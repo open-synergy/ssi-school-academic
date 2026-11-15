@@ -202,9 +202,11 @@ odoo.define("ssi_school_academic.school_subject_tour", function (require) {
                     trigger: ".o_notebook .nav-link:contains(Minimum Score)",
                 },
                 {
+                    // Column 1 = minimum_score (tree: grade_id, minimum_score);
+                    // a 14.0 <td> has no name attribute.
                     content: "Click the Minimum Score cell of the line",
                     trigger:
-                        ".o_field_x2many[name='minimum_score_ids'] .o_data_row .o_data_cell[name='minimum_score']",
+                        ".o_field_x2many[name='minimum_score_ids'] .o_data_row:first .o_data_cell:eq(1)",
                 },
                 {
                     content: "Change the Minimum Score of the line",
