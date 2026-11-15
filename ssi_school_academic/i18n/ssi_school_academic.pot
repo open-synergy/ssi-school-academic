@@ -365,6 +365,12 @@ msgid "Average Weight (%)"
 msgstr ""
 
 #. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card_type__total_weight
+msgid ""
+"Average weight plus the weights of all component lines. It must total 100%."
+msgstr ""
+
+#. module: ssi_school_academic
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type__average_component_ids
 msgid "Averaged Components"
 msgstr ""
@@ -1403,6 +1409,11 @@ msgstr ""
 msgid ""
 "This replaces every line with one line per open enrollment and per score "
 "component. Continue?"
+msgstr ""
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type__total_weight
+msgid "Total Weight"
 msgstr ""
 
 #. module: ssi_school_academic
