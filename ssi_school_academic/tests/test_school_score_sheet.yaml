@@ -1,0 +1,744 @@
+# T-01 (odoo-development-unit-test/test-traps.md): the `setup:` block replays
+# before every scenario inside one un-rolled-back transaction, so every
+# unique-constrained code it creates is generated per replay from a count of
+# the existing records, and documents keep the default name `/`. The
+# "Generate" scenario runs FIRST and is the only one that counts lines: the
+# score components are created by the replayed setup, so a later scenario
+# would also see the components of the earlier replays.
+options:
+  auto_refresh: true
+
+setup:
+  steps:
+    - step: "Create the grade type"
+      action: "create"
+      model: "school_grade_type"
+      save_as: "grade_type"
+      values:
+        name: "SSS Grade Type"
+        code: "EVAL: 'SSSGT%d' % env['school_grade_type'].search_count([])"
+
+    - step: "Create the school"
+      action: "create"
+      model: "school"
+      save_as: "school"
+      values:
+        name: "SSS School"
+        code: "EVAL: 'SSSSC%d' % env['school'].search_count([])"
+        grade_type_id: "REC: grade_type.id"
+
+    - step: "Create the academic year"
+      action: "create"
+      model: "school_academic_year"
+      save_as: "academic_year"
+      values:
+        name: "SSS Academic Year"
+        code: "EVAL: 'SSSAY%d' % env['school_academic_year'].search_count([])"
+        date_start: 2026-07-01
+        date_end: 2027-06-30
+
+    - step: "Create the academic term open for enrollment"
+      action: "create"
+      model: "school_academic_term"
+      save_as: "academic_term"
+      values:
+        name: "SSS Term"
+        code: "EVAL: 'SSSTM%d' % env['school_academic_term'].search_count([])"
+        date_start: 2026-07-01
+        date_end: 2026-12-31
+        year_id: "REC: academic_year.id"
+        enrollment_state: "open"
+
+    - step: "Create the grade"
+      action: "create"
+      model: "school_grade"
+      save_as: "grade"
+      values:
+        name: "SSS Grade"
+        code: "EVAL: 'SSSGR%d' % env['school_grade'].search_count([])"
+        type_id: "REC: grade_type.id"
+
+    - step: "Create the grade class"
+      action: "create"
+      model: "school_grade_class"
+      save_as: "grade_class"
+      values:
+        name: "SSS Class"
+        code: "EVAL: 'SSSCL%d' % env['school_grade_class'].search_count([])"
+        school_id: "REC: school.id"
+        grade_id: "REC: grade.id"
+
+    - step: "Create the subject taught in the grade"
+      action: "create"
+      model: "school_subject"
+      save_as: "subject"
+      values:
+        name: "SSS Subject"
+        code: "EVAL: 'SSSSJ%d' % env['school_subject'].search_count([])"
+        grade_ids:
+          - - 6
+            - 0
+            - - "REC: grade.id"
+
+    - step: "Create the home address partner of the teacher"
+      action: "create"
+      model: "res.partner"
+      save_as: "teacher_partner"
+      values:
+        name: "SSS Teacher Home Address"
+
+    - step: "Create the employee of the teacher"
+      action: "create"
+      model: "hr.employee"
+      save_as: "employee"
+      values:
+        name: "SSS Teacher Employee"
+        company_id: "base.main_company"
+        address_home_id: "REC: teacher_partner.id"
+
+    - step: "Create the teacher"
+      action: "create"
+      model: "school_teacher"
+      save_as: "teacher"
+      values:
+        name: "SSS Teacher"
+        code: "EVAL: 'SSSTC%d' % env['school_teacher'].search_count([])"
+        employee_id: "REC: employee.id"
+
+    - step: "Create the first score component"
+      action: "create"
+      model: "school_score_component"
+      save_as: "component_1"
+      values:
+        name: "SSS Daily Test 1"
+        code: "EVAL: 'SSSC%d' % env['school_score_component'].search_count([])"
+        category: "daily_test"
+        sequence: 10
+
+    - step: "Create the second score component"
+      action: "create"
+      model: "school_score_component"
+      save_as: "component_2"
+      values:
+        name: "SSS Daily Test 2"
+        code: "EVAL: 'SSSC%d' % env['school_score_component'].search_count([])"
+        category: "daily_test"
+        sequence: 20
+
+    - step: "Create the contact of the first student"
+      action: "create"
+      model: "res.partner"
+      save_as: "contact_1"
+      values:
+        name: "SSS Student Contact 1"
+
+    - step: "Create the first student"
+      action: "create"
+      model: "school_student"
+      save_as: "student_1"
+      values:
+        name: "SSS Student 1"
+        code: "EVAL: 'SSSST%d' % env['school_student'].search_count([])"
+        contact_id: "REC: contact_1.id"
+        school_id: "REC: school.id"
+
+    - step: "Create the enrollment of the first student"
+      action: "create"
+      model: "school_enrollment"
+      save_as: "enrollment_1"
+      values:
+        academic_year_id: "REC: academic_year.id"
+        academic_term_id: "REC: academic_term.id"
+        school_id: "REC: school.id"
+        grade_id: "REC: grade.id"
+        grade_class_id: "REC: grade_class.id"
+        student_id: "REC: student_1.id"
+        currency_id: "EVAL: env.company.currency_id.id"
+
+    - step: "Confirm the first enrollment"
+      action: "call"
+      target: "enrollment_1"
+      method: "action_confirm"
+      as_user: "base.user_admin"
+      asserts:
+        state:
+          type: "value"
+          expected: "confirm"
+
+    - step: "Approve the first enrollment, which opens it"
+      action: "call"
+      target: "enrollment_1"
+      method: "action_approve_approval"
+      as_user: "base.user_admin"
+      asserts:
+        state:
+          type: "value"
+          expected: "open"
+
+    - step: "Create the contact of the second student"
+      action: "create"
+      model: "res.partner"
+      save_as: "contact_2"
+      values:
+        name: "SSS Student Contact 2"
+
+    - step: "Create the second student"
+      action: "create"
+      model: "school_student"
+      save_as: "student_2"
+      values:
+        name: "SSS Student 2"
+        code: "EVAL: 'SSSST%d' % env['school_student'].search_count([])"
+        contact_id: "REC: contact_2.id"
+        school_id: "REC: school.id"
+
+    - step: "Create the enrollment of the second student"
+      action: "create"
+      model: "school_enrollment"
+      save_as: "enrollment_2"
+      values:
+        academic_year_id: "REC: academic_year.id"
+        academic_term_id: "REC: academic_term.id"
+        school_id: "REC: school.id"
+        grade_id: "REC: grade.id"
+        grade_class_id: "REC: grade_class.id"
+        student_id: "REC: student_2.id"
+        currency_id: "EVAL: env.company.currency_id.id"
+
+    - step: "Confirm the second enrollment"
+      action: "call"
+      target: "enrollment_2"
+      method: "action_confirm"
+      as_user: "base.user_admin"
+      asserts:
+        state:
+          type: "value"
+          expected: "confirm"
+
+    - step: "Approve the second enrollment, which opens it"
+      action: "call"
+      target: "enrollment_2"
+      method: "action_approve_approval"
+      as_user: "base.user_admin"
+      asserts:
+        state:
+          type: "value"
+          expected: "open"
+
+    - step: "Create the contact of the third student"
+      action: "create"
+      model: "res.partner"
+      save_as: "contact_3"
+      values:
+        name: "SSS Student Contact 3"
+
+    - step: "Create the third student"
+      action: "create"
+      model: "school_student"
+      save_as: "student_3"
+      values:
+        name: "SSS Student 3"
+        code: "EVAL: 'SSSST%d' % env['school_student'].search_count([])"
+        contact_id: "REC: contact_3.id"
+        school_id: "REC: school.id"
+
+    - step: "Create the enrollment of the third student, left in draft"
+      action: "create"
+      model: "school_enrollment"
+      save_as: "enrollment_3"
+      values:
+        academic_year_id: "REC: academic_year.id"
+        academic_term_id: "REC: academic_term.id"
+        school_id: "REC: school.id"
+        grade_id: "REC: grade.id"
+        grade_class_id: "REC: grade_class.id"
+        student_id: "REC: student_3.id"
+        currency_id: "EVAL: env.company.currency_id.id"
+
+    - step: "Assert the third enrollment is draft"
+      action: "assert"
+      target: "enrollment_3"
+      asserts:
+        state:
+          type: "value"
+          expected: "draft"
+
+scenarios:
+  - name: "School Score Sheet - Generate lines from open enrollments"
+    steps:
+      - step: "Create an inactive score component"
+        action: "create"
+        model: "school_score_component"
+        save_as: "inactive_component"
+        values:
+          name: "SSS Inactive Component"
+          code: "SSSCINACT"
+          category: "assignment"
+          sequence: 30
+          active: false
+
+      - step: "Create the draft score sheet"
+        action: "create"
+        model: "school_score_sheet"
+        save_as: "sheet"
+        values:
+          academic_term_id: "REC: academic_term.id"
+          grade_class_id: "REC: grade_class.id"
+          subject_id: "REC: subject.id"
+          teacher_id: "REC: teacher.id"
+          date: 2026-08-10
+          user_id: "REF: base.user_admin"
+
+      - step: "Generate the lines"
+        action: "call"
+        target: "sheet"
+        method: "action_generate_lines"
+        as_user: "base.user_admin"
+        asserts:
+          line_ids:
+            type: "o2m"
+            check: "count"
+            expected_count: 4
+
+      - step: "The draft enrollment got no line"
+        action: "search"
+        model: "school_score_sheet_line"
+        domain:
+          - ["sheet_id", "=", "REC: sheet.id"]
+          - ["enrollment_id", "=", "REC: enrollment_3.id"]
+        save_as: "draft_enrollment_lines"
+        expect_count: 0
+
+      - step: "The inactive component got no line"
+        action: "search"
+        model: "school_score_sheet_line"
+        domain:
+          - ["sheet_id", "=", "REC: sheet.id"]
+          - ["component_id", "=", "REC: inactive_component.id"]
+        save_as: "inactive_component_lines"
+        expect_count: 0
+
+      - step: "Each open enrollment got one line per active component"
+        action: "search"
+        model: "school_score_sheet_line"
+        domain:
+          - ["sheet_id", "=", "REC: sheet.id"]
+          - ["enrollment_id", "=", "REC: enrollment_1.id"]
+        save_as: "enrollment_1_lines"
+        expect_count: 2
+
+      - step: "Generating again replaces the lines instead of adding to them"
+        action: "call"
+        target: "sheet"
+        method: "action_generate_lines"
+        as_user: "base.user_admin"
+        asserts:
+          line_ids:
+            type: "o2m"
+            check: "count"
+            expected_count: 4
+
+  - name: "School Score Sheet - Confirm and approve finish the sheet"
+    steps:
+      - step: "Create the draft score sheet with two lines"
+        action: "create"
+        model: "school_score_sheet"
+        save_as: "sheet"
+        values:
+          academic_term_id: "REC: academic_term.id"
+          grade_class_id: "REC: grade_class.id"
+          subject_id: "REC: subject.id"
+          teacher_id: "REC: teacher.id"
+          date: 2026-08-10
+          user_id: "REF: base.user_admin"
+          line_ids:
+            - - 0
+              - 0
+              - enrollment_id: "REC: enrollment_1.id"
+                component_id: "REC: component_1.id"
+                score: 85.0
+            - - 0
+              - 0
+              - enrollment_id: "REC: enrollment_2.id"
+                component_id: "REC: component_1.id"
+
+      - step: "The new sheet is a draft with its two lines"
+        action: "assert"
+        target: "sheet"
+        asserts:
+          state:
+            type: "value"
+            expected: "draft"
+          line_ids:
+            type: "o2m"
+            check: "count"
+            expected_count: 2
+
+      - step: "Confirm the sheet"
+        action: "call"
+        target: "sheet"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve the sheet, which finishes it"
+        action: "call"
+        target: "sheet"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "done"
+          name:
+            type: "value"
+            operator: "not_equals"
+            expected: "/"
+
+  - name: "School Score Sheet - A score must be between 0 and 100"
+    steps:
+      - step: "Create the draft score sheet with one line"
+        action: "create"
+        model: "school_score_sheet"
+        save_as: "sheet"
+        values:
+          academic_term_id: "REC: academic_term.id"
+          grade_class_id: "REC: grade_class.id"
+          subject_id: "REC: subject.id"
+          teacher_id: "REC: teacher.id"
+          date: 2026-08-10
+          user_id: "REF: base.user_admin"
+
+      - step: "A score of 100 is accepted"
+        action: "create"
+        model: "school_score_sheet_line"
+        save_as: "line"
+        values:
+          sheet_id: "REC: sheet.id"
+          enrollment_id: "REC: enrollment_1.id"
+          component_id: "REC: component_1.id"
+          score: 100.0
+
+      - step: "A score of 0 is accepted"
+        action: "write"
+        target: "line"
+        values:
+          score: 0.0
+
+      - step: "A score above 100 is rejected"
+        action: "write"
+        target: "line"
+        values:
+          score: 101.0
+        expect_error:
+          type: "ValidationError"
+          message_contains: "between 0 and 100"
+
+      - step: "A negative score is rejected"
+        action: "write"
+        target: "line"
+        values:
+          score: -1.0
+        expect_error:
+          type: "ValidationError"
+          message_contains: "between 0 and 100"
+
+  - name: "School Score Sheet - One score per student and component"
+    steps:
+      - step: "Create the draft score sheet with one line"
+        action: "create"
+        model: "school_score_sheet"
+        save_as: "sheet"
+        values:
+          academic_term_id: "REC: academic_term.id"
+          grade_class_id: "REC: grade_class.id"
+          subject_id: "REC: subject.id"
+          teacher_id: "REC: teacher.id"
+          date: 2026-08-10
+          user_id: "REF: base.user_admin"
+          line_ids:
+            - - 0
+              - 0
+              - enrollment_id: "REC: enrollment_1.id"
+                component_id: "REC: component_1.id"
+
+      - step: "A second line for the same student and component is rejected"
+        action: "create"
+        model: "school_score_sheet_line"
+        values:
+          sheet_id: "REC: sheet.id"
+          enrollment_id: "REC: enrollment_1.id"
+          component_id: "REC: component_1.id"
+        expect_error:
+          type: "ValidationError"
+          message_contains: "one score per component"
+
+      - step: "The same student with another component is accepted"
+        action: "create"
+        model: "school_score_sheet_line"
+        values:
+          sheet_id: "REC: sheet.id"
+          enrollment_id: "REC: enrollment_1.id"
+          component_id: "REC: component_2.id"
+
+      - step: "The sheet has the two accepted lines only"
+        action: "assert"
+        target: "sheet"
+        asserts:
+          line_ids:
+            type: "o2m"
+            check: "count"
+            expected_count: 2
+
+  - name: "School Score Sheet - One live sheet per subject, class, and term"
+    steps:
+      - step: "Create the first score sheet"
+        action: "create"
+        model: "school_score_sheet"
+        save_as: "sheet"
+        values:
+          academic_term_id: "REC: academic_term.id"
+          grade_class_id: "REC: grade_class.id"
+          subject_id: "REC: subject.id"
+          teacher_id: "REC: teacher.id"
+          date: 2026-08-10
+          user_id: "REF: base.user_admin"
+
+      - step: "A second sheet with the same subject, class, and term is rejected"
+        action: "create"
+        model: "school_score_sheet"
+        values:
+          academic_term_id: "REC: academic_term.id"
+          grade_class_id: "REC: grade_class.id"
+          subject_id: "REC: subject.id"
+          teacher_id: "REC: teacher.id"
+          date: 2026-08-11
+          user_id: "REF: base.user_admin"
+        expect_error:
+          type: "ValidationError"
+          message_contains: "already exists"
+
+      - step: "Create the cancel reason"
+        action: "create"
+        model: "base.cancel_reason"
+        save_as: "cancel_reason"
+        values:
+          name: "SSS Cancel Reason"
+          code: "EVAL: 'SSSCR%d' % env['base.cancel_reason'].search_count([])"
+
+      - step: "Cancel the first sheet via the wizard"
+        action: "wizard"
+        model: "base.select_cancel_reason"
+        target: "sheet"
+        as_user: "base.user_admin"
+        values:
+          cancel_reason_id: "REC: cancel_reason.id"
+        method: "action_confirm"
+        asserts:
+          state:
+            type: "value"
+            expected: "cancel"
+
+      - step: "A new sheet with the same key is accepted after the cancel"
+        action: "create"
+        model: "school_score_sheet"
+        save_as: "new_sheet"
+        values:
+          academic_term_id: "REC: academic_term.id"
+          grade_class_id: "REC: grade_class.id"
+          subject_id: "REC: subject.id"
+          teacher_id: "REC: teacher.id"
+          date: 2026-08-12
+          user_id: "REF: base.user_admin"
+
+      - step: "The new sheet is a draft"
+        action: "assert"
+        target: "new_sheet"
+        asserts:
+          state:
+            type: "value"
+            expected: "draft"
+
+  - name: "School Score Sheet - A line needs an open enrollment"
+    steps:
+      - step: "Create the draft score sheet"
+        action: "create"
+        model: "school_score_sheet"
+        save_as: "sheet"
+        values:
+          academic_term_id: "REC: academic_term.id"
+          grade_class_id: "REC: grade_class.id"
+          subject_id: "REC: subject.id"
+          teacher_id: "REC: teacher.id"
+          date: 2026-08-10
+          user_id: "REF: base.user_admin"
+
+      - step: "A line of the draft enrollment is rejected"
+        action: "create"
+        model: "school_score_sheet_line"
+        values:
+          sheet_id: "REC: sheet.id"
+          enrollment_id: "REC: enrollment_3.id"
+          component_id: "REC: component_1.id"
+        expect_error:
+          type: "ValidationError"
+          message_contains: "open enrollments"
+
+  - name: "School Score Sheet - Confirm checks the enrollments again"
+    steps:
+      - step: "Create the draft score sheet with a line of an open enrollment"
+        action: "create"
+        model: "school_score_sheet"
+        save_as: "sheet"
+        values:
+          academic_term_id: "REC: academic_term.id"
+          grade_class_id: "REC: grade_class.id"
+          subject_id: "REC: subject.id"
+          teacher_id: "REC: teacher.id"
+          date: 2026-08-10
+          user_id: "REF: base.user_admin"
+          line_ids:
+            - - 0
+              - 0
+              - enrollment_id: "REC: enrollment_1.id"
+                component_id: "REC: component_1.id"
+                score: 70.0
+
+      - step: "The enrollment of the line leaves the open state"
+        action: "write"
+        target: "enrollment_1"
+        values:
+          state: "draft"
+
+      - step: "Confirming a sheet whose enrollment is not open is rejected"
+        action: "call"
+        target: "sheet"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        expect_error:
+          type: "ValidationError"
+          message_contains: "open enrollments"
+
+      - step: "The sheet is still a draft"
+        action: "assert"
+        target: "sheet"
+        asserts:
+          state:
+            type: "value"
+            expected: "draft"
+
+  - name: "School Score Sheet - Lines can only be generated in draft"
+    steps:
+      - step: "Create the draft score sheet with a line"
+        action: "create"
+        model: "school_score_sheet"
+        save_as: "sheet"
+        values:
+          academic_term_id: "REC: academic_term.id"
+          grade_class_id: "REC: grade_class.id"
+          subject_id: "REC: subject.id"
+          teacher_id: "REC: teacher.id"
+          date: 2026-08-10
+          user_id: "REF: base.user_admin"
+          line_ids:
+            - - 0
+              - 0
+              - enrollment_id: "REC: enrollment_1.id"
+                component_id: "REC: component_1.id"
+
+      - step: "Confirm the sheet"
+        action: "call"
+        target: "sheet"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Generating the lines of a confirmed sheet is rejected"
+        action: "call"
+        target: "sheet"
+        method: "action_generate_lines"
+        as_user: "base.user_admin"
+        expect_error:
+          type: "UserError"
+          message_contains: "draft state"
+
+      - step: "The line of the confirmed sheet is untouched"
+        action: "assert"
+        target: "sheet"
+        asserts:
+          line_ids:
+            type: "o2m"
+            check: "count"
+            expected_count: 1
+
+  - name: "School Score Sheet - Reject and restart"
+    steps:
+      - step: "Create the draft score sheet with a line"
+        action: "create"
+        model: "school_score_sheet"
+        save_as: "sheet"
+        values:
+          academic_term_id: "REC: academic_term.id"
+          grade_class_id: "REC: grade_class.id"
+          subject_id: "REC: subject.id"
+          teacher_id: "REC: teacher.id"
+          date: 2026-08-10
+          user_id: "REF: base.user_admin"
+          line_ids:
+            - - 0
+              - 0
+              - enrollment_id: "REC: enrollment_1.id"
+                component_id: "REC: component_1.id"
+
+      - step: "Confirm the sheet"
+        action: "call"
+        target: "sheet"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Restart the approval process keeps the sheet waiting"
+        action: "call"
+        target: "sheet"
+        method: "action_reload_approval_template"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Reject the sheet"
+        action: "call"
+        target: "sheet"
+        method: "action_reject_approval"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "reject"
+
+      - step: "Restart the rejected sheet"
+        action: "call"
+        target: "sheet"
+        method: "action_restart"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "draft"
