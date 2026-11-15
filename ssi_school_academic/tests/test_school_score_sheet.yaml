@@ -762,11 +762,24 @@ scenarios:
         target: "sheet"
         method: "action_generate_lines"
         as_user: "base.user_admin"
-        asserts:
-          line_ids:
-            type: "o2m"
-            check: "count"
-            expected_count: 4
+
+      - step: "Each open enrollment got a line of the first component"
+        action: "search"
+        model: "school_score_sheet_line"
+        domain:
+          - ["sheet_id", "=", "REC: sheet.id"]
+          - ["component_id", "=", "REC: component_1.id"]
+        save_as: "component_1_lines"
+        expect_count: 2
+
+      - step: "Each open enrollment got a line of the second component"
+        action: "search"
+        model: "school_score_sheet_line"
+        domain:
+          - ["sheet_id", "=", "REC: sheet.id"]
+          - ["component_id", "=", "REC: component_2.id"]
+        save_as: "component_2_lines"
+        expect_count: 2
 
       - step: "No generated line is scored"
         action: "search"
