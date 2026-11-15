@@ -86,7 +86,29 @@ class SchoolReportCardType(models.Model):
         ),
     )
 
-    @api.constrains("average_weight", "weight_ids")
+    total_weight = fields.Float(
+        string="Total Weight",
+        compute="_compute_total_weight",
+        store=True,
+        readonly=True,
+        help=(
+            "Average weight plus the weights of all component lines. "
+            "It must total 100%."
+        ),
+    )
+
+    @api.depends("average_weight", "weight_ids.weight")
+    def _compute_total_weight(self):
+        """Compute the sum of the average weight and the line weights.
+
+        Stored, so a change to any weight line recomputes it and the
+        total weight check runs after all lines of a save are written.
+        """
+        for record in self:
+            result = record.average_weight + sum(record.weight_ids.mapped("weight"))
+            record.total_weight = result
+
+    @api.constrains("total_weight")
     def _check_total_weight(self):
         """Reject a configuration whose weights do not total 100%.
 
