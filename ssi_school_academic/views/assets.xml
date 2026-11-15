@@ -25,6 +25,10 @@
                 type="text/javascript"
                 src="/ssi_school_academic/static/tests/tours/school_score_predicate_tour.js"
             />
+            <script
+                type="text/javascript"
+                src="/ssi_school_academic/static/tests/tours/school_score_sheet_tour.js"
+            />
         </xpath>
     </template>
 </odoo>

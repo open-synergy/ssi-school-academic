@@ -12,7 +12,9 @@ score (KKM) a student must reach on each Grade. It also manages the score
 components of the report card (e.g. Daily Test 1, Assignment 1, Mid-Term
 Exam), one record per slot. Report card types set how the final score is
 calculated: the averaged components, the weights, the printed columns, and
-the rounding threshold.
+the rounding threshold. Teachers record the scores of a subject on a score
+sheet per grade class and academic term: the lines are generated from the open
+enrollments of the class, filled in, and approved.
 
 
 Work Instruction
@@ -27,6 +29,13 @@ Work Instruction
 * `Create Report Card Type <docs/school_report_card_type/01-create.html>`_
 * `Edit Report Card Type <docs/school_report_card_type/02-edit.html>`_
 * `Archive Report Card Type <docs/school_report_card_type/03-archive.html>`_
+* `Create School Score Sheet <docs/school_score_sheet/01-create.html>`_
+* `Generate Lines of School Score Sheet <docs/school_score_sheet/02-generate-lines.html>`_
+* `Confirm School Score Sheet <docs/school_score_sheet/03-confirm.html>`_
+* `Approve School Score Sheet <docs/school_score_sheet/04-approve.html>`_
+* `Reject School Score Sheet <docs/school_score_sheet/05-reject.html>`_
+* `Cancel School Score Sheet <docs/school_score_sheet/06-cancel.html>`_
+* `Restart School Score Sheet Approval Process <docs/school_score_sheet/07-restart-approval.html>`_
 
 
 Installation
