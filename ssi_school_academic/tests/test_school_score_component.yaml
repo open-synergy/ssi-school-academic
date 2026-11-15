@@ -1,0 +1,122 @@
+options:
+  auto_refresh: true
+scenarios:
+  - name: "Create Score Components"
+    steps:
+      - step: "Create daily test component"
+        action: "create"
+        model: "school_score_component"
+        save_as: "component_uh"
+        values:
+          name: "UH 1"
+          code: "SCSC1A"
+          category: "daily_test"
+          sequence: 10
+      - step: "Create assignment component"
+        action: "create"
+        model: "school_score_component"
+        save_as: "component_task"
+        values:
+          name: "Tugas 1"
+          code: "SCSC1B"
+          category: "assignment"
+          sequence: 20
+      - step: "Create mid-term exam component"
+        action: "create"
+        model: "school_score_component"
+        save_as: "component_pts"
+        values:
+          name: "PTS"
+          code: "SCSC1C"
+          category: "mid_term_exam"
+          sequence: 30
+      - step: "Assert daily test component"
+        action: "assert"
+        target: "component_uh"
+        asserts:
+          category:
+            type: "value"
+            expected: "daily_test"
+      - step: "Assert assignment component"
+        action: "assert"
+        target: "component_task"
+        asserts:
+          category:
+            type: "value"
+            expected: "assignment"
+      - step: "Assert mid-term exam component"
+        action: "assert"
+        target: "component_pts"
+        asserts:
+          category:
+            type: "value"
+            expected: "mid_term_exam"
+
+  - name: "Edit Score Component Sequence"
+    steps:
+      - step: "Create mid-term exam component"
+        action: "create"
+        model: "school_score_component"
+        save_as: "component_pts"
+        values:
+          name: "PTS"
+          code: "SCSC2A"
+          category: "mid_term_exam"
+          sequence: 30
+      - step: "Write new sequence"
+        action: "write"
+        target: "component_pts"
+        values:
+          sequence: 5
+      - step: "Assert sequence updated"
+        action: "assert"
+        target: "component_pts"
+        asserts:
+          sequence:
+            type: "value"
+            expected: 5
+
+  - name: "Search Score Components By Category"
+    steps:
+      - step: "Create daily test component"
+        action: "create"
+        model: "school_score_component"
+        save_as: "component_uh"
+        values:
+          name: "UH 1"
+          code: "SCSC3A"
+          category: "daily_test"
+          sequence: 10
+      - step: "Create assignment component"
+        action: "create"
+        model: "school_score_component"
+        save_as: "component_task"
+        values:
+          name: "Tugas 1"
+          code: "SCSC3B"
+          category: "assignment"
+          sequence: 20
+      - step: "Create mid-term exam component"
+        action: "create"
+        model: "school_score_component"
+        save_as: "component_pts"
+        values:
+          name: "PTS"
+          code: "SCSC3C"
+          category: "mid_term_exam"
+          sequence: 30
+      - step: "Search daily test components of this scenario"
+        action: "search"
+        model: "school_score_component"
+        domain:
+          - ["code", "in", ["SCSC3A", "SCSC3B", "SCSC3C"]]
+          - ["category", "=", "daily_test"]
+        save_as: "found"
+        expect_count: 1
+      - step: "Assert only the daily test component matches"
+        action: "assert"
+        target: "found"
+        asserts:
+          name:
+            type: "value"
+            expected: "UH 1"

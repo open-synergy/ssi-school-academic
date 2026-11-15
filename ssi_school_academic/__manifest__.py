@@ -18,8 +18,11 @@
     ],
     "data": [
         "security/res_groups/school_subject.xml",
+        "security/res_groups/school_score_component.xml",
         "security/ir_model_access/school_subject.xml",
+        "security/ir_model_access/school_score_component.xml",
         "views/school_subject.xml",
+        "views/school_score_component.xml",
         "views/assets.xml",
     ],
     "demo": [],

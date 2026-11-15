@@ -8,7 +8,9 @@ School Academic
 
 Manages the academic master data of a school: the subjects taught, the
 Subject Group each belongs to, the Grades it applies to, and the minimum
-score (KKM) a student must reach on each Grade.
+score (KKM) a student must reach on each Grade. It also manages the score
+components of the report card (e.g. Daily Test 1, Assignment 1, Mid-Term
+Exam), one record per slot.
 
 
 Work Instruction
@@ -17,6 +19,9 @@ Work Instruction
 * `Create Subject <docs/school_subject/01-create.html>`_
 * `Edit Subject <docs/school_subject/02-edit.html>`_
 * `Archive Subject <docs/school_subject/03-archive.html>`_
+* `Create Score Component <docs/school_score_component/01-create.html>`_
+* `Edit Score Component <docs/school_score_component/02-edit.html>`_
+* `Archive Score Component <docs/school_score_component/03-archive.html>`_
 
 
 Installation
