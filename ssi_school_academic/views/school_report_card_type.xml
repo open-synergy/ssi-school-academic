@@ -57,6 +57,7 @@
                     <group name="calculation_group_1" string="Average">
                         <field name="average_component_ids" widget="many2many_tags" />
                         <field name="average_weight" />
+                        <field name="total_weight" />
                     </group>
                     <group name="calculation_group_2" string="Rounding">
                         <field name="rounding_threshold" />

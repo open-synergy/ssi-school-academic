@@ -435,3 +435,266 @@ scenarios:
             type: "o2m"
             check: "count"
             expected_count: 2
+
+  - name: "Reject Weight Line Write Off 100"
+    steps:
+      - step: "Create component UH 1"
+        action: "create"
+        model: "school_score_component"
+        save_as: "component_uh"
+        values:
+          name: "UH 1"
+          code: "RCT9A"
+          category: "daily_test"
+          sequence: 10
+      - step: "Create component PTS"
+        action: "create"
+        model: "school_score_component"
+        save_as: "component_pts"
+        values:
+          name: "PTS"
+          code: "RCT9C"
+          category: "mid_term_exam"
+          sequence: 30
+      - step: "Create the type"
+        action: "create"
+        model: "school_report_card_type"
+        save_as: "report_type"
+        values:
+          name: "Mid-Term 9"
+          code: "RCTYPE9"
+          term_type: "mid_term"
+          average_weight: 70.0
+          average_component_ids:
+            - - 6
+              - 0
+              - - "REC: component_uh.id"
+          weight_ids:
+            - - 0
+              - 0
+              - component_id: "REC: component_pts.id"
+                weight: 30.0
+      - step: "Find the component_pts weight line"
+        action: "search"
+        model: "school_report_card_type_weight"
+        domain:
+          - ["type_id", "=", "REC: report_type.id"]
+          - ["component_id", "=", "REC: component_pts.id"]
+        save_as: "line_pts"
+        limit: 1
+      - step: "Reject a direct weight change to 20"
+        action: "write"
+        target: "line_pts"
+        expect_error:
+          type: "ValidationError"
+          message_contains: "must be 100%"
+        values:
+          weight: 20.0
+
+  - name: "Reject Weight Line Create Off 100"
+    steps:
+      - step: "Create component UH 1"
+        action: "create"
+        model: "school_score_component"
+        save_as: "component_uh"
+        values:
+          name: "UH 1"
+          code: "RCT10A"
+          category: "daily_test"
+          sequence: 10
+      - step: "Create component PTS"
+        action: "create"
+        model: "school_score_component"
+        save_as: "component_pts"
+        values:
+          name: "PTS"
+          code: "RCT10C"
+          category: "mid_term_exam"
+          sequence: 30
+      - step: "Create component PAS"
+        action: "create"
+        model: "school_score_component"
+        save_as: "component_pas"
+        values:
+          name: "PAS"
+          code: "RCT10D"
+          category: "final_exam"
+          sequence: 40
+      - step: "Create the type"
+        action: "create"
+        model: "school_report_card_type"
+        save_as: "report_type"
+        values:
+          name: "Mid-Term 10"
+          code: "RCTYPE10"
+          term_type: "mid_term"
+          average_weight: 70.0
+          average_component_ids:
+            - - 6
+              - 0
+              - - "REC: component_uh.id"
+          weight_ids:
+            - - 0
+              - 0
+              - component_id: "REC: component_pts.id"
+                weight: 30.0
+      - step: "Reject a direct new weight line of 10"
+        action: "create"
+        model: "school_report_card_type_weight"
+        expect_error:
+          type: "ValidationError"
+          message_contains: "must be 100%"
+        values:
+          type_id: "REC: report_type.id"
+          component_id: "REC: component_pas.id"
+          weight: 10.0
+
+  - name: "Reject Weight Line Unlink Off 100"
+    steps:
+      - step: "Create component UH 1"
+        action: "create"
+        model: "school_score_component"
+        save_as: "component_uh"
+        values:
+          name: "UH 1"
+          code: "RCT11A"
+          category: "daily_test"
+          sequence: 10
+      - step: "Create component PTS"
+        action: "create"
+        model: "school_score_component"
+        save_as: "component_pts"
+        values:
+          name: "PTS"
+          code: "RCT11C"
+          category: "mid_term_exam"
+          sequence: 30
+      - step: "Create the type"
+        action: "create"
+        model: "school_report_card_type"
+        save_as: "report_type"
+        values:
+          name: "Mid-Term 11"
+          code: "RCTYPE11"
+          term_type: "mid_term"
+          average_weight: 70.0
+          average_component_ids:
+            - - 6
+              - 0
+              - - "REC: component_uh.id"
+          weight_ids:
+            - - 0
+              - 0
+              - component_id: "REC: component_pts.id"
+                weight: 30.0
+      - step: "Find the component_pts weight line"
+        action: "search"
+        model: "school_report_card_type_weight"
+        domain:
+          - ["type_id", "=", "REC: report_type.id"]
+          - ["component_id", "=", "REC: component_pts.id"]
+        save_as: "line_pts"
+        limit: 1
+      - step: "Reject deleting the weight line"
+        action: "unlink"
+        target: "line_pts"
+        expect_error:
+          type: "ValidationError"
+          message_contains: "must be 100%"
+
+  - name: "Edit Several Weight Lines In One Save"
+    steps:
+      - step: "Create component UH 1"
+        action: "create"
+        model: "school_score_component"
+        save_as: "component_uh"
+        values:
+          name: "UH 1"
+          code: "RCT12A"
+          category: "daily_test"
+          sequence: 10
+      - step: "Create component PTS"
+        action: "create"
+        model: "school_score_component"
+        save_as: "component_pts"
+        values:
+          name: "PTS"
+          code: "RCT12C"
+          category: "mid_term_exam"
+          sequence: 30
+      - step: "Create component PAS"
+        action: "create"
+        model: "school_score_component"
+        save_as: "component_pas"
+        values:
+          name: "PAS"
+          code: "RCT12D"
+          category: "final_exam"
+          sequence: 40
+      - step: "Create the type with 50 / 20 / 30"
+        action: "create"
+        model: "school_report_card_type"
+        save_as: "report_type"
+        values:
+          name: "Mid-Term 12"
+          code: "RCTYPE12"
+          term_type: "mid_term"
+          average_weight: 50.0
+          average_component_ids:
+            - - 6
+              - 0
+              - - "REC: component_uh.id"
+          weight_ids:
+            - - 0
+              - 0
+              - component_id: "REC: component_pts.id"
+                weight: 20.0
+            - - 0
+              - 0
+              - component_id: "REC: component_pas.id"
+                weight: 30.0
+      - step: "Find the component_pts weight line"
+        action: "search"
+        model: "school_report_card_type_weight"
+        domain:
+          - ["type_id", "=", "REC: report_type.id"]
+          - ["component_id", "=", "REC: component_pts.id"]
+        save_as: "line_pts"
+        limit: 1
+      - step: "Find the component_pas weight line"
+        action: "search"
+        model: "school_report_card_type_weight"
+        domain:
+          - ["type_id", "=", "REC: report_type.id"]
+          - ["component_id", "=", "REC: component_pas.id"]
+        save_as: "line_pas"
+        limit: 1
+      - step: "Swap the two weights in one write"
+        action: "write"
+        target: "report_type"
+        values:
+          weight_ids:
+            - - 1
+              - "REC: line_pts.id"
+              - weight: 30.0
+            - - 1
+              - "REC: line_pas.id"
+              - weight: 20.0
+      - step: "Assert the new weights and the total"
+        action: "assert"
+        target: "report_type"
+        asserts:
+          total_weight:
+            type: "value"
+            expected: 100.0
+          weight_ids:
+            type: "o2m"
+            check: "count"
+            expected_count: 2
+      - step: "Assert the PTS weight"
+        action: "assert"
+        target: "line_pts"
+        asserts:
+          weight:
+            type: "value"
+            expected: 30.0

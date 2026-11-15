@@ -359,3 +359,208 @@ scenarios:
           subject_id: "REC: subject.id"
           grade_id: "REC: grade_b.id"
           minimum_score: 70.0
+
+  - name: "Reject Removing Grade With Minimum Score"
+    steps:
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Subject Test Grade Type 7"
+          code: "/"
+          sequence: 10
+      - step: "Create Grade X"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade_x"
+        values:
+          name: "Subject Test Grade X 7"
+          code: "/"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+      - step: "Create Grade Y"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade_y"
+        values:
+          name: "Subject Test Grade Y 7"
+          code: "/"
+          sequence: 20
+          type_id: "REC: grade_type.id"
+      - step: "Create subject"
+        action: "create"
+        model: "school_subject"
+        save_as: "subject"
+        values:
+          name: "Mathematics"
+          code: "MTKSBJ7"
+          subject_group: "vocational"
+          grade_ids:
+            - - 6
+              - 0
+              - - "REC: grade_x.id"
+                - "REC: grade_y.id"
+      - step: "Create minimum score line for grade x"
+        action: "create"
+        model: "school_subject_minimum_score"
+        save_as: "line_x"
+        values:
+          subject_id: "REC: subject.id"
+          grade_id: "REC: grade_x.id"
+          minimum_score: 70.0
+      - step: "Reject removing grade X that still has a minimum score"
+        action: "write"
+        target: "subject"
+        expect_error:
+          type: "ValidationError"
+          message_contains: "applicable grades of the subject"
+        values:
+          grade_ids:
+            - - 6
+              - 0
+              - - "REC: grade_y.id"
+
+  - name: "Remove Grade Together With Its Minimum Score"
+    steps:
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Subject Test Grade Type 8"
+          code: "/"
+          sequence: 10
+      - step: "Create Grade X"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade_x"
+        values:
+          name: "Subject Test Grade X 8"
+          code: "/"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+      - step: "Create Grade Y"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade_y"
+        values:
+          name: "Subject Test Grade Y 8"
+          code: "/"
+          sequence: 20
+          type_id: "REC: grade_type.id"
+      - step: "Create subject"
+        action: "create"
+        model: "school_subject"
+        save_as: "subject"
+        values:
+          name: "Mathematics"
+          code: "MTKSBJ8"
+          subject_group: "vocational"
+          grade_ids:
+            - - 6
+              - 0
+              - - "REC: grade_x.id"
+                - "REC: grade_y.id"
+      - step: "Create minimum score line for grade x"
+        action: "create"
+        model: "school_subject_minimum_score"
+        save_as: "line_x"
+        values:
+          subject_id: "REC: subject.id"
+          grade_id: "REC: grade_x.id"
+          minimum_score: 70.0
+      - step: "Remove grade X and its minimum score in one save"
+        action: "write"
+        target: "subject"
+        values:
+          grade_ids:
+            - - 6
+              - 0
+              - - "REC: grade_y.id"
+          minimum_score_ids:
+            - - 2
+              - "REC: line_x.id"
+              - 0
+      - step: "Assert the subject"
+        action: "assert"
+        target: "subject"
+        asserts:
+          grade_ids:
+            type: "m2m"
+            check: "count"
+            expected_count: 1
+          minimum_score_ids:
+            type: "o2m"
+            check: "count"
+            expected_count: 0
+
+  - name: "Remove Grade Without Minimum Score"
+    steps:
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Subject Test Grade Type 9"
+          code: "/"
+          sequence: 10
+      - step: "Create Grade X"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade_x"
+        values:
+          name: "Subject Test Grade X 9"
+          code: "/"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+      - step: "Create Grade Y"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade_y"
+        values:
+          name: "Subject Test Grade Y 9"
+          code: "/"
+          sequence: 20
+          type_id: "REC: grade_type.id"
+      - step: "Create subject"
+        action: "create"
+        model: "school_subject"
+        save_as: "subject"
+        values:
+          name: "Mathematics"
+          code: "MTKSBJ9"
+          subject_group: "vocational"
+          grade_ids:
+            - - 6
+              - 0
+              - - "REC: grade_x.id"
+                - "REC: grade_y.id"
+      - step: "Create minimum score line for grade y"
+        action: "create"
+        model: "school_subject_minimum_score"
+        save_as: "line_y"
+        values:
+          subject_id: "REC: subject.id"
+          grade_id: "REC: grade_y.id"
+          minimum_score: 70.0
+      - step: "Remove grade X that has no minimum score"
+        action: "write"
+        target: "subject"
+        values:
+          grade_ids:
+            - - 6
+              - 0
+              - - "REC: grade_y.id"
+      - step: "Assert the subject"
+        action: "assert"
+        target: "subject"
+        asserts:
+          grade_ids:
+            type: "m2m"
+            check: "count"
+            expected_count: 1
+          minimum_score_ids:
+            type: "o2m"
+            check: "count"
+            expected_count: 1
