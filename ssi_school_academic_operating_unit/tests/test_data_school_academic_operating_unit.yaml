@@ -1,9 +1,10 @@
 # T-01 (odoo-development-unit-test/test-traps.md): the `setup:` block replays
 # before every scenario inside one un-rolled-back transaction, so every
-# unique-constrained value it creates (codes, logins) is generated per replay
-# from a count of the existing records, and documents keep the default name
-# `/`. The assertions of each scenario are limited to the aliases the scenario
-# builds itself, never to a count over the whole model.
+# unique-constrained value it creates (codes, logins, and the name of an
+# operating unit, unique per company) is generated per replay from a count of
+# the existing records, and documents keep the default name `/`. The
+# assertions of each scenario are limited to the aliases the scenario builds
+# itself, never to a count over the whole model.
 options:
   auto_refresh: true
 
@@ -21,7 +22,8 @@ setup:
       model: "operating.unit"
       save_as: "ou_a"
       values:
-        name: "SAOU Operating Unit A"
+        name:
+          "EVAL: 'SAOU Operating Unit A %d' % env['operating.unit'].search_count([])"
         code: "EVAL: 'SAOUA%d' % env['operating.unit'].search_count([])"
         company_id: "REF: base.main_company"
         partner_id: "REC: ou_a_partner.id"
@@ -38,7 +40,8 @@ setup:
       model: "operating.unit"
       save_as: "ou_b"
       values:
-        name: "SAOU Operating Unit B"
+        name:
+          "EVAL: 'SAOU Operating Unit B %d' % env['operating.unit'].search_count([])"
         code: "EVAL: 'SAOUB%d' % env['operating.unit'].search_count([])"
         company_id: "REF: base.main_company"
         partner_id: "REC: ou_b_partner.id"
@@ -428,7 +431,7 @@ scenarios:
         model: "school_score_sheet"
         as_user: "user_ou_a"
         domain:
-          - ["id", "in", "EVAL: [registry['sheet_a'].id, registry['sheet_b'].id]"]
+          - ["id", "in", ["REC: sheet_a.id", "REC: sheet_b.id"]]
         save_as: "seen_sheets_a"
         expect_count: 1
 
@@ -437,7 +440,7 @@ scenarios:
         model: "school_score_sheet"
         as_user: "user_ou_b"
         domain:
-          - ["id", "in", "EVAL: [registry['sheet_a'].id, registry['sheet_b'].id]"]
+          - ["id", "in", ["REC: sheet_a.id", "REC: sheet_b.id"]]
         save_as: "seen_sheets_b"
         expect_count: 1
 
@@ -446,7 +449,7 @@ scenarios:
         model: "school_report_card"
         as_user: "user_ou_a"
         domain:
-          - ["id", "in", "EVAL: [registry['card_a'].id, registry['card_b'].id]"]
+          - ["id", "in", ["REC: card_a.id", "REC: card_b.id"]]
         save_as: "seen_cards_a"
         expect_count: 1
 
@@ -455,7 +458,7 @@ scenarios:
         model: "school_report_card"
         as_user: "user_ou_b"
         domain:
-          - ["id", "in", "EVAL: [registry['card_a'].id, registry['card_b'].id]"]
+          - ["id", "in", ["REC: card_a.id", "REC: card_b.id"]]
         save_as: "seen_cards_b"
         expect_count: 1
 
