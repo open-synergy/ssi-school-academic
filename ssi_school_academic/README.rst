@@ -10,7 +10,9 @@ Manages the academic master data of a school: the subjects taught, the
 Subject Group each belongs to, the Grades it applies to, and the minimum
 score (KKM) a student must reach on each Grade. It also manages the score
 components of the report card (e.g. Daily Test 1, Assignment 1, Mid-Term
-Exam), one record per slot.
+Exam), one record per slot. Report card types set how the final score is
+calculated: the averaged components, the weights, the printed columns, and
+the rounding threshold.
 
 
 Work Instruction
@@ -22,6 +24,9 @@ Work Instruction
 * `Create Score Component <docs/school_score_component/01-create.html>`_
 * `Edit Score Component <docs/school_score_component/02-edit.html>`_
 * `Archive Score Component <docs/school_score_component/03-archive.html>`_
+* `Create Report Card Type <docs/school_report_card_type/01-create.html>`_
+* `Edit Report Card Type <docs/school_report_card_type/02-edit.html>`_
+* `Archive Report Card Type <docs/school_report_card_type/03-archive.html>`_
 
 
 Installation

@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 OpenSynergy Indonesia
+     Copyright 2026 PT. Simetri Sinergi Indonesia
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+<record id="school_report_card_type_view_search" model="ir.ui.view">
+    <field name="name">school_report_card_type - search</field>
+    <field name="model">school_report_card_type</field>
+    <field
+            name="inherit_id"
+            ref="ssi_master_data_mixin.mixin_master_data_view_search"
+        />
+    <field name="mode">primary</field>
+    <field name="arch" type="xml">
+        <data>
+            <xpath expr="//search" position="inside">
+                <field name="term_type" />
+                <group expand="0" string="Group By">
+                    <filter
+                            name="group_by_term_type"
+                            string="Term Type"
+                            context="{'group_by': 'term_type'}"
+                        />
+                </group>
+            </xpath>
+        </data>
+    </field>
+</record>
+
+<record id="school_report_card_type_view_tree" model="ir.ui.view">
+    <field name="name">school_report_card_type - tree</field>
+    <field name="model">school_report_card_type</field>
+    <field name="inherit_id" ref="ssi_master_data_mixin.mixin_master_data_view_tree" />
+    <field name="mode">primary</field>
+    <field name="arch" type="xml">
+        <data>
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="term_type" />
+                <field name="rounding_threshold" />
+            </xpath>
+        </data>
+    </field>
+</record>
+
+<record id="school_report_card_type_view_form" model="ir.ui.view">
+    <field name="name">school_report_card_type - form</field>
+    <field name="model">school_report_card_type</field>
+    <field name="inherit_id" ref="ssi_master_data_mixin.mixin_master_data_view_form" />
+    <field name="mode">primary</field>
+    <field name="arch" type="xml">
+        <data>
+            <xpath expr="//field[@name='code']" position="after">
+                <field name="term_type" />
+            </xpath>
+            <xpath expr="//notebook/page[@name='note']" position="before">
+                <page name="calculation" string="Calculation">
+                    <group name="calculation_group_1" string="Average">
+                        <field name="average_component_ids" widget="many2many_tags" />
+                        <field name="average_weight" />
+                    </group>
+                    <group name="calculation_group_2" string="Rounding">
+                        <field name="rounding_threshold" />
+                    </group>
+                    <field name="weight_ids" nolabel="1">
+                        <tree editable="bottom">
+                            <field name="component_id" />
+                            <field name="weight" />
+                        </tree>
+                        <form>
+                            <group name="weight_group_1">
+                                <field name="component_id" />
+                                <field name="weight" />
+                            </group>
+                        </form>
+                    </field>
+                </page>
+                <page name="display" string="Display">
+                    <group name="display_group_1" string="Printed Columns">
+                        <field name="display_component_ids" widget="many2many_tags" />
+                    </group>
+                </page>
+            </xpath>
+        </data>
+    </field>
+</record>
+
+<record id="school_report_card_type_action" model="ir.actions.act_window">
+    <field name="name">Report Card Types</field>
+    <field name="type">ir.actions.act_window</field>
+    <field name="res_model">school_report_card_type</field>
+    <field name="view_mode">tree,form</field>
+</record>
+
+<menuitem
+        id="school_report_card_type_menu"
+        name="Report Card Types"
+        parent="ssi_school.menu_subject_configuration"
+        action="school_report_card_type_action"
+        groups="school_report_card_type_group"
+        sequence="30"
+    />
+
+</odoo>
