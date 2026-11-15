@@ -1,0 +1,361 @@
+options:
+  auto_refresh: true
+scenarios:
+  - name: "Create Subject With Minimum Scores"
+    steps:
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Subject Test Grade Type 1"
+          code: "/"
+          sequence: 10
+      - step: "Create grade A"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade_a"
+        values:
+          name: "Subject Test Grade A 1"
+          code: "/"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+      - step: "Create grade B"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade_b"
+        values:
+          name: "Subject Test Grade B 1"
+          code: "/"
+          sequence: 20
+          type_id: "REC: grade_type.id"
+      - step: "Create subject"
+        action: "create"
+        model: "school_subject"
+        save_as: "subject"
+        values:
+          name: "Mathematics"
+          code: "MTKSBJ1"
+          subject_group: "vocational"
+          grade_ids:
+            - - 6
+              - 0
+              - - "REC: grade_a.id"
+                - "REC: grade_b.id"
+      - step: "Create minimum score line line_a"
+        action: "create"
+        model: "school_subject_minimum_score"
+        save_as: "line_a"
+        values:
+          subject_id: "REC: subject.id"
+          grade_id: "REC: grade_a.id"
+          minimum_score: 70.0
+      - step: "Create minimum score line line_b"
+        action: "create"
+        model: "school_subject_minimum_score"
+        save_as: "line_b"
+        values:
+          subject_id: "REC: subject.id"
+          grade_id: "REC: grade_b.id"
+          minimum_score: 72.0
+      - step: "Assert subject and minimum scores"
+        action: "assert"
+        target: "subject"
+        asserts:
+          id:
+            type: "value"
+            operator: "is_truthy"
+          subject_group:
+            type: "value"
+            expected: "vocational"
+          grade_ids:
+            type: "m2m"
+            check: "count"
+            expected_count: 2
+          minimum_score_ids:
+            type: "o2m"
+            check: "count"
+            expected_count: 2
+      - step: "Assert first minimum score"
+        action: "assert"
+        target: "line_a"
+        asserts:
+          minimum_score:
+            type: "value"
+            expected: 70.0
+
+  - name: "Edit Minimum Score"
+    steps:
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Subject Test Grade Type 2"
+          code: "/"
+          sequence: 10
+      - step: "Create grade A"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade_a"
+        values:
+          name: "Subject Test Grade A 2"
+          code: "/"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+      - step: "Create grade B"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade_b"
+        values:
+          name: "Subject Test Grade B 2"
+          code: "/"
+          sequence: 20
+          type_id: "REC: grade_type.id"
+      - step: "Create subject"
+        action: "create"
+        model: "school_subject"
+        save_as: "subject"
+        values:
+          name: "Mathematics"
+          code: "MTKSBJ2"
+          subject_group: "vocational"
+          grade_ids:
+            - - 6
+              - 0
+              - - "REC: grade_a.id"
+      - step: "Create minimum score line line_a"
+        action: "create"
+        model: "school_subject_minimum_score"
+        save_as: "line_a"
+        values:
+          subject_id: "REC: subject.id"
+          grade_id: "REC: grade_a.id"
+          minimum_score: 70.0
+      - step: "Write new minimum score"
+        action: "write"
+        target: "line_a"
+        values:
+          minimum_score: 75.0
+      - step: "Assert minimum score updated"
+        action: "assert"
+        target: "line_a"
+        asserts:
+          minimum_score:
+            type: "value"
+            expected: 75.0
+
+  - name: "Archive Subject"
+    steps:
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Subject Test Grade Type 3"
+          code: "/"
+          sequence: 10
+      - step: "Create grade A"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade_a"
+        values:
+          name: "Subject Test Grade A 3"
+          code: "/"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+      - step: "Create grade B"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade_b"
+        values:
+          name: "Subject Test Grade B 3"
+          code: "/"
+          sequence: 20
+          type_id: "REC: grade_type.id"
+      - step: "Create subject"
+        action: "create"
+        model: "school_subject"
+        save_as: "subject"
+        values:
+          name: "Mathematics"
+          code: "MTKSBJ3"
+          subject_group: "vocational"
+          grade_ids:
+            - - 6
+              - 0
+              - - "REC: grade_a.id"
+      - step: "Archive subject"
+        action: "write"
+        target: "subject"
+        values:
+          active: false
+      - step: "Assert subject archived"
+        action: "assert"
+        target: "subject"
+        asserts:
+          active:
+            type: "value"
+            operator: "is_falsy"
+
+  - name: "Reject Duplicate Grade Minimum Score"
+    steps:
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Subject Test Grade Type 4"
+          code: "/"
+          sequence: 10
+      - step: "Create grade A"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade_a"
+        values:
+          name: "Subject Test Grade A 4"
+          code: "/"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+      - step: "Create grade B"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade_b"
+        values:
+          name: "Subject Test Grade B 4"
+          code: "/"
+          sequence: 20
+          type_id: "REC: grade_type.id"
+      - step: "Create subject"
+        action: "create"
+        model: "school_subject"
+        save_as: "subject"
+        values:
+          name: "Mathematics"
+          code: "MTKSBJ4"
+          subject_group: "vocational"
+          grade_ids:
+            - - 6
+              - 0
+              - - "REC: grade_a.id"
+                - "REC: grade_b.id"
+      - step: "Create minimum score line line_a"
+        action: "create"
+        model: "school_subject_minimum_score"
+        save_as: "line_a"
+        values:
+          subject_id: "REC: subject.id"
+          grade_id: "REC: grade_a.id"
+          minimum_score: 70.0
+      - step: "Reject the invalid minimum score line"
+        action: "create"
+        model: "school_subject_minimum_score"
+        expect_error:
+          type: "ValidationError"
+          message_contains: "only have one minimum score"
+        values:
+          subject_id: "REC: subject.id"
+          grade_id: "REC: grade_a.id"
+          minimum_score: 72.0
+
+  - name: "Reject Minimum Score Out Of Range"
+    steps:
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Subject Test Grade Type 5"
+          code: "/"
+          sequence: 10
+      - step: "Create grade A"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade_a"
+        values:
+          name: "Subject Test Grade A 5"
+          code: "/"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+      - step: "Create grade B"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade_b"
+        values:
+          name: "Subject Test Grade B 5"
+          code: "/"
+          sequence: 20
+          type_id: "REC: grade_type.id"
+      - step: "Create subject"
+        action: "create"
+        model: "school_subject"
+        save_as: "subject"
+        values:
+          name: "Mathematics"
+          code: "MTKSBJ5"
+          subject_group: "vocational"
+          grade_ids:
+            - - 6
+              - 0
+              - - "REC: grade_a.id"
+      - step: "Reject the invalid minimum score line"
+        action: "create"
+        model: "school_subject_minimum_score"
+        expect_error:
+          type: "ValidationError"
+          message_contains: "between 0 and 100"
+        values:
+          subject_id: "REC: subject.id"
+          grade_id: "REC: grade_a.id"
+          minimum_score: 120.0
+
+  - name: "Reject Grade Outside Applicable Grades"
+    steps:
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Subject Test Grade Type 6"
+          code: "/"
+          sequence: 10
+      - step: "Create grade A"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade_a"
+        values:
+          name: "Subject Test Grade A 6"
+          code: "/"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+      - step: "Create grade B"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade_b"
+        values:
+          name: "Subject Test Grade B 6"
+          code: "/"
+          sequence: 20
+          type_id: "REC: grade_type.id"
+      - step: "Create subject"
+        action: "create"
+        model: "school_subject"
+        save_as: "subject"
+        values:
+          name: "Mathematics"
+          code: "MTKSBJ6"
+          subject_group: "vocational"
+          grade_ids:
+            - - 6
+              - 0
+              - - "REC: grade_a.id"
+      - step: "Reject the invalid minimum score line"
+        action: "create"
+        model: "school_subject_minimum_score"
+        expect_error:
+          type: "ValidationError"
+          message_contains: "applicable grades"
+        values:
+          subject_id: "REC: subject.id"
+          grade_id: "REC: grade_b.id"
+          minimum_score: 70.0
