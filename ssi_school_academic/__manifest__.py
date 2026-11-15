@@ -19,10 +19,13 @@
     "data": [
         "security/res_groups/school_subject.xml",
         "security/res_groups/school_score_component.xml",
+        "security/res_groups/school_report_card_type.xml",
         "security/ir_model_access/school_subject.xml",
         "security/ir_model_access/school_score_component.xml",
+        "security/ir_model_access/school_report_card_type.xml",
         "views/school_subject.xml",
         "views/school_score_component.xml",
+        "views/school_report_card_type.xml",
         "views/assets.xml",
     ],
     "demo": [],

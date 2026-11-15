@@ -3,8 +3,10 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from . import (  # noqa: F401
+    test_school_report_card_type,
     test_school_score_component,
     test_school_subject,
+    test_ui_school_report_card_type,
     test_ui_school_score_component,
     test_ui_school_subject,
 )

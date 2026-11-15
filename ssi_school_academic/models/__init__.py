@@ -3,6 +3,8 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from . import (  # noqa: F401
+    school_report_card_type,
+    school_report_card_type_weight,
     school_score_component,
     school_subject,
     school_subject_minimum_score,

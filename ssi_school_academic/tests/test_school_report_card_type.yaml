@@ -1,0 +1,437 @@
+options:
+  auto_refresh: true
+scenarios:
+  - name: "Create Report Card Type"
+    steps:
+      - step: "Create component UH 1"
+        action: "create"
+        model: "school_score_component"
+        save_as: "component_uh"
+        values:
+          name: "UH 1"
+          code: "RCT1A"
+          category: "daily_test"
+          sequence: 10
+      - step: "Create component Tugas 1"
+        action: "create"
+        model: "school_score_component"
+        save_as: "component_task"
+        values:
+          name: "Tugas 1"
+          code: "RCT1B"
+          category: "assignment"
+          sequence: 20
+      - step: "Create component PTS"
+        action: "create"
+        model: "school_score_component"
+        save_as: "component_pts"
+        values:
+          name: "PTS"
+          code: "RCT1C"
+          category: "mid_term_exam"
+          sequence: 30
+      - step: "Create the mid-term type with all weights in one write"
+        action: "create"
+        model: "school_report_card_type"
+        save_as: "report_type"
+        values:
+          name: "Mid-Term 1"
+          code: "RCTYPE1"
+          term_type: "mid_term"
+          average_weight: 70.0
+          average_component_ids:
+            - - 6
+              - 0
+              - - "REC: component_uh.id"
+                - "REC: component_task.id"
+          weight_ids:
+            - - 0
+              - 0
+              - component_id: "REC: component_pts.id"
+                weight: 30.0
+          display_component_ids:
+            - - 6
+              - 0
+              - - "REC: component_uh.id"
+      - step: "Assert the report card type"
+        action: "assert"
+        target: "report_type"
+        asserts:
+          id:
+            type: "value"
+            operator: "is_truthy"
+          rounding_threshold:
+            type: "value"
+            expected: 0.56
+          average_component_ids:
+            type: "m2m"
+            check: "count"
+            expected_count: 2
+          weight_ids:
+            type: "o2m"
+            check: "count"
+            expected_count: 1
+          display_component_ids:
+            type: "m2m"
+            check: "count"
+            expected_count: 1
+
+  - name: "Edit Report Card Type"
+    steps:
+      - step: "Create component UH 1"
+        action: "create"
+        model: "school_score_component"
+        save_as: "component_uh"
+        values:
+          name: "UH 1"
+          code: "RCT2A"
+          category: "daily_test"
+          sequence: 10
+      - step: "Create component Tugas 1"
+        action: "create"
+        model: "school_score_component"
+        save_as: "component_task"
+        values:
+          name: "Tugas 1"
+          code: "RCT2B"
+          category: "assignment"
+          sequence: 20
+      - step: "Create component PTS"
+        action: "create"
+        model: "school_score_component"
+        save_as: "component_pts"
+        values:
+          name: "PTS"
+          code: "RCT2C"
+          category: "mid_term_exam"
+          sequence: 30
+      - step: "Create the mid-term type"
+        action: "create"
+        model: "school_report_card_type"
+        save_as: "report_type"
+        values:
+          name: "Mid-Term 2"
+          code: "RCTYPE2"
+          term_type: "mid_term"
+          average_weight: 70.0
+          average_component_ids:
+            - - 6
+              - 0
+              - - "REC: component_uh.id"
+                - "REC: component_task.id"
+          weight_ids:
+            - - 0
+              - 0
+              - component_id: "REC: component_pts.id"
+                weight: 30.0
+      - step: "Write new rounding threshold"
+        action: "write"
+        target: "report_type"
+        values:
+          rounding_threshold: 0.6
+      - step: "Assert rounding threshold updated"
+        action: "assert"
+        target: "report_type"
+        asserts:
+          rounding_threshold:
+            type: "value"
+            expected: 0.6
+
+  - name: "Reject Total Weight Not 100"
+    steps:
+      - step: "Create component UH 1"
+        action: "create"
+        model: "school_score_component"
+        save_as: "component_uh"
+        values:
+          name: "UH 1"
+          code: "RCT3A"
+          category: "daily_test"
+          sequence: 10
+      - step: "Create component Tugas 1"
+        action: "create"
+        model: "school_score_component"
+        save_as: "component_task"
+        values:
+          name: "Tugas 1"
+          code: "RCT3B"
+          category: "assignment"
+          sequence: 20
+      - step: "Create component PTS"
+        action: "create"
+        model: "school_score_component"
+        save_as: "component_pts"
+        values:
+          name: "PTS"
+          code: "RCT3C"
+          category: "mid_term_exam"
+          sequence: 30
+      - step: "Reject a total weight of 90"
+        action: "create"
+        model: "school_report_card_type"
+        expect_error:
+          type: "ValidationError"
+          message_contains: "must be 100%"
+        values:
+          name: "Mid-Term 3"
+          code: "RCTYPE3"
+          term_type: "mid_term"
+          average_weight: 60.0
+          average_component_ids:
+            - - 6
+              - 0
+              - - "REC: component_uh.id"
+                - "REC: component_task.id"
+          weight_ids:
+            - - 0
+              - 0
+              - component_id: "REC: component_pts.id"
+                weight: 30.0
+
+  - name: "Reject Component Weighted Twice"
+    steps:
+      - step: "Create component UH 1"
+        action: "create"
+        model: "school_score_component"
+        save_as: "component_uh"
+        values:
+          name: "UH 1"
+          code: "RCT4A"
+          category: "daily_test"
+          sequence: 10
+      - step: "Create component Tugas 1"
+        action: "create"
+        model: "school_score_component"
+        save_as: "component_task"
+        values:
+          name: "Tugas 1"
+          code: "RCT4B"
+          category: "assignment"
+          sequence: 20
+      - step: "Create component PTS"
+        action: "create"
+        model: "school_score_component"
+        save_as: "component_pts"
+        values:
+          name: "PTS"
+          code: "RCT4C"
+          category: "mid_term_exam"
+          sequence: 30
+      - step: "Reject a component averaged and weighted"
+        action: "create"
+        model: "school_report_card_type"
+        expect_error:
+          type: "ValidationError"
+          message_contains: "only be weighted once"
+        values:
+          name: "Mid-Term 4"
+          code: "RCTYPE4"
+          term_type: "mid_term"
+          average_weight: 70.0
+          average_component_ids:
+            - - 6
+              - 0
+              - - "REC: component_uh.id"
+                - "REC: component_pts.id"
+          weight_ids:
+            - - 0
+              - 0
+              - component_id: "REC: component_pts.id"
+                weight: 30.0
+
+  - name: "Reject Rounding Threshold Out Of Range"
+    steps:
+      - step: "Create component UH 1"
+        action: "create"
+        model: "school_score_component"
+        save_as: "component_uh"
+        values:
+          name: "UH 1"
+          code: "RCT5A"
+          category: "daily_test"
+          sequence: 10
+      - step: "Create component Tugas 1"
+        action: "create"
+        model: "school_score_component"
+        save_as: "component_task"
+        values:
+          name: "Tugas 1"
+          code: "RCT5B"
+          category: "assignment"
+          sequence: 20
+      - step: "Create component PTS"
+        action: "create"
+        model: "school_score_component"
+        save_as: "component_pts"
+        values:
+          name: "PTS"
+          code: "RCT5C"
+          category: "mid_term_exam"
+          sequence: 30
+      - step: "Reject a rounding threshold of 1.2"
+        action: "create"
+        model: "school_report_card_type"
+        expect_error:
+          type: "ValidationError"
+          message_contains: "between 0 and 1"
+        values:
+          name: "Mid-Term 5"
+          code: "RCTYPE5"
+          term_type: "mid_term"
+          average_weight: 70.0
+          rounding_threshold: 1.2
+          average_component_ids:
+            - - 6
+              - 0
+              - - "REC: component_uh.id"
+                - "REC: component_task.id"
+          weight_ids:
+            - - 0
+              - 0
+              - component_id: "REC: component_pts.id"
+                weight: 30.0
+
+  - name: "Reject Average Weight Without Components"
+    steps:
+      - step: "Create component UH 1"
+        action: "create"
+        model: "school_score_component"
+        save_as: "component_uh"
+        values:
+          name: "UH 1"
+          code: "RCT6A"
+          category: "daily_test"
+          sequence: 10
+      - step: "Create component Tugas 1"
+        action: "create"
+        model: "school_score_component"
+        save_as: "component_task"
+        values:
+          name: "Tugas 1"
+          code: "RCT6B"
+          category: "assignment"
+          sequence: 20
+      - step: "Create component PTS"
+        action: "create"
+        model: "school_score_component"
+        save_as: "component_pts"
+        values:
+          name: "PTS"
+          code: "RCT6C"
+          category: "mid_term_exam"
+          sequence: 30
+      - step: "Reject an average weight without averaged components"
+        action: "create"
+        model: "school_report_card_type"
+        expect_error:
+          type: "ValidationError"
+          message_contains: "Averaged components are required"
+        values:
+          name: "Mid-Term 6"
+          code: "RCTYPE6"
+          term_type: "mid_term"
+          average_weight: 70.0
+          weight_ids:
+            - - 0
+              - 0
+              - component_id: "REC: component_pts.id"
+                weight: 30.0
+
+  - name: "Reject Component Repeated In Weight Lines"
+    steps:
+      - step: "Create component UH 1"
+        action: "create"
+        model: "school_score_component"
+        save_as: "component_uh"
+        values:
+          name: "UH 1"
+          code: "RCT7A"
+          category: "daily_test"
+          sequence: 10
+      - step: "Create component PTS"
+        action: "create"
+        model: "school_score_component"
+        save_as: "component_pts"
+        values:
+          name: "PTS"
+          code: "RCT7C"
+          category: "mid_term_exam"
+          sequence: 30
+      - step: "Reject the same component on two weight lines"
+        action: "create"
+        model: "school_report_card_type"
+        expect_error:
+          type: "ValidationError"
+          message_contains: "only be weighted once"
+        values:
+          name: "Mid-Term 7"
+          code: "RCTYPE7"
+          term_type: "mid_term"
+          average_weight: 40.0
+          average_component_ids:
+            - - 6
+              - 0
+              - - "REC: component_uh.id"
+          weight_ids:
+            - - 0
+              - 0
+              - component_id: "REC: component_pts.id"
+                weight: 30.0
+            - - 0
+              - 0
+              - component_id: "REC: component_pts.id"
+                weight: 30.0
+
+  - name: "Create Report Card Type Without Average Weight"
+    steps:
+      - step: "Create component PTS"
+        action: "create"
+        model: "school_score_component"
+        save_as: "component_pts"
+        values:
+          name: "PTS"
+          code: "RCT8C"
+          category: "mid_term_exam"
+          sequence: 30
+      - step: "Create component PAS"
+        action: "create"
+        model: "school_score_component"
+        save_as: "component_pas"
+        values:
+          name: "PAS"
+          code: "RCT8D"
+          category: "final_exam"
+          sequence: 40
+      - step: "Create the type with weight lines only"
+        action: "create"
+        model: "school_report_card_type"
+        save_as: "report_type"
+        values:
+          name: "Final 8"
+          code: "RCTYPE8"
+          term_type: "final"
+          average_weight: 0.0
+          weight_ids:
+            - - 0
+              - 0
+              - component_id: "REC: component_pts.id"
+                weight: 50.0
+            - - 0
+              - 0
+              - component_id: "REC: component_pas.id"
+                weight: 50.0
+      - step: "Assert the type without averaged components"
+        action: "assert"
+        target: "report_type"
+        asserts:
+          id:
+            type: "value"
+            operator: "is_truthy"
+          average_component_ids:
+            type: "m2m"
+            check: "count"
+            expected_count: 0
+          weight_ids:
+            type: "o2m"
+            check: "count"
+            expected_count: 2
