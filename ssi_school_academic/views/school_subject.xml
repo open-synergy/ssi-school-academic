@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 OpenSynergy Indonesia
+     Copyright 2026 PT. Simetri Sinergi Indonesia
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+<record id="school_subject_view_search" model="ir.ui.view">
+    <field name="name">school_subject - search</field>
+    <field name="model">school_subject</field>
+    <field
+            name="inherit_id"
+            ref="ssi_master_data_mixin.mixin_master_data_view_search"
+        />
+    <field name="mode">primary</field>
+    <field name="arch" type="xml">
+        <data>
+            <xpath expr="//search" position="inside">
+                <field name="subject_group" />
+                <field name="grade_ids" />
+                <group expand="0" string="Group By">
+                    <filter
+                            name="group_by_subject_group"
+                            string="Subject Group"
+                            context="{'group_by': 'subject_group'}"
+                        />
+                </group>
+            </xpath>
+        </data>
+    </field>
+</record>
+
+<record id="school_subject_view_tree" model="ir.ui.view">
+    <field name="name">school_subject - tree</field>
+    <field name="model">school_subject</field>
+    <field name="inherit_id" ref="ssi_master_data_mixin.mixin_master_data_view_tree" />
+    <field name="mode">primary</field>
+    <field name="arch" type="xml">
+        <data>
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="subject_group" />
+                <field name="grade_ids" widget="many2many_tags" />
+            </xpath>
+        </data>
+    </field>
+</record>
+
+<record id="school_subject_view_form" model="ir.ui.view">
+    <field name="name">school_subject - form</field>
+    <field name="model">school_subject</field>
+    <field name="inherit_id" ref="ssi_master_data_mixin.mixin_master_data_view_form" />
+    <field name="mode">primary</field>
+    <field name="arch" type="xml">
+        <data>
+            <xpath expr="//notebook/page[@name='note']" position="before">
+                <page name="applicability" string="Applicability">
+                    <group name="applicability_group_1" string="Classification">
+                        <field name="subject_group" />
+                        <field name="grade_ids" widget="many2many_tags" />
+                    </group>
+                </page>
+                <page name="minimum_score" string="Minimum Score">
+                    <field name="minimum_score_ids" nolabel="1">
+                        <tree editable="bottom">
+                            <field name="grade_id" />
+                            <field name="minimum_score" />
+                        </tree>
+                        <form>
+                            <group name="minimum_score_group_1">
+                                <field name="grade_id" />
+                                <field name="minimum_score" />
+                            </group>
+                        </form>
+                    </field>
+                </page>
+            </xpath>
+        </data>
+    </field>
+</record>
+
+<record id="school_subject_action" model="ir.actions.act_window">
+    <field name="name">Subjects</field>
+    <field name="type">ir.actions.act_window</field>
+    <field name="res_model">school_subject</field>
+    <field name="view_mode">tree,form</field>
+</record>
+
+<menuitem
+        id="school_subject_menu"
+        name="Subjects"
+        parent="ssi_school.menu_subject_configuration"
+        action="school_subject_action"
+        groups="school_subject_group"
+        sequence="10"
+    />
+
+</odoo>
