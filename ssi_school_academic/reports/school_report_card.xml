@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 OpenSynergy Indonesia
+     Copyright 2026 PT. Simetri Sinergi Indonesia
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+<record id="report_school_report_card" model="ir.actions.report">
+    <field name="name">Report Card</field>
+    <field name="type">ir.actions.report</field>
+    <field name="model">school_report_card</field>
+    <field name="report_name">report_school_report_card</field>
+    <field name="report_type">py3o</field>
+    <field name="py3o_filetype">pdf</field>
+    <field name="module">ssi_school_academic</field>
+    <field name="py3o_template_fallback">reports/school_report_card.odt</field>
+    <field name="binding_model_id" ref="model_school_report_card" />
+    <field name="binding_type">report</field>
+    <field
+            name="print_report_name"
+        >'Report Card - %s' % (object.student_id.name or '')</field>
+    <field
+            name="groups_id"
+            eval="[(4, ref('ssi_school_academic.school_report_card_viewer_group'))]"
+        />
+</record>
+</odoo>

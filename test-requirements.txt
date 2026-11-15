@@ -1,3 +1,4 @@
 odoo-yaml-test
-odoo14-addon-ssi-school>=14.0.5.20.0
+odoo14-addon-ssi-school>=14.0.5.21.0
 odoo14-addon-ssi-master-data-mixin
+odoo14-addon-ssi-py3o

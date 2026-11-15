@@ -13,6 +13,7 @@
     "application": False,
     "depends": [
         "ssi_school",
+        "ssi_py3o",
         "ssi_master_data_mixin",
         "ssi_decorator",
         "ssi_transaction_confirm_mixin",
@@ -51,6 +52,8 @@
         "views/school_score_predicate.xml",
         "views/school_score_sheet.xml",
         "views/school_report_card.xml",
+        "views/school_grade.xml",
+        "reports/school_report_card.xml",
         "views/assets.xml",
     ],
     "demo": [],
