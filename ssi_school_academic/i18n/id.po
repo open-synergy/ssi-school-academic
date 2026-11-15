@@ -1,0 +1,2401 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* ssi_school_academic
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 14.0\n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"Language: id\n"
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_report_card.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Check report card\n"
+"Database ID: %s\n"
+"Problem: Report cards may only be created for open enrollments.\n"
+"Solution: Select an enrollment that is open\n"
+msgstr ""
+"\n"
+"Konteks: Periksa raport\n"
+"ID Basis Data: %s\n"
+"Masalah: Raport hanya dapat dibuat untuk pendaftaran yang berstatus terbuka.\n"
+"Solusi: Pilih pendaftaran yang berstatus terbuka\n"
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_score_sheet_line.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Check score line\n"
+"Database ID: %s\n"
+"Problem: Scores may only be entered for open enrollments.\n"
+"Solution: Remove the lines of enrollments that are not open\n"
+msgstr ""
+"\n"
+"Konteks: Periksa baris nilai\n"
+"ID Basis Data: %s\n"
+"Masalah: Nilai hanya dapat dimasukkan untuk pendaftaran yang berstatus terbuka.\n"
+"Solusi: Hapus baris pendaftaran yang tidak berstatus terbuka\n"
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_report_card.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Save report card\n"
+"Database ID: %s\n"
+"Problem: A report card already exists for this enrollment and report card "
+"type.\n"
+"Solution: Open the existing report card, or cancel it before creating a new "
+"one\n"
+msgstr ""
+"\n"
+"Konteks: Simpan raport\n"
+"ID Basis Data: %s\n"
+"Masalah: Raport sudah ada untuk pendaftaran dan jenis raport ini.\n"
+"Solusi: Buka raport yang sudah ada, atau batalkan sebelum membuat yang baru\n"
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_report_card.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Save report card\n"
+"Database ID: %s\n"
+"Problem: Absence days cannot be negative.\n"
+"Solution: Enter 0 or a positive number of days\n"
+msgstr ""
+"\n"
+"Konteks: Simpan raport\n"
+"ID Basis Data: %s\n"
+"Masalah: Jumlah hari ketidakhadiran tidak boleh negatif.\n"
+"Solusi: Masukkan 0 atau jumlah hari yang positif\n"
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_report_card_line.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Save report card line\n"
+"Database ID: %s\n"
+"Problem: Each subject may only appear once per report card.\n"
+"Solution: Remove the duplicate line\n"
+msgstr ""
+"\n"
+"Konteks: Simpan baris raport\n"
+"ID Basis Data: %s\n"
+"Masalah: Setiap mata pelajaran hanya boleh muncul satu kali per raport.\n"
+"Solusi: Hapus baris duplikat\n"
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_score_sheet_line.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Save score\n"
+"Database ID: %s\n"
+"Problem: Each student may only have one score per component.\n"
+"Solution: Remove the duplicate line\n"
+msgstr ""
+"\n"
+"Konteks: Simpan nilai\n"
+"ID Basis Data: %s\n"
+"Masalah: Setiap siswa hanya boleh memiliki satu nilai per komponen.\n"
+"Solusi: Hapus baris duplikat\n"
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_score_sheet_line.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Save score\n"
+"Database ID: %s\n"
+"Problem: Score must be between 0 and 100.\n"
+"Solution: Enter a score from 0 to 100\n"
+msgstr ""
+"\n"
+"Konteks: Simpan nilai\n"
+"ID Basis Data: %s\n"
+"Masalah: Nilai harus antara 0 dan 100.\n"
+"Solusi: Masukkan nilai dari 0 sampai 100\n"
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_score_sheet.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Save score sheet\n"
+"Database ID: %s\n"
+"Problem: A score sheet already exists for this subject, class, and term.\n"
+"Solution: Open the existing score sheet, or cancel it before creating a new "
+"one\n"
+msgstr ""
+"\n"
+"Konteks: Simpan lembar nilai\n"
+"ID Basis Data: %s\n"
+"Masalah: Lembar nilai sudah ada untuk mata pelajaran, kelas, dan periode ini.\n"
+"Solusi: Buka lembar nilai yang sudah ada, atau batalkan sebelum membuat yang baru\n"
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_report_card_type.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Validate report card type\n"
+"Database ID: %s\n"
+"Problem: A component may only be weighted once.\n"
+"Solution: Keep each component either averaged or in one weight line\n"
+msgstr ""
+"\n"
+"Konteks: Validasi jenis raport\n"
+"ID Basis Data: %s\n"
+"Masalah: Sebuah komponen hanya boleh diberi bobot satu kali.\n"
+"Solusi: Biarkan setiap komponen dirata-rata atau berada dalam satu baris bobot\n"
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_report_card_type.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Validate report card type\n"
+"Database ID: %s\n"
+"Problem: Averaged components are required when the average weight is set.\n"
+"Solution: Select the averaged components or set the average weight to 0\n"
+msgstr ""
+"\n"
+"Konteks: Validasi jenis raport\n"
+"ID Basis Data: %s\n"
+"Masalah: Komponen yang dirata-rata wajib diisi bila bobot rata-rata ditetapkan.\n"
+"Solusi: Pilih komponen yang dirata-rata atau atur bobot rata-rata menjadi 0\n"
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_report_card_type.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Validate report card type\n"
+"Database ID: %s\n"
+"Problem: Rounding threshold must be between 0 and 1.\n"
+"Solution: Enter a rounding threshold above 0 and below 1\n"
+msgstr ""
+"\n"
+"Konteks: Validasi jenis raport\n"
+"ID Basis Data: %s\n"
+"Masalah: Ambang pembulatan harus antara 0 dan 1.\n"
+"Solusi: Masukkan ambang pembulatan di atas 0 dan di bawah 1\n"
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_report_card_type.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Validate report card type\n"
+"Database ID: %s\n"
+"Problem: Total weight must be 100%%.\n"
+"Solution: Adjust the average weight and the component weights to total "
+"100%%\n"
+msgstr ""
+"\n"
+"Konteks: Validasi jenis raport\n"
+"ID Basis Data: %s\n"
+"Masalah: Total bobot harus 100%%.\n"
+"Solusi: Sesuaikan bobot rata-rata dan bobot komponen agar totalnya 100%%\n"
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_score_predicate.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Validate score predicate\n"
+"Database ID: %s\n"
+"Problem: A grade may only belong to one active predicate table.\n"
+"Solution: Remove the grade from the other active predicate table or archive "
+"it\n"
+msgstr ""
+"\n"
+"Konteks: Validasi predikat nilai\n"
+"ID Basis Data: %s\n"
+"Masalah: Satu tingkat hanya boleh termasuk dalam satu tabel predikat aktif.\n"
+"Solusi: Hapus tingkat dari tabel predikat aktif lainnya atau arsipkan\n"
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_score_predicate_line.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Validate score predicate line\n"
+"Database ID: %s\n"
+"Problem: Minimum score must be between 0 and 100.\n"
+"Solution: Enter a minimum score from 0 to 100\n"
+msgstr ""
+"\n"
+"Konteks: Validasi baris predikat nilai\n"
+"ID Basis Data: %s\n"
+"Masalah: KKM harus antara 0 dan 100.\n"
+"Solusi: Masukkan KKM dari 0 sampai 100\n"
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_score_predicate_line.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Validate score predicate line\n"
+"Database ID: %s\n"
+"Problem: Minimum scores within a predicate table must be unique.\n"
+"Solution: Change or remove the lines that share the same minimum score\n"
+msgstr ""
+"\n"
+"Konteks: Validasi baris predikat nilai\n"
+"ID Basis Data: %s\n"
+"Masalah: KKM dalam satu tabel predikat harus unik.\n"
+"Solusi: Ubah atau hapus baris yang memiliki KKM yang sama\n"
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_subject_minimum_score.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Validate subject minimum score\n"
+"Database ID: %s\n"
+"Problem: Each grade may only have one minimum score per subject.\n"
+"Solution: Remove or merge the minimum score lines of the same grade\n"
+msgstr ""
+"\n"
+"Konteks: Validasi KKM mata pelajaran\n"
+"ID Basis Data: %s\n"
+"Masalah: Setiap tingkat hanya boleh memiliki satu KKM per mata pelajaran.\n"
+"Solusi: Hapus atau gabungkan baris KKM pada tingkat yang sama\n"
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_subject_minimum_score.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Validate subject minimum score\n"
+"Database ID: %s\n"
+"Problem: Minimum score grade must be one of the applicable grades of the "
+"subject.\n"
+"Solution: Add the grade to the applicable grades of the subject\n"
+msgstr ""
+"\n"
+"Konteks: Validasi KKM mata pelajaran\n"
+"ID Basis Data: %s\n"
+"Masalah: Tingkat pada KKM harus salah satu tingkat yang berlaku untuk mata pelajaran.\n"
+"Solusi: Tambahkan tingkat tersebut ke tingkat yang berlaku pada mata pelajaran\n"
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_subject_minimum_score.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Validate subject minimum score\n"
+"Database ID: %s\n"
+"Problem: Minimum score must be between 0 and 100.\n"
+"Solution: Enter a minimum score from 0 to 100\n"
+msgstr ""
+"\n"
+"Konteks: Validasi KKM mata pelajaran\n"
+"ID Basis Data: %s\n"
+"Masalah: KKM harus antara 0 dan 100.\n"
+"Solusi: Masukkan KKM dari 0 sampai 100\n"
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_report_card.py:0
+#, python-format
+msgid ""
+"\n"
+"Document Type: %s\n"
+"Context: %s\n"
+"Database ID: %s\n"
+"Problem: This action is only allowed in draft state\n"
+"Solution: Restart the document before running this action\n"
+msgstr ""
+"\n"
+"Jenis Dokumen: %s\n"
+"Konteks: %s\n"
+"ID Basis Data: %s\n"
+"Masalah: Tindakan ini hanya diizinkan pada status draf\n"
+"Solusi: Mulai ulang dokumen sebelum menjalankan tindakan ini\n"
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_score_sheet.py:0
+#, python-format
+msgid ""
+"\n"
+"Document Type: %s\n"
+"Context: Generate lines\n"
+"Database ID: %s\n"
+"Problem: Lines can only be generated in draft state\n"
+"Solution: Restart the document before generating the lines\n"
+msgstr ""
+"\n"
+"Jenis Dokumen: %s\n"
+"Konteks: Buat baris\n"
+"ID Basis Data: %s\n"
+"Masalah: Baris hanya dapat dibuat pada status draf\n"
+"Solusi: Mulai ulang dokumen sebelum membuat baris\n"
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_report_card.py:0
+#, python-format
+msgid ""
+"\n"
+"Document Type: %s\n"
+"Context: Print report card\n"
+"Database ID: %s\n"
+"Problem: You are not allowed to print this report card\n"
+"Solution: Ask the administrator to add you to the report card Viewer group\n"
+msgstr ""
+"\n"
+"Jenis Dokumen: %s\n"
+"Konteks: Cetak raport\n"
+"ID Basis Data: %s\n"
+"Masalah: Anda tidak diizinkan mencetak raport ini\n"
+"Solusi: Minta administrator menambahkan Anda ke grup Penampil raport\n"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__name
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__name
+msgid "# Document"
+msgstr "No. Dokumen"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate_line__predicate_id
+msgid "# Predicate Table"
+msgstr "# Tabel Predikat"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_co_curricular__report_card_id
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_extracurricular__report_card_id
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_line__report_card_id
+msgid "# Report Card"
+msgstr "# Raport"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type_weight__type_id
+msgid "# Report Card Type"
+msgstr "# Jenis Raport"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject_minimum_score__subject_id
+msgid "# Subject"
+msgstr "# Mata Pelajaran"
+
+#. module: ssi_school_academic
+#: model:ir.actions.report,print_report_name:ssi_school_academic.report_school_report_card
+msgid "'Report Card - %s' % (object.student_id.name or '')"
+msgstr "'Raport - %s' % (object.student_id.name or '')"
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_report_card.py:0
+#: model_terms:ir.ui.view,arch_db:ssi_school_academic.school_report_card_view_form
+#, python-format
+msgid "Absences"
+msgstr "Ketidakhadiran"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__absent_days
+msgid "Absent Days"
+msgstr "Hari Tidak Hadir"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__academic_term_id
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__academic_term_id
+#: model_terms:ir.ui.view,arch_db:ssi_school_academic.school_report_card_view_search
+#: model_terms:ir.ui.view,arch_db:ssi_school_academic.school_score_sheet_view_search
+msgid "Academic Term"
+msgstr "Periode Akademik"
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_report_card.py:0
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__academic_year_id
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__academic_year_id
+#, python-format
+msgid "Academic Year"
+msgstr "Tahun Pelajaran"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card__academic_term_id
+msgid ""
+"Academic term of the selected Enrollment. The scores come from the score "
+"sheets of this term."
+msgstr "Periode akademik dari pendaftaran yang dipilih. Nilai berasal dari lembar nilai periode ini."
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_score_sheet__academic_term_id
+msgid ""
+"Academic term the scores belong to. Only enrollments of this term are "
+"offered when the lines are generated."
+msgstr "Periode akademik tempat nilai berada. Hanya pendaftaran pada periode ini yang ditawarkan saat baris dibuat."
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_score_sheet__academic_year_id
+msgid "Academic year of the selected Academic Term."
+msgstr "Tahun pelajaran dari periode akademik yang dipilih."
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card__academic_year_id
+msgid "Academic year of the selected Enrollment."
+msgstr "Tahun pelajaran dari pendaftaran yang dipilih."
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__message_needaction
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type__message_needaction
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_component__message_needaction
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__message_needaction
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__message_needaction
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject__message_needaction
+msgid "Action Needed"
+msgstr "Perlu Tindakan"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type__active
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_component__active
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__active
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject__active
+msgid "Active"
+msgstr "Aktif"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__active_approval_ids
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__active_approval_ids
+msgid "Active Approvals"
+msgstr "Persetujuan Aktif"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__active_approver_partner_ids
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__active_approver_partner_ids
+msgid "Active Partners"
+msgstr "Mitra Aktif"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__active_approver_user_ids
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__active_approver_user_ids
+msgid "Active Users"
+msgstr "Pengguna Aktif"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__activity_ids
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type__activity_ids
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_component__activity_ids
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__activity_ids
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__activity_ids
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject__activity_ids
+msgid "Activities"
+msgstr "Aktivitas"
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_report_card.py:0
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_extracurricular__name
+#, python-format
+msgid "Activity"
+msgstr "Kegiatan"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__activity_exception_decoration
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type__activity_exception_decoration
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_component__activity_exception_decoration
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__activity_exception_decoration
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__activity_exception_decoration
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr "Dekorasi Pengecualian Aktivitas"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__activity_state
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type__activity_state
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_component__activity_state
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__activity_state
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__activity_state
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject__activity_state
+msgid "Activity State"
+msgstr "Status Aktivitas"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__activity_type_icon
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type__activity_type_icon
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_component__activity_type_icon
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__activity_type_icon
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__activity_type_icon
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "Ikon Jenis Aktivitas"
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_report_card.py:0
+#, python-format
+msgid "Address"
+msgstr "Alamat"
+
+#. module: ssi_school_academic
+#: model:res.groups,name:ssi_school_academic.school_report_card_all_group
+#: model:res.groups,name:ssi_school_academic.school_score_sheet_all_group
+msgid "All"
+msgstr "Semua"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__allowed_policy_template_ids
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__allowed_policy_template_ids
+msgid "Allowed Policy Templates"
+msgstr "Templat Kebijakan yang Diizinkan"
+
+#. module: ssi_school_academic
+#: model_terms:ir.ui.view,arch_db:ssi_school_academic.school_score_predicate_view_form
+#: model_terms:ir.ui.view,arch_db:ssi_school_academic.school_subject_view_form
+msgid "Applicability"
+msgstr "Keberlakuan"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__grade_ids
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject__grade_ids
+msgid "Applicable Grades"
+msgstr "Tingkat yang Berlaku"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card__approval_template_id
+#: model:ir.model.fields,help:ssi_school_academic.field_school_score_sheet__approval_template_id
+msgid "Approval Configuration"
+msgstr "Konfigurasi Persetujuan"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__approval_template_id
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__approval_template_id
+msgid "Approval Template"
+msgstr "Templat Persetujuan"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__approval_ids
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__approval_ids
+msgid "Approvals"
+msgstr "Persetujuan"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card__approve_ok
+#: model:ir.model.fields,help:ssi_school_academic.field_school_score_sheet__approve_ok
+msgid ""
+"Approve policy\n"
+"\n"
+"* If active user can see and execute 'Approve' button"
+msgstr "Kebijakan persetujuan\\n\\n* Jika pengguna aktif dapat melihat dan mengeksekusi tombol 'Setujui'"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__approved
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__approved
+msgid "Approved"
+msgstr "Disetujui"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields.selection,name:ssi_school_academic.selection__school_score_component__category__assignment
+msgid "Assignment"
+msgstr "Tugas"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__message_attachment_count
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type__message_attachment_count
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_component__message_attachment_count
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__message_attachment_count
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__message_attachment_count
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject__message_attachment_count
+msgid "Attachment Count"
+msgstr "Jumlah Lampiran"
+
+#. module: ssi_school_academic
+#: model_terms:ir.ui.view,arch_db:ssi_school_academic.school_report_card_view_form
+msgid "Attendance and Notes"
+msgstr "Kehadiran dan Catatan"
+
+#. module: ssi_school_academic
+#: model_terms:ir.ui.view,arch_db:ssi_school_academic.school_report_card_type_view_form
+msgid "Average"
+msgstr "Rata-rata"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type__average_weight
+msgid "Average Weight (%)"
+msgstr "Bobot Rata-rata (%)"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card_type__total_weight
+msgid ""
+"Average weight plus the weights of all component lines. It must total 100%."
+msgstr "Bobot rata-rata ditambah bobot seluruh baris komponen. Totalnya harus 100%."
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type__average_component_ids
+msgid "Averaged Components"
+msgstr "Komponen yang Dirata-rata"
+
+#. module: ssi_school_academic
+#: model_terms:ir.ui.view,arch_db:ssi_school_academic.school_report_card_type_view_form
+msgid "Calculation"
+msgstr "Perhitungan"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__approve_ok
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__approve_ok
+msgid "Can Approve"
+msgstr "Dapat Menyetujui"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__cancel_ok
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__cancel_ok
+msgid "Can Cancel"
+msgstr "Dapat Membatalkan"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__compute_scores_ok
+msgid "Can Compute Scores"
+msgstr "Dapat Menghitung Nilai"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__confirm_ok
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__confirm_ok
+msgid "Can Confirm"
+msgstr "Dapat Mengonfirmasi"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__done_ok
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__done_ok
+msgid "Can Finished"
+msgstr "Dapat Diselesaikan"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__generate_lines_ok
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__generate_lines_ok
+msgid "Can Generate Lines"
+msgstr "Dapat Membuat Baris"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__manual_number_ok
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__manual_number_ok
+msgid "Can Input Manual Document Number"
+msgstr "Dapat Memasukkan Nomor Dokumen Manual"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__reject_ok
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__reject_ok
+msgid "Can Reject"
+msgstr "Dapat Menolak"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__restart_ok
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__restart_ok
+msgid "Can Restart"
+msgstr "Dapat Memulai Ulang"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__restart_approval_ok
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__restart_approval_ok
+msgid "Can Restart Approval"
+msgstr "Dapat Memulai Ulang Persetujuan"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__cancel_reason_id
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__cancel_reason_id
+msgid "Cancel Reason"
+msgstr "Alasan Pembatalan"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card__cancel_ok
+#: model:ir.model.fields,help:ssi_school_academic.field_school_score_sheet__cancel_ok
+msgid ""
+"Cancel policy\n"
+"\n"
+"* If active user can see and execute 'Cancel' button"
+msgstr "Kebijakan batal\\n\\n* Jika aktif, pengguna dapat melihat dan menekan tombol 'Batal'"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_component__category
+#: model_terms:ir.ui.view,arch_db:ssi_school_academic.school_score_component_view_search
+msgid "Category"
+msgstr "Kategori"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card__print_city
+msgid "City printed next to the signature date."
+msgstr "Kota yang dicetak di samping tanggal tanda tangan."
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_report_card.py:0
+#, python-format
+msgid "Class"
+msgstr "Kelas"
+
+#. module: ssi_school_academic
+#: model_terms:ir.ui.view,arch_db:ssi_school_academic.school_subject_view_form
+msgid "Classification"
+msgstr "Klasifikasi"
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_report_card.py:0
+#: model_terms:ir.ui.view,arch_db:ssi_school_academic.school_report_card_view_form
+#, python-format
+msgid "Co-Curricular"
+msgstr "Kokurikuler"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__co_curricular_ids
+msgid "Co-Curriculars"
+msgstr "Kokurikuler"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card__co_curricular_ids
+msgid "Co-curricular themes written by hand."
+msgstr "Tema kokurikuler yang ditulis manual."
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type__code
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_component__code
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__code
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject__code
+msgid "Code"
+msgstr "Kode"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__company_id
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__company_id
+#: model:res.groups,name:ssi_school_academic.school_report_card_company_group
+#: model:res.groups,name:ssi_school_academic.school_score_sheet_company_group
+msgid "Company"
+msgstr "Perusahaan"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__company_partner_id
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__company_partner_id
+msgid "Company Partner"
+msgstr "Mitra Perusahaan"
+
+#. module: ssi_school_academic
+#: model:res.groups,name:ssi_school_academic.school_report_card_company_child_group
+#: model:res.groups,name:ssi_school_academic.school_score_sheet_company_child_group
+msgid "Company and All Child Companies"
+msgstr "Perusahaan dan Semua Anak Perusahaan"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card__company_id
+#: model:ir.model.fields,help:ssi_school_academic.field_school_score_sheet__company_id
+msgid ""
+"Company that own the document\n"
+"\n"
+"* Automatically filled with user's company.\n"
+"  Default company can be changed"
+msgstr "Perusahaan pemilik dokumen\\n\\n* Otomatis diisi dengan perusahaan pengguna.\\n  Perusahaan default dapat diubah"
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_report_card.py:0
+#, python-format
+msgid "Competency Achievement"
+msgstr "Capaian Kompetensi"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type_weight__component_id
+msgid "Component"
+msgstr "Komponen"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type__weight_ids
+msgid "Component Weights"
+msgstr "Bobot Komponen"
+
+#. module: ssi_school_academic
+#: model_terms:ir.ui.view,arch_db:ssi_school_academic.school_report_card_view_form
+msgid "Compute Scores"
+msgstr "Hitung Nilai"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card__confirm_ok
+#: model:ir.model.fields,help:ssi_school_academic.field_school_score_sheet__confirm_ok
+msgid ""
+"Confirm policy\n"
+"\n"
+"* If active user can see and execute 'Confirm' button"
+msgstr "Kebijakan konfirmasi\\n\\n* Jika pengguna aktif dapat melihat dan mengeksekusi tombol 'Konfirmasi'"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__create_uid
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_co_curricular__create_uid
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_extracurricular__create_uid
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_line__create_uid
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type__create_uid
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type_weight__create_uid
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_component__create_uid
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__create_uid
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate_line__create_uid
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__create_uid
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet_line__create_uid
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject__create_uid
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject_minimum_score__create_uid
+msgid "Created by"
+msgstr "Dibuat oleh"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__create_date
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_co_curricular__create_date
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_extracurricular__create_date
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_line__create_date
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type__create_date
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type_weight__create_date
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_component__create_date
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__create_date
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate_line__create_date
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__create_date
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet_line__create_date
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject__create_date
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject_minimum_score__create_date
+msgid "Created on"
+msgstr "Dibuat pada"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_grade__phase
+msgid ""
+"Curriculum phase of the grade, for example E or F. It is printed in the "
+"header of the report card. Leave empty when not applicable."
+msgstr "Fase kurikulum tingkat, misalnya E atau F. Dicetak pada kepala raport. Biarkan kosong bila tidak berlaku."
+
+#. module: ssi_school_academic
+#: model:ir.model.fields.selection,name:ssi_school_academic.selection__school_score_component__category__daily_test
+msgid "Daily Test"
+msgstr "Ulangan Harian"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__date
+msgid "Date"
+msgstr "Tanggal"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_score_sheet__date
+msgid ""
+"Date of this score sheet. It is also the date the document number is "
+"generated from."
+msgstr "Tanggal lembar nilai ini. Juga menjadi tanggal pembuatan nomor dokumen."
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card__print_date
+msgid ""
+"Date printed next to the signature. It is also the date the document number "
+"is generated from."
+msgstr "Tanggal yang dicetak di samping tanda tangan. Juga menjadi tanggal pembuatan nomor dokumen."
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card_type__rounding_threshold
+msgid ""
+"Decimal part from which the final score is rounded up. With 0.56, a score of "
+"87.56 becomes 88 and 87.55 becomes 87. It must be between 0 and 1."
+msgstr "Bagian desimal mulai dari mana nilai akhir dibulatkan ke atas. Dengan 0,56, nilai 87,56 menjadi 88 dan 87,55 menjadi 87. Harus antara 0 dan 1."
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_report_card.py:0
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_co_curricular__description
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_extracurricular__description
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate_line__description
+#, python-format
+msgid "Description"
+msgstr "Deskripsi"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card_line__learning_objective
+msgid ""
+"Description of the learning objectives the student achieved, written by hand."
+msgstr "Deskripsi tujuan pembelajaran yang dicapai siswa, ditulis manual."
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card_co_curricular__description
+msgid "Description of what the student did in the theme."
+msgstr "Deskripsi kegiatan yang dilakukan siswa pada tema."
+
+#. module: ssi_school_academic
+#: model_terms:ir.ui.view,arch_db:ssi_school_academic.school_report_card_type_view_form
+msgid "Display"
+msgstr "Tampilan"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_grade__display_name
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__display_name
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_co_curricular__display_name
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_extracurricular__display_name
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_line__display_name
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type__display_name
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type_weight__display_name
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_component__display_name
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__display_name
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate_line__display_name
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__display_name
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet_line__display_name
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject__display_name
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject_minimum_score__display_name
+msgid "Display Name"
+msgstr "Nama Tampilan"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type__display_component_ids
+msgid "Displayed Columns"
+msgstr "Kolom yang Ditampilkan"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card__done_ok
+#: model:ir.model.fields,help:ssi_school_academic.field_school_score_sheet__done_ok
+msgid ""
+"Done policy\n"
+"\n"
+"* If active user can see and execute 'Done' button"
+msgstr "Kebijakan selesai\\n\\n* Jika pengguna aktif dapat melihat dan menjalankan tombol 'Selesai'"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__enrollment_id
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet_line__enrollment_id
+msgid "Enrollment"
+msgstr "Pendaftaran"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_score_sheet_line__enrollment_id
+msgid "Enrollment of the student the score is given to. It must be open."
+msgstr "Pendaftaran siswa yang diberi nilai. Harus berstatus terbuka."
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_report_card.py:0
+#, python-format
+msgid "Expertise Concentration"
+msgstr "Konsentrasi Keahlian"
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_report_card.py:0
+#, python-format
+msgid "Expertise Program"
+msgstr "Program Keahlian"
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_report_card.py:0
+#: model_terms:ir.ui.view,arch_db:ssi_school_academic.school_report_card_view_form
+#, python-format
+msgid "Extracurricular"
+msgstr "Ekstrakurikuler"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card__extracurricular_ids
+msgid "Extracurricular activities written by hand."
+msgstr "Kegiatan ekstrakurikuler yang ditulis manual."
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__extracurricular_ids
+msgid "Extracurriculars"
+msgstr "Ekstrakurikuler"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields.selection,name:ssi_school_academic.selection__school_report_card_type__term_type__final
+msgid "Final"
+msgstr "Akhir"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields.selection,name:ssi_school_academic.selection__school_score_component__category__final_exam
+msgid "Final Exam"
+msgstr "Penilaian Akhir Semester"
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_report_card.py:0
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_line__final_score
+#, python-format
+msgid "Final Score"
+msgstr "Nilai Akhir"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card__line_ids
+msgid "Final score of the student, one line per subject."
+msgstr "Nilai akhir siswa, satu baris per mata pelajaran."
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card_line__final_score
+msgid ""
+"Final score of the subject. It is filled by the Compute Scores button of the "
+"report card, not typed by hand."
+msgstr "Nilai akhir mata pelajaran. Diisi oleh tombol Hitung Nilai pada raport, tidak diketik manual."
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__message_follower_ids
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type__message_follower_ids
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_component__message_follower_ids
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__message_follower_ids
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__message_follower_ids
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject__message_follower_ids
+msgid "Followers"
+msgstr "Pengikut"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__message_channel_ids
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type__message_channel_ids
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_component__message_channel_ids
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__message_channel_ids
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__message_channel_ids
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject__message_channel_ids
+msgid "Followers (Channels)"
+msgstr "Pengikut (Saluran)"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__message_partner_ids
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type__message_partner_ids
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_component__message_partner_ids
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__message_partner_ids
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__message_partner_ids
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Pengikut (Mitra)"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card__activity_type_icon
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card_type__activity_type_icon
+#: model:ir.model.fields,help:ssi_school_academic.field_school_score_component__activity_type_icon
+#: model:ir.model.fields,help:ssi_school_academic.field_school_score_predicate__activity_type_icon
+#: model:ir.model.fields,help:ssi_school_academic.field_school_score_sheet__activity_type_icon
+#: model:ir.model.fields,help:ssi_school_academic.field_school_subject__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Ikon Font Awesome mis. fa-tasks"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card__note
+#: model:ir.model.fields,help:ssi_school_academic.field_school_score_sheet__note
+msgid ""
+"Free-form note attached to the document, used for any additional remarks or "
+"information related to the transaction."
+msgstr "Catatan bebas yang dilampirkan pada dokumen, dipakai untuk keterangan atau informasi tambahan terkait transaksi."
+
+#. module: ssi_school_academic
+#: model:ir.model.fields.selection,name:ssi_school_academic.selection__school_subject__subject_group__general
+msgid "General"
+msgstr "Umum"
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_report_card.py:0
+#, python-format
+msgid "General Subjects"
+msgstr "Kelompok Mata Pelajaran Umum"
+
+#. module: ssi_school_academic
+#: model_terms:ir.ui.view,arch_db:ssi_school_academic.school_report_card_view_form
+#: model_terms:ir.ui.view,arch_db:ssi_school_academic.school_score_sheet_view_form
+msgid "Generate Lines"
+msgstr "Buat Baris"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__grade_id
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__grade_id
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject_minimum_score__grade_id
+msgid "Grade"
+msgstr "Tingkat"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__grade_class_id
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__grade_class_id
+#: model_terms:ir.ui.view,arch_db:ssi_school_academic.school_report_card_view_search
+#: model_terms:ir.ui.view,arch_db:ssi_school_academic.school_score_sheet_view_search
+msgid "Grade Class"
+msgstr "Kelas Tingkat"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card__grade_class_id
+msgid "Grade class of the selected Enrollment."
+msgstr "Kelas tingkat dari pendaftaran yang dipilih."
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_score_sheet__grade_class_id
+msgid ""
+"Grade class the scores are given to. Only enrollments of this class are "
+"offered when the lines are generated."
+msgstr "Kelas tingkat tempat nilai diberikan. Hanya pendaftaran pada kelas ini yang ditawarkan saat baris dibuat."
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card__grade_id
+msgid "Grade of the selected Enrollment. It decides which subjects get a line."
+msgstr "Tingkat dari pendaftaran yang dipilih. Menentukan mata pelajaran mana yang mendapat baris."
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_score_sheet__grade_id
+msgid ""
+"Grade of the selected Grade Class. It decides which subjects can be chosen."
+msgstr "Tingkat dari kelas tingkat yang dipilih. Menentukan mata pelajaran yang dapat dipilih."
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_subject_minimum_score__grade_id
+msgid "Grade this minimum score applies to."
+msgstr "Tingkat yang berlaku untuk KKM ini."
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_score_predicate__grade_ids
+msgid ""
+"Grades this predicate table applies to. A grade can belong to only one "
+"active predicate table."
+msgstr "Tingkat yang berlaku untuk tabel predikat ini. Satu tingkat hanya dapat termasuk dalam satu tabel predikat aktif."
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_subject__grade_ids
+msgid ""
+"Grades this subject is taught on. A minimum score can only be set for one of "
+"these grades."
+msgstr "Tingkat tempat mata pelajaran ini diajarkan. KKM hanya dapat ditetapkan untuk salah satu tingkat ini."
+
+#. module: ssi_school_academic
+#: model_terms:ir.ui.view,arch_db:ssi_school_academic.school_report_card_type_view_search
+#: model_terms:ir.ui.view,arch_db:ssi_school_academic.school_report_card_view_search
+#: model_terms:ir.ui.view,arch_db:ssi_school_academic.school_score_component_view_search
+#: model_terms:ir.ui.view,arch_db:ssi_school_academic.school_score_sheet_view_search
+#: model_terms:ir.ui.view,arch_db:ssi_school_academic.school_subject_view_search
+msgid "Group By"
+msgstr "Kelompokkan Berdasarkan"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card_line__subject_group
+msgid "Group of the selected Subject on the report card."
+msgstr "Kelompok mata pelajaran yang dipilih pada raport."
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_subject__subject_group
+msgid ""
+"Group the subject belongs to on the report card: General = general subject "
+"group, Vocational = vocational subject group."
+msgstr "Kelompok mata pelajaran pada raport: Umum = kelompok mata pelajaran umum, Kejuruan = kelompok mata pelajaran kejuruan."
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__homeroom_id
+msgid "Homeroom"
+msgstr "Wali Kelas"
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_report_card.py:0
+#, python-format
+msgid "Homeroom Teacher"
+msgstr "Wali Kelas"
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_report_card.py:0
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__homeroom_note
+#, python-format
+msgid "Homeroom Teacher Note"
+msgstr "Catatan Wali Kelas"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card__homeroom_id
+msgid "Homeroom of the selected Enrollment."
+msgstr "Wali kelas dari pendaftaran yang dipilih."
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_grade__id
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__id
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_co_curricular__id
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_extracurricular__id
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_line__id
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type__id
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type_weight__id
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_component__id
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__id
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate_line__id
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__id
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet_line__id
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject__id
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject_minimum_score__id
+msgid "ID"
+msgstr "ID"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__activity_exception_icon
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type__activity_exception_icon
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_component__activity_exception_icon
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__activity_exception_icon
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__activity_exception_icon
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject__activity_exception_icon
+msgid "Icon"
+msgstr "Ikon"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card__activity_exception_icon
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card_type__activity_exception_icon
+#: model:ir.model.fields,help:ssi_school_academic.field_school_score_component__activity_exception_icon
+#: model:ir.model.fields,help:ssi_school_academic.field_school_score_predicate__activity_exception_icon
+#: model:ir.model.fields,help:ssi_school_academic.field_school_score_sheet__activity_exception_icon
+#: model:ir.model.fields,help:ssi_school_academic.field_school_subject__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr "Ikon untuk menunjukkan aktivitas pengecualian."
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card__message_needaction
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card__message_unread
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card_type__message_needaction
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card_type__message_unread
+#: model:ir.model.fields,help:ssi_school_academic.field_school_score_component__message_needaction
+#: model:ir.model.fields,help:ssi_school_academic.field_school_score_component__message_unread
+#: model:ir.model.fields,help:ssi_school_academic.field_school_score_predicate__message_needaction
+#: model:ir.model.fields,help:ssi_school_academic.field_school_score_predicate__message_unread
+#: model:ir.model.fields,help:ssi_school_academic.field_school_score_sheet__message_needaction
+#: model:ir.model.fields,help:ssi_school_academic.field_school_score_sheet__message_unread
+#: model:ir.model.fields,help:ssi_school_academic.field_school_subject__message_needaction
+#: model:ir.model.fields,help:ssi_school_academic.field_school_subject__message_unread
+msgid "If checked, new messages require your attention."
+msgstr "Jika dicentang, pesan baru memerlukan perhatian Anda."
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card__message_has_error
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card_type__message_has_error
+#: model:ir.model.fields,help:ssi_school_academic.field_school_score_component__message_has_error
+#: model:ir.model.fields,help:ssi_school_academic.field_school_score_predicate__message_has_error
+#: model:ir.model.fields,help:ssi_school_academic.field_school_score_sheet__message_has_error
+#: model:ir.model.fields,help:ssi_school_academic.field_school_subject__message_has_error
+msgid "If checked, some messages have a delivery error."
+msgstr "Jika dicentang, beberapa pesan mengalami kesalahan pengiriman."
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__message_is_follower
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type__message_is_follower
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_component__message_is_follower
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__message_is_follower
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__message_is_follower
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject__message_is_follower
+msgid "Is Follower"
+msgstr "Adalah Pengikut"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_score_component__category
+msgid ""
+"Kind of assessment the component belongs to: Daily Test = daily test slot, "
+"Assignment = assignment slot, Mid-Term Exam = mid-term exam, Final Exam = "
+"final exam."
+msgstr "Jenis penilaian tempat komponen berada: Ulangan Harian = slot ulangan harian, Tugas = slot tugas, Penilaian Tengah Semester = penilaian tengah semester, Penilaian Akhir Semester = penilaian akhir semester."
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card__type_id
+msgid ""
+"Kind of report card, for example Mid-Term or Final. It decides how the final "
+"score of every subject is computed."
+msgstr "Jenis raport, misalnya Tengah Semester atau Akhir. Menentukan cara nilai akhir setiap mata pelajaran dihitung."
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card_type__term_type
+msgid ""
+"Kind of term the report card covers: Mid-Term = mid-term report card, Final "
+"= end-of-term report card."
+msgstr "Jenis periode yang dicakup raport: Tengah Semester = raport tengah semester, Akhir = raport akhir semester."
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_grade____last_update
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card____last_update
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_co_curricular____last_update
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_extracurricular____last_update
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_line____last_update
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type____last_update
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type_weight____last_update
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_component____last_update
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate____last_update
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate_line____last_update
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet____last_update
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet_line____last_update
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject____last_update
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject_minimum_score____last_update
+msgid "Last Modified on"
+msgstr "Terakhir Diubah pada"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__write_uid
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_co_curricular__write_uid
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_extracurricular__write_uid
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_line__write_uid
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type__write_uid
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type_weight__write_uid
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_component__write_uid
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__write_uid
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate_line__write_uid
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__write_uid
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet_line__write_uid
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject__write_uid
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject_minimum_score__write_uid
+msgid "Last Updated by"
+msgstr "Terakhir Diperbarui oleh"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__write_date
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_co_curricular__write_date
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_extracurricular__write_date
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_line__write_date
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type__write_date
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type_weight__write_date
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_component__write_date
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__write_date
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate_line__write_date
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__write_date
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet_line__write_date
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject__write_date
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject_minimum_score__write_date
+msgid "Last Updated on"
+msgstr "Terakhir Diperbarui pada"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_line__learning_objective
+msgid "Learning Objective Achievement"
+msgstr "Capaian Tujuan Pembelajaran"
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_report_card.py:0
+#, python-format
+msgid "Learning Result Report"
+msgstr "Laporan Hasil Belajar"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__line_ids
+msgid "Lines"
+msgstr "Baris"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_score_predicate_line__min_score
+msgid "Lowest score, from 0 to 100, that earns this predicate."
+msgstr "Nilai terendah, dari 0 sampai 100, yang memperoleh predikat ini."
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__message_main_attachment_id
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type__message_main_attachment_id
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_component__message_main_attachment_id
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__message_main_attachment_id
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__message_main_attachment_id
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject__message_main_attachment_id
+msgid "Main Attachment"
+msgstr "Lampiran Utama"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card__manual_number_ok
+#: model:ir.model.fields,help:ssi_school_academic.field_school_score_sheet__manual_number_ok
+msgid ""
+"Manual number assignment policy\n"
+"\n"
+"* If active user can edit document number"
+msgstr "Kebijakan penetapan nomor manual\\n\\n* Jika pengguna aktif dapat mengubah nomor dokumen"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card_type__active
+#: model:ir.model.fields,help:ssi_school_academic.field_school_score_component__active
+#: model:ir.model.fields,help:ssi_school_academic.field_school_score_predicate__active
+#: model:ir.model.fields,help:ssi_school_academic.field_school_subject__active
+msgid ""
+"Master data status\n"
+"\n"
+"* Inactive data can not be selected when creating new transaction\n"
+"* Transaction with inactive master data can still be viewed\n"
+"* Set master data as inactive if master data no longger needed,\n"
+"but master data already used on transaction"
+msgstr "Status data master\\n\\n* Data nonaktif tidak dapat dipilih saat membuat transaksi baru\\n* Transaksi dengan data master nonaktif tetap dapat dilihat\\n* Atur data master sebagai nonaktif jika data master tidak lagi diperlukan,\\ntetapi data master sudah digunakan pada transaksi"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card_type__code
+#: model:ir.model.fields,help:ssi_school_academic.field_school_score_component__code
+#: model:ir.model.fields,help:ssi_school_academic.field_school_score_predicate__code
+#: model:ir.model.fields,help:ssi_school_academic.field_school_subject__code
+msgid ""
+"Master data unique identifier.\n"
+"\n"
+"* Fill with '/' if You do not need unique identifier\n"
+"* Click 'Generate Code' button to automatically assign code.\n"
+"  Sequence template mush be set to perform this action\n"
+"  Only master data with '/' code will be assign automatic code"
+msgstr "Pengenal unik data master.\\n\\n* Isi dengan '/' jika Anda tidak memerlukan pengenal unik\\n* Klik tombol 'Buat Kode' untuk menetapkan kode secara otomatis.\\n  Templat urutan harus diatur untuk menjalankan tindakan ini\\n  Hanya data master dengan kode '/' yang akan diberi kode otomatis"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_score_predicate_line__description
+msgid "Meaning of the predicate, e.g. Very Good."
+msgstr "Makna predikat, misalnya Sangat Baik."
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__message_has_error
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type__message_has_error
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_component__message_has_error
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__message_has_error
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__message_has_error
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject__message_has_error
+msgid "Message Delivery error"
+msgstr "Kesalahan Pengiriman Pesan"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__message_ids
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type__message_ids
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_component__message_ids
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__message_ids
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__message_ids
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject__message_ids
+msgid "Messages"
+msgstr "Pesan"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields.selection,name:ssi_school_academic.selection__school_report_card_type__term_type__mid_term
+msgid "Mid-Term"
+msgstr "Tengah Semester"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields.selection,name:ssi_school_academic.selection__school_score_component__category__mid_term_exam
+msgid "Mid-Term Exam"
+msgstr "Penilaian Tengah Semester"
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_report_card.py:0
+#, python-format
+msgid "Mid-Term Semester"
+msgstr "Tengah Semester"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_line__minimum_score
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate_line__min_score
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject_minimum_score__minimum_score
+#: model_terms:ir.ui.view,arch_db:ssi_school_academic.school_subject_view_form
+msgid "Minimum Score"
+msgstr "KKM"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject__minimum_score_ids
+msgid "Minimum Scores"
+msgstr "KKM"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_subject_minimum_score__minimum_score
+msgid ""
+"Minimum score (KKM) a student must reach to pass the subject on this grade, "
+"from 0 to 100."
+msgstr "Nilai minimum (KKM) yang harus dicapai siswa untuk lulus mata pelajaran pada tingkat ini, dari 0 sampai 100."
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card_line__minimum_score
+msgid ""
+"Minimum score (KKM) of the subject on the grade of the report card. It is 0 "
+"when the subject has no minimum score for that grade."
+msgstr "Nilai minimum (KKM) mata pelajaran pada tingkat raport. Bernilai 0 bila mata pelajaran tidak memiliki KKM untuk tingkat itu."
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_subject__minimum_score_ids
+msgid "Minimum score (KKM) of the subject, one line per applicable grade."
+msgstr "Nilai minimum (KKM) mata pelajaran, satu baris per tingkat yang berlaku."
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__my_activity_date_deadline
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type__my_activity_date_deadline
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_component__my_activity_date_deadline
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__my_activity_date_deadline
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__my_activity_date_deadline
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "Batas Waktu Aktivitas Saya"
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_report_card.py:0
+#, python-format
+msgid "NUPTK"
+msgstr "NUPTK"
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_report_card.py:0
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type__name
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_component__name
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__name
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject__name
+#, python-format
+msgid "Name"
+msgstr "Nama"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card_extracurricular__name
+msgid "Name of the extracurricular activity."
+msgstr "Nama kegiatan ekstrakurikuler."
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_report_card.py:0
+#, python-format
+msgid "National Student ID (NISN)"
+msgstr "Nomor Induk Siswa Nasional (NISN)"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__need_validation
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__need_validation
+msgid "Need Validation"
+msgstr "Perlu Validasi"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__activity_date_deadline
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type__activity_date_deadline
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_component__activity_date_deadline
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__activity_date_deadline
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__activity_date_deadline
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "Batas Waktu Aktivitas Berikutnya"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__activity_summary
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type__activity_summary
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_component__activity_summary
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__activity_summary
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__activity_summary
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject__activity_summary
+msgid "Next Activity Summary"
+msgstr "Ringkasan Aktivitas Berikutnya"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__activity_type_id
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type__activity_type_id
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_component__activity_type_id
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__activity_type_id
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__activity_type_id
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject__activity_type_id
+msgid "Next Activity Type"
+msgstr "Jenis Aktivitas Berikutnya"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__next_approval_ids
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__next_approval_ids
+msgid "Next Approvals"
+msgstr "Persetujuan Berikutnya"
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_report_card.py:0
+#, python-format
+msgid "No"
+msgstr "No"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__note
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type__note
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_component__note
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__note
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__note
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject__note
+msgid "Note"
+msgstr "Catatan"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card__homeroom_note
+msgid "Note of the homeroom teacher printed on the report card."
+msgstr "Catatan wali kelas yang dicetak pada raport."
+
+#. module: ssi_school_academic
+#: model_terms:ir.ui.view,arch_db:ssi_school_academic.school_report_card_view_form
+msgid "Notes"
+msgstr "Catatan"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__message_needaction_counter
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type__message_needaction_counter
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_component__message_needaction_counter
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__message_needaction_counter
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__message_needaction_counter
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Jumlah Tindakan"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card__sick_days
+msgid "Number of days the student was absent because of sickness."
+msgstr "Jumlah hari siswa tidak hadir karena sakit."
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card__permission_days
+msgid "Number of days the student was absent with permission."
+msgstr "Jumlah hari siswa tidak hadir dengan izin."
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card__absent_days
+msgid "Number of days the student was absent without a reason."
+msgstr "Jumlah hari siswa tidak hadir tanpa keterangan."
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__message_has_error_counter
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type__message_has_error_counter
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_component__message_has_error_counter
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__message_has_error_counter
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__message_has_error_counter
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject__message_has_error_counter
+msgid "Number of errors"
+msgstr "Jumlah kesalahan"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card__message_needaction_counter
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card_type__message_needaction_counter
+#: model:ir.model.fields,help:ssi_school_academic.field_school_score_component__message_needaction_counter
+#: model:ir.model.fields,help:ssi_school_academic.field_school_score_predicate__message_needaction_counter
+#: model:ir.model.fields,help:ssi_school_academic.field_school_score_sheet__message_needaction_counter
+#: model:ir.model.fields,help:ssi_school_academic.field_school_subject__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr "Jumlah pesan yang memerlukan tindakan"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card__message_has_error_counter
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card_type__message_has_error_counter
+#: model:ir.model.fields,help:ssi_school_academic.field_school_score_component__message_has_error_counter
+#: model:ir.model.fields,help:ssi_school_academic.field_school_score_predicate__message_has_error_counter
+#: model:ir.model.fields,help:ssi_school_academic.field_school_score_sheet__message_has_error_counter
+#: model:ir.model.fields,help:ssi_school_academic.field_school_subject__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "Jumlah pesan dengan kesalahan pengiriman"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card__message_unread_counter
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card_type__message_unread_counter
+#: model:ir.model.fields,help:ssi_school_academic.field_school_score_component__message_unread_counter
+#: model:ir.model.fields,help:ssi_school_academic.field_school_score_predicate__message_unread_counter
+#: model:ir.model.fields,help:ssi_school_academic.field_school_score_sheet__message_unread_counter
+#: model:ir.model.fields,help:ssi_school_academic.field_school_subject__message_unread_counter
+msgid "Number of unread messages"
+msgstr "Jumlah pesan yang belum dibaca"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card__enrollment_id
+msgid ""
+"Open enrollment of the student the report card is for. The report card of an "
+"enrollment that is done is still read and printed."
+msgstr "Pendaftaran terbuka milik siswa pemilik raport. Raport dari pendaftaran yang sudah selesai tetap dapat dibaca dan dicetak."
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_score_component__sequence
+msgid ""
+"Order of the component. It sets the column order on the score input and on "
+"the printed report card."
+msgstr "Urutan komponen. Menentukan urutan kolom pada input nilai dan pada raport yang dicetak."
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_report_card.py:0
+#, python-format
+msgid "Parent / Guardian"
+msgstr "Orang Tua/Wali Murid"
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_report_card.py:0
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__parent_response
+#, python-format
+msgid "Parent Response"
+msgstr "Tanggapan Orang Tua/Wali Murid"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card__company_partner_id
+#: model:ir.model.fields,help:ssi_school_academic.field_school_score_sheet__company_partner_id
+msgid ""
+"Partner (res.partner) linked to the document's company\n"
+"\n"
+"* Automatically follows 'company_id.partner_id'.\n"
+"* Used for reporting/printing documents that require the company-level\n"
+"  partner instead of the responsible user's partner."
+msgstr ""
+"Mitra (res.partner) yang terhubung dengan perusahaan pemilik dokumen\n"
+"\n"
+"* Otomatis mengikuti 'company_id.partner_id'.\n"
+"* Dipakai untuk pelaporan/pencetakan dokumen yang memerlukan mitra tingkat perusahaan\n"
+"  alih-alih mitra milik pengguna penanggung jawab."
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_report_card.py:0
+#, python-format
+msgid "Permission"
+msgstr "Izin"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__permission_days
+msgid "Permission Days"
+msgstr "Hari Izin"
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_report_card.py:0
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_grade__phase
+#, python-format
+msgid "Phase"
+msgstr "Fase"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__policy_template_id
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__policy_template_id
+msgid "Policy Template"
+msgstr "Templat Kebijakan"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card__compute_scores_ok
+msgid "Policy that determines whether the Compute Scores button is visible."
+msgstr "Kebijakan yang menentukan apakah tombol Hitung Nilai terlihat."
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card__generate_lines_ok
+#: model:ir.model.fields,help:ssi_school_academic.field_school_score_sheet__generate_lines_ok
+msgid "Policy that determines whether the Generate Lines button is visible."
+msgstr "Kebijakan yang menentukan apakah tombol Buat Baris terlihat."
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_line__predicate_line_id
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate_line__name
+msgid "Predicate"
+msgstr "Predikat"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__line_ids
+#: model_terms:ir.ui.view,arch_db:ssi_school_academic.school_score_predicate_view_form
+msgid "Predicate Lines"
+msgstr "Baris Predikat"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_score_predicate_line__name
+msgid "Predicate code printed on the report card, e.g. A."
+msgstr "Kode predikat yang dicetak pada raport, misalnya A."
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_score_predicate__line_ids
+msgid "Predicate earned from a minimum score, one line per predicate."
+msgstr "Predikat yang diperoleh dari nilai minimum, satu baris per predikat."
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_score_predicate_line__predicate_id
+msgid "Predicate table this line belongs to."
+msgstr "Tabel predikat tempat baris ini berada."
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card_line__predicate_line_id
+msgid ""
+"Predicate the final score earns in the predicate table of the grade. It is "
+"empty when the grade has no predicate table."
+msgstr "Predikat yang diperoleh nilai akhir pada tabel predikat tingkat. Kosong bila tingkat tidak memiliki tabel predikat."
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__print_city
+msgid "Print City"
+msgstr "Kota Cetak"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__print_date
+msgid "Print Date"
+msgstr "Tanggal Cetak"
+
+#. module: ssi_school_academic
+#: model_terms:ir.ui.view,arch_db:ssi_school_academic.school_report_card_type_view_form
+msgid "Printed Columns"
+msgstr "Kolom yang Dicetak"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card__reject_ok
+#: model:ir.model.fields,help:ssi_school_academic.field_school_score_sheet__reject_ok
+msgid ""
+"Reject policy\n"
+"\n"
+"* If active user can see and execute 'Reject' button"
+msgstr "Kebijakan penolakan\\n\\n* Jika pengguna aktif dapat melihat dan mengeksekusi tombol 'Tolak'"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__rejected
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__rejected
+msgid "Rejected"
+msgstr "Ditolak"
+
+#. module: ssi_school_academic
+#: model:ir.actions.report,name:ssi_school_academic.report_school_report_card
+msgid "Report Card"
+msgstr "Raport"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__type_id
+#: model:res.groups,name:ssi_school_academic.school_report_card_type_group
+#: model_terms:ir.ui.view,arch_db:ssi_school_academic.school_report_card_view_search
+msgid "Report Card Type"
+msgstr "Jenis Raport"
+
+#. module: ssi_school_academic
+#: model:ir.actions.act_window,name:ssi_school_academic.school_report_card_type_action
+#: model:ir.ui.menu,name:ssi_school_academic.school_report_card_type_menu
+msgid "Report Card Types"
+msgstr "Jenis Raport"
+
+#. module: ssi_school_academic
+#: model:ir.ui.menu,name:ssi_school_academic.school_report_card_menu
+msgid "Report Cards"
+msgstr "Raport"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card_co_curricular__report_card_id
+msgid "Report card this co-curricular line belongs to."
+msgstr "Raport tempat baris kokurikuler ini berada."
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card_extracurricular__report_card_id
+msgid "Report card this extracurricular line belongs to."
+msgstr "Raport tempat baris ekstrakurikuler ini berada."
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card_line__report_card_id
+msgid "Report card this line belongs to."
+msgstr "Raport tempat baris ini berada."
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card_type_weight__type_id
+msgid "Report card type this weight belongs to."
+msgstr "Jenis raport tempat bobot ini berada."
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card__parent_response
+msgid "Response of the parent or guardian printed on the report card."
+msgstr "Tanggapan orang tua/wali murid yang dicetak pada raport."
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__user_id
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__user_id
+msgid "Responsible"
+msgstr "Penanggung Jawab"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__activity_user_id
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type__activity_user_id
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_component__activity_user_id
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__activity_user_id
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__activity_user_id
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject__activity_user_id
+msgid "Responsible User"
+msgstr "Pengguna Penanggung Jawab"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card__restart_approval_ok
+#: model:ir.model.fields,help:ssi_school_academic.field_school_score_sheet__restart_approval_ok
+msgid ""
+"Restart approval policy\n"
+"\n"
+"* If active user can see and execute 'Restart Approval' button"
+msgstr "Kebijakan mulai ulang persetujuan\\n\\n* Jika pengguna aktif dapat melihat dan menjalankan tombol 'Mulai Ulang Persetujuan'"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card__restart_ok
+#: model:ir.model.fields,help:ssi_school_academic.field_school_score_sheet__restart_ok
+msgid ""
+"Restart policy\n"
+"\n"
+"* If active user can see and execute 'Restart' button"
+msgstr "Kebijakan mulai ulang\\n\\n* Jika aktif, pengguna dapat melihat dan menekan tombol 'Mulai Ulang'"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__reviewer_id
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__reviewer_id
+msgid "Reviewer"
+msgstr "Pemeriksa"
+
+#. module: ssi_school_academic
+#: model_terms:ir.ui.view,arch_db:ssi_school_academic.school_report_card_type_view_form
+msgid "Rounding"
+msgstr "Pembulatan"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type__rounding_threshold
+msgid "Rounding Threshold"
+msgstr "Ambang Pembulatan"
+
+#. module: ssi_school_academic
+#: model:ir.model,name:ssi_school_academic.model_school_grade
+msgid "School Grade"
+msgstr "Tingkat Sekolah"
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_report_card.py:0
+#, python-format
+msgid "School Name"
+msgstr "Nama Sekolah"
+
+#. module: ssi_school_academic
+#: model:ir.model,name:ssi_school_academic.model_school_report_card
+#: model:ir.module.category,name:ssi_school_academic.school_report_card_data_ownership_module_category
+#: model:ir.module.category,name:ssi_school_academic.school_report_card_workflow_module_category
+msgid "School Report Card"
+msgstr "Raport Sekolah"
+
+#. module: ssi_school_academic
+#: model:ir.model,name:ssi_school_academic.model_school_report_card_co_curricular
+msgid "School Report Card Co-Curricular"
+msgstr "Kokurikuler Raport Sekolah"
+
+#. module: ssi_school_academic
+#: model:ir.model,name:ssi_school_academic.model_school_report_card_extracurricular
+msgid "School Report Card Extracurricular"
+msgstr "Ekstrakurikuler Raport Sekolah"
+
+#. module: ssi_school_academic
+#: model:ir.model,name:ssi_school_academic.model_school_report_card_line
+msgid "School Report Card Line"
+msgstr "Baris Raport Sekolah"
+
+#. module: ssi_school_academic
+#: model:ir.model,name:ssi_school_academic.model_school_report_card_type
+msgid "School Report Card Type"
+msgstr "Jenis Raport Sekolah"
+
+#. module: ssi_school_academic
+#: model:ir.model,name:ssi_school_academic.model_school_report_card_type_weight
+msgid "School Report Card Type Weight"
+msgstr "Bobot Jenis Raport Sekolah"
+
+#. module: ssi_school_academic
+#: model:ir.actions.act_window,name:ssi_school_academic.school_report_card_action
+msgid "School Report Cards"
+msgstr "Raport Sekolah"
+
+#. module: ssi_school_academic
+#: model:ir.model,name:ssi_school_academic.model_school_score_component
+msgid "School Score Component"
+msgstr "Komponen Nilai Sekolah"
+
+#. module: ssi_school_academic
+#: model:ir.model,name:ssi_school_academic.model_school_score_predicate
+msgid "School Score Predicate"
+msgstr "Predikat Nilai Sekolah"
+
+#. module: ssi_school_academic
+#: model:ir.model,name:ssi_school_academic.model_school_score_predicate_line
+msgid "School Score Predicate Line"
+msgstr "Baris Predikat Nilai Sekolah"
+
+#. module: ssi_school_academic
+#: model:ir.model,name:ssi_school_academic.model_school_score_sheet
+#: model:ir.module.category,name:ssi_school_academic.school_score_sheet_data_ownership_module_category
+#: model:ir.module.category,name:ssi_school_academic.school_score_sheet_workflow_module_category
+msgid "School Score Sheet"
+msgstr "Lembar Nilai Sekolah"
+
+#. module: ssi_school_academic
+#: model:ir.model,name:ssi_school_academic.model_school_score_sheet_line
+msgid "School Score Sheet Line"
+msgstr "Baris Lembar Nilai Sekolah"
+
+#. module: ssi_school_academic
+#: model:ir.actions.act_window,name:ssi_school_academic.school_score_sheet_action
+msgid "School Score Sheets"
+msgstr "Lembar Nilai Sekolah"
+
+#. module: ssi_school_academic
+#: model:ir.model,name:ssi_school_academic.model_school_subject
+msgid "School Subject"
+msgstr "Mata Pelajaran Sekolah"
+
+#. module: ssi_school_academic
+#: model:ir.model,name:ssi_school_academic.model_school_subject_minimum_score
+msgid "School Subject Minimum Score"
+msgstr "KKM Mata Pelajaran Sekolah"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet_line__score
+msgid "Score"
+msgstr "Nilai"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet_line__component_id
+#: model:res.groups,name:ssi_school_academic.school_score_component_group
+msgid "Score Component"
+msgstr "Komponen Nilai"
+
+#. module: ssi_school_academic
+#: model:ir.actions.act_window,name:ssi_school_academic.school_score_component_action
+#: model:ir.ui.menu,name:ssi_school_academic.school_score_component_menu
+msgid "Score Components"
+msgstr "Komponen Nilai"
+
+#. module: ssi_school_academic
+#: model:res.groups,name:ssi_school_academic.school_score_predicate_group
+msgid "Score Predicate"
+msgstr "Predikat Nilai"
+
+#. module: ssi_school_academic
+#: model:ir.actions.act_window,name:ssi_school_academic.school_score_predicate_action
+#: model:ir.ui.menu,name:ssi_school_academic.school_score_predicate_menu
+msgid "Score Predicates"
+msgstr "Predikat Nilai"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet_line__sheet_id
+msgid "Score Sheet"
+msgstr "Lembar Nilai"
+
+#. module: ssi_school_academic
+#: model:ir.ui.menu,name:ssi_school_academic.school_score_sheet_menu
+msgid "Score Sheets"
+msgstr "Lembar Nilai"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_score_sheet_line__score
+msgid ""
+"Score between 0 and 100. Leave it empty while the student is not scored yet; "
+"that is not the same as zero."
+msgstr "Nilai antara 0 dan 100. Biarkan kosong selama siswa belum dinilai; itu tidak sama dengan nol."
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_score_sheet_line__component_id
+msgid "Score component the score is given for, for example Daily Test 1."
+msgstr "Komponen nilai yang menjadi dasar nilai, misalnya Ulangan Harian 1."
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card_type_weight__component_id
+msgid "Score component this weight applies to."
+msgstr "Komponen nilai yang menjadi sasaran bobot ini."
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card_type__display_component_ids
+msgid ""
+"Score components printed as score columns on the report card. Leave empty to "
+"print only the final score."
+msgstr "Komponen nilai yang dicetak sebagai kolom nilai pada raport. Biarkan kosong untuk mencetak nilai akhir saja."
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card_type__average_component_ids
+msgid ""
+"Score components whose scores are averaged into one part of the final score. "
+"A component without a score is left out of the average."
+msgstr "Komponen nilai yang nilainya dirata-rata menjadi satu bagian nilai akhir. Komponen tanpa nilai tidak diikutkan dalam rata-rata."
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_score_sheet__line_ids
+msgid "Score lines, one per enrollment and per score component."
+msgstr "Baris nilai, satu per pendaftaran dan per komponen nilai."
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_score_sheet_line__sheet_id
+msgid "Score sheet this line belongs to."
+msgstr "Lembar nilai tempat baris ini berada."
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet_line__is_scored
+msgid "Scored"
+msgstr "Sudah Dinilai"
+
+#. module: ssi_school_academic
+#: model_terms:ir.ui.view,arch_db:ssi_school_academic.school_score_sheet_view_form
+msgid "Scores"
+msgstr "Nilai"
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_report_card.py:0
+#, python-format
+msgid "Semester"
+msgstr "Semester"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_component__sequence
+msgid "Sequence"
+msgstr "Urutan"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_score_sheet_line__is_scored
+msgid ""
+"Set when a score was entered, zero included, and cleared when the score is "
+"emptied. A float field reads 0.0 for both an empty score and a zero score, "
+"so this flag tells them apart."
+msgstr "Terisi saat nilai dimasukkan, termasuk nol, dan dikosongkan saat nilai dikosongkan. Field float terbaca 0.0 untuk nilai kosong maupun nilai nol, sehingga penanda ini membedakan keduanya."
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card_extracurricular__description
+msgid "Short description of the student's result in the activity."
+msgstr "Deskripsi singkat hasil siswa pada kegiatan."
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_report_card.py:0
+#, python-format
+msgid "Sick"
+msgstr "Sakit"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__sick_days
+msgid "Sick Days"
+msgstr "Hari Sakit"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__state
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__state
+msgid "State"
+msgstr "Status"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card__activity_state
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card_type__activity_state
+#: model:ir.model.fields,help:ssi_school_academic.field_school_score_component__activity_state
+#: model:ir.model.fields,help:ssi_school_academic.field_school_score_predicate__activity_state
+#: model:ir.model.fields,help:ssi_school_academic.field_school_score_sheet__activity_state
+#: model:ir.model.fields,help:ssi_school_academic.field_school_subject__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr "Status berdasarkan aktivitas\\nTerlambat: Tanggal jatuh tempo sudah lewat\\nHari ini: Tanggal aktivitas adalah hari ini\\nDirencanakan: Aktivitas mendatang."
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__student_id
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet_line__student_id
+msgid "Student"
+msgstr "Siswa"
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_report_card.py:0
+#, python-format
+msgid "Student ID (NIS)"
+msgstr "Nomor Induk Siswa (NIS)"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card__student_id
+#: model:ir.model.fields,help:ssi_school_academic.field_school_score_sheet_line__student_id
+msgid "Student of the selected Enrollment."
+msgstr "Siswa dari pendaftaran yang dipilih."
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_report_card.py:0
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_line__subject_id
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__subject_id
+#: model:res.groups,name:ssi_school_academic.school_subject_group
+#: model_terms:ir.ui.view,arch_db:ssi_school_academic.school_score_sheet_view_search
+#, python-format
+msgid "Subject"
+msgstr "Mata Pelajaran"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_line__subject_group
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject__subject_group
+#: model_terms:ir.ui.view,arch_db:ssi_school_academic.school_subject_view_search
+msgid "Subject Group"
+msgstr "Kelompok Mata Pelajaran"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__line_ids
+msgid "Subject Lines"
+msgstr "Baris Mata Pelajaran"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card_line__subject_id
+msgid "Subject the final score is given for."
+msgstr "Mata pelajaran yang diberi nilai akhir."
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_score_sheet__subject_id
+msgid ""
+"Subject the scores are given for. Only subjects taught in the Grade of the "
+"Grade Class can be chosen."
+msgstr "Mata pelajaran yang diberi nilai. Hanya mata pelajaran yang diajarkan pada tingkat dari kelas tingkat yang dapat dipilih."
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_subject_minimum_score__subject_id
+msgid "Subject this minimum score belongs to."
+msgstr "Mata pelajaran pemilik KKM ini."
+
+#. module: ssi_school_academic
+#: model:ir.actions.act_window,name:ssi_school_academic.school_subject_action
+#: model:ir.ui.menu,name:ssi_school_academic.school_subject_menu
+#: model_terms:ir.ui.view,arch_db:ssi_school_academic.school_report_card_view_form
+msgid "Subjects"
+msgstr "Mata Pelajaran"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__teacher_id
+#: model_terms:ir.ui.view,arch_db:ssi_school_academic.school_score_sheet_view_search
+msgid "Teacher"
+msgstr "Guru"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_score_sheet__teacher_id
+msgid "Teacher who gives the scores of this sheet."
+msgstr "Guru yang memberikan nilai pada lembar ini."
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type__term_type
+#: model_terms:ir.ui.view,arch_db:ssi_school_academic.school_report_card_type_view_search
+msgid "Term Type"
+msgstr "Jenis Periode"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_co_curricular__theme
+msgid "Theme"
+msgstr "Tema"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card_co_curricular__theme
+msgid "Theme of the co-curricular activity."
+msgstr "Tema kegiatan kokurikuler."
+
+#. module: ssi_school_academic
+#: model_terms:ir.ui.view,arch_db:ssi_school_academic.school_report_card_view_form
+msgid ""
+"This overwrites the final score of every line from the score sheets that are "
+"done. Continue?"
+msgstr "Ini menimpa nilai akhir setiap baris dari lembar nilai yang sudah selesai. Lanjutkan?"
+
+#. module: ssi_school_academic
+#: model_terms:ir.ui.view,arch_db:ssi_school_academic.school_score_sheet_view_form
+msgid ""
+"This replaces every line with one line per open enrollment and per score "
+"component. Continue?"
+msgstr "Ini mengganti seluruh baris dengan satu baris per pendaftaran terbuka dan per komponen nilai. Lanjutkan?"
+
+#. module: ssi_school_academic
+#: model_terms:ir.ui.view,arch_db:ssi_school_academic.school_report_card_view_form
+msgid ""
+"This replaces every line with one line per subject of the grade and computes "
+"the scores. Continue?"
+msgstr "Ini mengganti seluruh baris dengan satu baris per mata pelajaran tingkat dan menghitung nilai. Lanjutkan?"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type__total_weight
+msgid "Total Weight"
+msgstr "Total Bobot"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card__name
+#: model:ir.model.fields,help:ssi_school_academic.field_school_score_sheet__name
+msgid ""
+"Transaction/document number\n"
+"\n"
+"* Unique indentifer of transaction\n"
+"* Leave '/' to automatically generate number\n"
+"* Change '/' into any number/identifier to manually assign number.\n"
+"  Manual number assignment can be done in 'Draft' state\n"
+"  Only user with 'Can Manualy Assign Number' policy can manually assign "
+"number.\n"
+"* Transaction with number other than '/' can not be deleted."
+msgstr "Nomor transaksi/dokumen\\n\\n* Pengenal unik transaksi\\n* Biarkan '/' untuk menghasilkan nomor secara otomatis\\n* Ubah '/' menjadi nomor/pengenal apa pun untuk menetapkan nomor secara manual.\\n  Penetapan nomor manual dapat dilakukan dalam status 'Draf'\\n  Hanya pengguna dengan kebijakan 'Dapat Memasukkan Nomor Dokumen Manual' yang dapat menetapkan nomor secara manual.\\n* Transaksi dengan nomor selain '/' tidak dapat dihapus."
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card__activity_exception_decoration
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card_type__activity_exception_decoration
+#: model:ir.model.fields,help:ssi_school_academic.field_school_score_component__activity_exception_decoration
+#: model:ir.model.fields,help:ssi_school_academic.field_school_score_predicate__activity_exception_decoration
+#: model:ir.model.fields,help:ssi_school_academic.field_school_score_sheet__activity_exception_decoration
+#: model:ir.model.fields,help:ssi_school_academic.field_school_subject__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr "Jenis aktivitas pengecualian pada catatan."
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__message_unread
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type__message_unread
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_component__message_unread
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__message_unread
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__message_unread
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject__message_unread
+msgid "Unread Messages"
+msgstr "Pesan yang Belum Dibaca"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__message_unread_counter
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type__message_unread_counter
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_component__message_unread_counter
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__message_unread_counter
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__message_unread_counter
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject__message_unread_counter
+msgid "Unread Messages Counter"
+msgstr "Penghitung Pesan yang Belum Dibaca"
+
+#. module: ssi_school_academic
+#: model:res.groups,name:ssi_school_academic.school_report_card_user_group
+#: model:res.groups,name:ssi_school_academic.school_score_sheet_user_group
+msgid "User"
+msgstr "Pengguna"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card__user_id
+#: model:ir.model.fields,help:ssi_school_academic.field_school_score_sheet__user_id
+msgid ""
+"User that responsible for document\n"
+"\n"
+"* Create user can be different with responsible user\n"
+"* Automatically filled with user that initiate document creation.\n"
+"  Default responsible can be changed."
+msgstr "Pengguna yang bertanggung jawab atas dokumen\\n\\n* Pengguna pembuat dapat berbeda dengan pengguna penanggung jawab\\n* Otomatis diisi dengan pengguna yang memulai pembuatan dokumen.\\n  Penanggung jawab bawaan dapat diubah."
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card__reviewer_id
+#: model:ir.model.fields,help:ssi_school_academic.field_school_score_sheet__reviewer_id
+msgid ""
+"User that responsible to review document\n"
+"\n"
+"* Unless it configured to approve reviewer does not equal to approver"
+msgstr "Pengguna yang bertanggung jawab memeriksa dokumen\\n\\n* Kecuali dikonfigurasi untuk menyetujui, pemeriksa tidak sama dengan penyetuju"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card__active_approver_user_ids
+#: model:ir.model.fields,help:ssi_school_academic.field_school_score_sheet__active_approver_user_ids
+msgid "Users that can approve/reject document"
+msgstr "Pengguna yang dapat menyetujui/menolak dokumen"
+
+#. module: ssi_school_academic
+#: model:res.groups,name:ssi_school_academic.school_report_card_validator_group
+#: model:res.groups,name:ssi_school_academic.school_score_sheet_validator_group
+msgid "Validator"
+msgstr "Validator"
+
+#. module: ssi_school_academic
+#: model:res.groups,name:ssi_school_academic.school_report_card_viewer_group
+#: model:res.groups,name:ssi_school_academic.school_score_sheet_viewer_group
+msgid "Viewer"
+msgstr "Penampil"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields.selection,name:ssi_school_academic.selection__school_subject__subject_group__vocational
+msgid "Vocational"
+msgstr "Kejuruan"
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_report_card.py:0
+#, python-format
+msgid "Vocational Subjects"
+msgstr "Kelompok Mata Pelajaran Kejuruan"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__website_message_ids
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type__website_message_ids
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_component__website_message_ids
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__website_message_ids
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__website_message_ids
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject__website_message_ids
+msgid "Website Messages"
+msgstr "Pesan Situs Web"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card__website_message_ids
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card_type__website_message_ids
+#: model:ir.model.fields,help:ssi_school_academic.field_school_score_component__website_message_ids
+#: model:ir.model.fields,help:ssi_school_academic.field_school_score_predicate__website_message_ids
+#: model:ir.model.fields,help:ssi_school_academic.field_school_score_sheet__website_message_ids
+#: model:ir.model.fields,help:ssi_school_academic.field_school_subject__website_message_ids
+msgid "Website communication history"
+msgstr "Riwayat komunikasi situs web"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type_weight__weight
+msgid "Weight (%)"
+msgstr "Bobot (%)"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card_type__weight_ids
+msgid ""
+"Weight of every score component that is not averaged. The average weight "
+"plus these weights must total 100%."
+msgstr "Bobot setiap komponen nilai yang tidak dirata-rata. Bobot rata-rata ditambah bobot ini harus berjumlah 100%."
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card_type__average_weight
+msgid ""
+"Weight, in percent, of the average of the averaged components in the final "
+"score."
+msgstr "Bobot, dalam persen, rata-rata komponen yang dirata-rata terhadap nilai akhir."
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card_type_weight__weight
+msgid "Weight, in percent, of the component in the final score."
+msgstr "Bobot, dalam persen, komponen terhadap nilai akhir."
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_report_card.py:0
+#, python-format
+msgid "Without Reason"
+msgstr "Tanpa Keterangan"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card__state
+#: model:ir.model.fields,help:ssi_school_academic.field_school_score_sheet__state
+msgid ""
+"Workflow status of the document\n"
+"\n"
+"* 'draft' is the only base state provided by this mixin.\n"
+"* Other states (e.g. confirmed, done, cancel) are added by derivative mixin\n"
+"  modules (such as confirm/done/cancel mixins) via 'selection_add'."
+msgstr ""
+"Status alur kerja dokumen\n"
+"\n"
+"* 'draft' adalah satu-satunya status dasar yang disediakan mixin ini.\n"
+"* Status lain (mis. dikonfirmasi, selesai, batal) ditambahkan oleh modul mixin turunan\n"
+"  (seperti mixin konfirmasi/selesai/batal) melalui 'selection_add'."
