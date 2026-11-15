@@ -6,6 +6,8 @@ from . import (  # noqa: F401
     school_report_card_type,
     school_report_card_type_weight,
     school_score_component,
+    school_score_predicate,
+    school_score_predicate_line,
     school_subject,
     school_subject_minimum_score,
 )

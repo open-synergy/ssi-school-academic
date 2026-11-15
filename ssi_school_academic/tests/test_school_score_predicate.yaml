@@ -1,0 +1,424 @@
+options:
+  auto_refresh: true
+setup:
+  steps:
+    - step: "Create grade type"
+      action: "create"
+      model: "school_grade_type"
+      save_as: "grade_type"
+      values:
+        name: "Predicate Grade Type"
+        code: "/"
+        sequence: 10
+    - step: "Create grade A"
+      action: "create"
+      model: "school_grade"
+      save_as: "grade_a"
+      values:
+        name: "Predicate Grade A"
+        code: "/"
+        sequence: 10
+        type_id: "REC: grade_type.id"
+    - step: "Create grade B"
+      action: "create"
+      model: "school_grade"
+      save_as: "grade_b"
+      values:
+        name: "Predicate Grade B"
+        code: "/"
+        sequence: 20
+        type_id: "REC: grade_type.id"
+scenarios:
+  - name: "Create Score Predicate"
+    steps:
+      - step: "Create the predicate table for two grades"
+        action: "create"
+        model: "school_score_predicate"
+        save_as: "predicate"
+        values:
+          name: "Predicate Table 1"
+          code: "/"
+          grade_ids:
+            - - 6
+              - 0
+              - - "REC: grade_a.id"
+                - "REC: grade_b.id"
+          line_ids:
+            - - 0
+              - 0
+              - name: "A"
+                description: "Very Good"
+                min_score: 90.0
+            - - 0
+              - 0
+              - name: "B"
+                description: "Good"
+                min_score: 80.0
+            - - 0
+              - 0
+              - name: "C"
+                description: "Fair"
+                min_score: 70.0
+            - - 0
+              - 0
+              - name: "D"
+                description: "Poor"
+                min_score: 0.0
+      - step: "Assert the predicate table"
+        action: "assert"
+        target: "predicate"
+        asserts:
+          id:
+            type: "value"
+            operator: "is_truthy"
+          active:
+            type: "value"
+            expected: true
+          grade_ids:
+            type: "m2m"
+            check: "count"
+            expected_count: 2
+          line_ids:
+            type: "o2m"
+            check: "count"
+            expected_count: 4
+  - name: "Edit Score Predicate"
+    steps:
+      - step: "Create the predicate table"
+        action: "create"
+        model: "school_score_predicate"
+        save_as: "predicate"
+        values:
+          name: "Predicate Table 2"
+          code: "/"
+          grade_ids:
+            - - 6
+              - 0
+              - - "REC: grade_a.id"
+          line_ids:
+            - - 0
+              - 0
+              - name: "A"
+                description: "Very Good"
+                min_score: 90.0
+            - - 0
+              - 0
+              - name: "B"
+                description: "Good"
+                min_score: 80.0
+            - - 0
+              - 0
+              - name: "C"
+                description: "Fair"
+                min_score: 70.0
+            - - 0
+              - 0
+              - name: "D"
+                description: "Poor"
+                min_score: 0.0
+      - step: "Write a new name"
+        action: "write"
+        target: "predicate"
+        values:
+          name: "Predicate Table 2 Changed"
+      - step: "Assert the name updated"
+        action: "assert"
+        target: "predicate"
+        asserts:
+          name:
+            type: "value"
+            expected: "Predicate Table 2 Changed"
+  - name: "Reject Grade On Two Active Tables"
+    steps:
+      - step: "Create the first active table"
+        action: "create"
+        model: "school_score_predicate"
+        save_as: "first"
+        values:
+          name: "Predicate Table 3"
+          code: "/"
+          grade_ids:
+            - - 6
+              - 0
+              - - "REC: grade_a.id"
+          line_ids:
+            - - 0
+              - 0
+              - name: "A"
+                description: "Very Good"
+                min_score: 90.0
+            - - 0
+              - 0
+              - name: "B"
+                description: "Good"
+                min_score: 80.0
+            - - 0
+              - 0
+              - name: "C"
+                description: "Fair"
+                min_score: 70.0
+            - - 0
+              - 0
+              - name: "D"
+                description: "Poor"
+                min_score: 0.0
+      - step: "Reject a second active table with the same grade"
+        action: "create"
+        model: "school_score_predicate"
+        expect_error:
+          type: "ValidationError"
+          message_contains: "only belong to one active predicate table"
+        values:
+          name: "Predicate Table 3b"
+          code: "/"
+          grade_ids:
+            - - 6
+              - 0
+              - - "REC: grade_a.id"
+                - "REC: grade_b.id"
+          line_ids:
+            - - 0
+              - 0
+              - name: "A"
+                description: "Very Good"
+                min_score: 90.0
+            - - 0
+              - 0
+              - name: "B"
+                description: "Good"
+                min_score: 80.0
+            - - 0
+              - 0
+              - name: "C"
+                description: "Fair"
+                min_score: 70.0
+            - - 0
+              - 0
+              - name: "D"
+                description: "Poor"
+                min_score: 0.0
+  - name: "Archived Table Frees Its Grade"
+    steps:
+      - step: "Create the first table"
+        action: "create"
+        model: "school_score_predicate"
+        save_as: "first"
+        values:
+          name: "Predicate Table 4"
+          code: "/"
+          grade_ids:
+            - - 6
+              - 0
+              - - "REC: grade_a.id"
+          line_ids:
+            - - 0
+              - 0
+              - name: "A"
+                description: "Very Good"
+                min_score: 90.0
+            - - 0
+              - 0
+              - name: "B"
+                description: "Good"
+                min_score: 80.0
+            - - 0
+              - 0
+              - name: "C"
+                description: "Fair"
+                min_score: 70.0
+            - - 0
+              - 0
+              - name: "D"
+                description: "Poor"
+                min_score: 0.0
+      - step: "Archive the first table"
+        action: "write"
+        target: "first"
+        values:
+          active: false
+      - step: "Create a second active table with the same grade"
+        action: "create"
+        model: "school_score_predicate"
+        save_as: "second"
+        values:
+          name: "Predicate Table 4b"
+          code: "/"
+          grade_ids:
+            - - 6
+              - 0
+              - - "REC: grade_a.id"
+          line_ids:
+            - - 0
+              - 0
+              - name: "A"
+                description: "Very Good"
+                min_score: 90.0
+            - - 0
+              - 0
+              - name: "B"
+                description: "Good"
+                min_score: 80.0
+            - - 0
+              - 0
+              - name: "C"
+                description: "Fair"
+                min_score: 70.0
+            - - 0
+              - 0
+              - name: "D"
+                description: "Poor"
+                min_score: 0.0
+      - step: "Assert the second table is saved"
+        action: "assert"
+        target: "second"
+        asserts:
+          active:
+            type: "value"
+            expected: true
+          line_ids:
+            type: "o2m"
+            check: "count"
+            expected_count: 4
+  - name: "Reject Unarchive Of Overlapping Table"
+    steps:
+      - step: "Create the first table"
+        action: "create"
+        model: "school_score_predicate"
+        save_as: "first"
+        values:
+          name: "Predicate Table 5"
+          code: "/"
+          grade_ids:
+            - - 6
+              - 0
+              - - "REC: grade_a.id"
+          line_ids:
+            - - 0
+              - 0
+              - name: "A"
+                description: "Very Good"
+                min_score: 90.0
+            - - 0
+              - 0
+              - name: "B"
+                description: "Good"
+                min_score: 80.0
+            - - 0
+              - 0
+              - name: "C"
+                description: "Fair"
+                min_score: 70.0
+            - - 0
+              - 0
+              - name: "D"
+                description: "Poor"
+                min_score: 0.0
+      - step: "Archive the first table"
+        action: "write"
+        target: "first"
+        values:
+          active: false
+      - step: "Create a second active table with the same grade"
+        action: "create"
+        model: "school_score_predicate"
+        save_as: "second"
+        values:
+          name: "Predicate Table 5b"
+          code: "/"
+          grade_ids:
+            - - 6
+              - 0
+              - - "REC: grade_a.id"
+          line_ids:
+            - - 0
+              - 0
+              - name: "A"
+                description: "Very Good"
+                min_score: 90.0
+            - - 0
+              - 0
+              - name: "B"
+                description: "Good"
+                min_score: 80.0
+            - - 0
+              - 0
+              - name: "C"
+                description: "Fair"
+                min_score: 70.0
+            - - 0
+              - 0
+              - name: "D"
+                description: "Poor"
+                min_score: 0.0
+      - step: "Reject unarchiving the first table"
+        action: "write"
+        target: "first"
+        expect_error:
+          type: "ValidationError"
+          message_contains: "only belong to one active predicate table"
+        values:
+          active: true
+  - name: "Reject Duplicate Minimum Score"
+    steps:
+      - step: "Reject two lines with the same minimum score"
+        action: "create"
+        model: "school_score_predicate"
+        expect_error:
+          type: "ValidationError"
+          message_contains: "must be unique"
+        values:
+          name: "Predicate Table 6"
+          code: "/"
+          grade_ids:
+            - - 6
+              - 0
+              - - "REC: grade_a.id"
+          line_ids:
+            - - 0
+              - 0
+              - name: "B"
+                min_score: 80.0
+            - - 0
+              - 0
+              - name: "B2"
+                min_score: 80.0
+  - name: "Reject Minimum Score Above 100"
+    steps:
+      - step: "Reject a minimum score of 101"
+        action: "create"
+        model: "school_score_predicate"
+        expect_error:
+          type: "ValidationError"
+          message_contains: "between 0 and 100"
+        values:
+          name: "Predicate Table 7"
+          code: "/"
+          grade_ids:
+            - - 6
+              - 0
+              - - "REC: grade_a.id"
+          line_ids:
+            - - 0
+              - 0
+              - name: "A"
+                min_score: 101.0
+  - name: "Reject Minimum Score Below 0"
+    steps:
+      - step: "Reject a minimum score of -1"
+        action: "create"
+        model: "school_score_predicate"
+        expect_error:
+          type: "ValidationError"
+          message_contains: "between 0 and 100"
+        values:
+          name: "Predicate Table 8"
+          code: "/"
+          grade_ids:
+            - - 6
+              - 0
+              - - "REC: grade_a.id"
+          line_ids:
+            - - 0
+              - 0
+              - name: "D"
+                min_score: -1.0
