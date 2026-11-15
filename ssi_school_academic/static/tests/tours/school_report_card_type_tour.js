@@ -125,9 +125,21 @@ odoo.define("ssi_school_academic.school_report_card_type_tour", function (requir
                     in_modal: false,
                 },
                 {
+                    // Gate: adding a tag re-renders the many2many_tags input;
+                    // wait until the first tag badge is rendered before typing.
+                    content: "First Averaged Component tag is rendered",
+                    trigger:
+                        ".o_field_many2manytags[name='average_component_ids'] .o_badge_text:contains(TOUR RCT UH 1)",
+                    run: function () {
+                        // Assertion only; do not trigger the default click action.
+                    },
+                },
+                {
                     content: "Select the second Averaged Component",
                     trigger:
                         ".o_field_many2manytags[name='average_component_ids'] input",
+                    extra_trigger:
+                        ".o_field_many2manytags[name='average_component_ids'] .o_badge_text:contains(TOUR RCT UH 1)",
                     run: "text TOUR RCT Task 1",
                 },
                 {
