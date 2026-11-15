@@ -1,0 +1,48 @@
+# T-01 (odoo-development-unit-test/test-traps.md): `setup:` replays before
+# every scenario without rollback, so the unique codes are generated per replay.
+options:
+  auto_refresh: true
+
+setup:
+  steps:
+    - step: "Create the grade type"
+      action: "create"
+      model: "school_grade_type"
+      save_as: "grade_type"
+      values:
+        name: "SGP Grade Type"
+        code: "EVAL: 'SGPGT%d' % env['school_grade_type'].search_count([])"
+
+scenarios:
+  - name: "School Grade - Phase is optional and can be written"
+    steps:
+      - step: "Create the grade without a phase"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "SGP Grade"
+          code: "EVAL: 'SGPGR%d' % env['school_grade'].search_count([])"
+          type_id: "REC: grade_type.id"
+
+      - step: "The phase is empty"
+        action: "assert"
+        target: "grade"
+        asserts:
+          phase:
+            type: "value"
+            expected: false
+
+      - step: "Write the phase"
+        action: "write"
+        target: "grade"
+        values:
+          phase: "E"
+
+      - step: "The phase is kept"
+        action: "assert"
+        target: "grade"
+        asserts:
+          phase:
+            type: "value"
+            expected: "E"

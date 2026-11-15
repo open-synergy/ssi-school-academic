@@ -5,7 +5,8 @@
 from datetime import date as datetime_date
 
 from odoo import _, api, fields, models
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import AccessError, UserError, ValidationError
+from odoo.tools.misc import format_date
 
 from odoo.addons.ssi_decorator import ssi_decorator
 
@@ -471,6 +472,222 @@ Solution: Restart the document before running this action
         return {
             "report_card_id": self.id,
             "subject_id": subject.id,
+        }
+
+    def get_report_card_print_data(self):
+        """Return the data the report card print template needs.
+
+        Called by the py3o template of the report card. The first
+        statement checks the Viewer group, because the read access of
+        the model is granted to every user and the report route does
+        not check the groups of the report. The returned dict holds the
+        translated static ``labels``, the ``header`` values, the
+        subject ``groups`` with their rows, and the blocks that are
+        ``False`` when empty (``co_curricular``, ``extracurricular``,
+        ``homeroom_note`` and ``parent_response``).
+
+        :raises AccessError: when the user is not in the Viewer group
+            of the report card.
+        :return: dict ready to print
+        :rtype: dict
+        """
+        self.ensure_one()
+        group = "ssi_school_academic.school_report_card_viewer_group"
+        if not self.env.user.has_group(group):
+            error_message = (
+                _(
+                    """
+Document Type: %s
+Context: Print report card
+Database ID: %s
+Problem: You are not allowed to print this report card
+Solution: Ask the administrator to add you to the report card Viewer group
+"""
+                )
+                % (self._description, self.id)
+            )
+            raise AccessError(error_message)
+        record = self.sudo()
+        card_type = record.type_id
+        show_components = card_type.term_type == "mid_term"
+        components = card_type.display_component_ids.sorted("sequence")[:4]
+        enrollment = record.enrollment_id
+        student = record.student_id
+        teacher = record.homeroom_id.teacher_id
+        grade_class = record.grade_class_id
+        labels = record._get_print_labels()
+        if show_components:
+            period = labels["mid_term_semester"]
+        else:
+            period = labels["semester"]
+        return {
+            "labels": labels,
+            "period": period,
+            "show_components": show_components,
+            "component_headers": [
+                components[i].name if i < len(components) else "" for i in range(4)
+            ],
+            "header": {
+                "student_name": student.name or "",
+                "nis": student.code or "",
+                "nisn": student.contact_id.nisn or "",
+                "school": enrollment.school_id.name or "",
+                "school_address": record._get_print_school_address(),
+                "program": grade_class.expertise_program or "",
+                "concentration": grade_class.expertise_concentration or "",
+                "class_name": grade_class.name or "",
+                "phase": record.grade_id.phase or "",
+                "academic_year": record.academic_year_id.name or "",
+                "term": record.academic_term_id.name or "",
+            },
+            "footer": " | ".join(
+                [grade_class.name or "", student.name or "", student.code or ""]
+            ),
+            "groups": record._get_print_groups(components, show_components),
+            "co_curricular": [
+                {"theme": item.theme or "", "description": item.description or ""}
+                for item in record.co_curricular_ids
+            ]
+            or False,
+            "extracurricular": [
+                {
+                    "no": str(index),
+                    "name": item.name or "",
+                    "description": item.description or "",
+                }
+                for index, item in enumerate(record.extracurricular_ids, start=1)
+            ]
+            or False,
+            "absence": {
+                "sick": str(record.sick_days),
+                "permission": str(record.permission_days),
+                "absent": str(record.absent_days),
+            },
+            "homeroom_note": record.homeroom_note or False,
+            "parent_response": record.parent_response or False,
+            "print_city": record.print_city or "",
+            "print_date": format_date(self.env, record.print_date),
+            "homeroom_name": teacher.name or "",
+            "homeroom_nuptk": teacher.nuptk or "",
+        }
+
+    def _get_print_school_address(self):
+        """Return the address of the school of the enrollment.
+
+        :return: address of the school contact on one line, empty when
+            the school has no contact
+        :rtype: str
+        """
+        self.ensure_one()
+        partner = self.enrollment_id.school_id.partner_id
+        if not partner:
+            return ""
+        address = partner._display_address(without_company=True)
+        return ", ".join(part for part in address.split("\n") if part.strip())
+
+    @api.model
+    def _format_print_score(self, score):
+        """Format a score without a useless decimal part.
+
+        :param float score: the score to print
+        :return: text such as ``87`` or ``85.5``
+        :rtype: str
+        """
+        return "%g" % score
+
+    def _get_print_groups(self, components, show_components):
+        """Build the subject groups and rows of the printed table.
+
+        Rows are grouped by subject group, General first and then
+        Vocational, and ordered by the subject name. A group without a
+        row is left out. A component the subject has no score for is
+        printed as ``-``, and a column without a component stays empty.
+
+        :param components: displayed score components, at most four
+        :param bool show_components: whether the component columns
+            are printed
+        :return: list of ``{"title": str, "rows": [dict]}``
+        :rtype: list
+        """
+        self.ensure_one()
+        labels = self._get_print_labels()
+        titles = [
+            ("general", labels["general"]),
+            ("vocational", labels["vocational"]),
+        ]
+        result = []
+        for group_key, title in titles:
+            lines = self.line_ids.filtered(
+                lambda line, key=group_key: line.subject_group == key
+            ).sorted(lambda line: line.subject_id.name or "")
+            rows = []
+            for index, line in enumerate(lines, start=1):
+                scores = [""] * 4
+                if show_components:
+                    component_scores = line._get_component_scores()
+                    for position, component in enumerate(components):
+                        if component.id in component_scores:
+                            scores[position] = self._format_print_score(
+                                component_scores[component.id]
+                            )
+                        else:
+                            scores[position] = "-"
+                rows.append(
+                    {
+                        "no": str(index),
+                        "subject": line.subject_id.name or "",
+                        "scores": scores,
+                        "final": self._format_print_score(line.final_score),
+                        "objective": line.learning_objective or "",
+                    }
+                )
+            if rows:
+                result.append({"title": title, "rows": rows})
+        return result
+
+    @api.model
+    def _get_print_labels(self):
+        """Return every static text of the printed report card.
+
+        The texts are English and translated here, so they reach the
+        ``.pot`` file instead of being typed into the template.
+
+        :return: label per key
+        :rtype: dict
+        """
+        return {
+            "title": _("Learning Result Report"),
+            "mid_term_semester": _("Mid-Term Semester"),
+            "semester": _("Semester"),
+            "name": _("Name"),
+            "nis": _("Student ID (NIS)"),
+            "nisn": _("National Student ID (NISN)"),
+            "school": _("School Name"),
+            "address": _("Address"),
+            "program": _("Expertise Program"),
+            "concentration": _("Expertise Concentration"),
+            "class": _("Class"),
+            "phase": _("Phase"),
+            "academic_year": _("Academic Year"),
+            "general": _("General Subjects"),
+            "vocational": _("Vocational Subjects"),
+            "no": _("No"),
+            "subject": _("Subject"),
+            "final": _("Final Score"),
+            "achievement": _("Competency Achievement"),
+            "co_curricular": _("Co-Curricular"),
+            "extracurricular": _("Extracurricular"),
+            "activity": _("Activity"),
+            "description": _("Description"),
+            "absence": _("Absences"),
+            "sick": _("Sick"),
+            "permission": _("Permission"),
+            "absent": _("Without Reason"),
+            "homeroom_note": _("Homeroom Teacher Note"),
+            "parent_response": _("Parent Response"),
+            "parent": _("Parent / Guardian"),
+            "homeroom": _("Homeroom Teacher"),
+            "nuptk": _("NUPTK"),
         }
 
     @ssi_decorator.pre_confirm_check()

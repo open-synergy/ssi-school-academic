@@ -18,7 +18,9 @@ enrollments of the class, filled in, and approved. The homeroom teacher then
 makes the report card of a student for an open enrollment: one line per
 subject with the final score, the minimum score and the predicate computed
 from the score sheets that are done, plus the co-curricular, extracurricular,
-absence and note parts written by hand, finished through approval.
+absence and note parts written by hand, finished through approval. A report
+card is printed as a PDF from one py3o template, for the Mid-Term and the Final
+type.
 
 
 Work Instruction
@@ -47,6 +49,7 @@ Work Instruction
 * `Approve School Report Card <docs/school_report_card/05-approve.html>`_
 * `Reject School Report Card <docs/school_report_card/06-reject.html>`_
 * `Cancel School Report Card <docs/school_report_card/07-cancel.html>`_
+* `Print School Report Card <docs/school_report_card/08-print.html>`_
 
 
 Installation
@@ -61,6 +64,18 @@ To install this module, you need to:
 5.  Search For *School Academic*
 6.  Install the module
 
+
+Usage
+=====
+
+* The print shows at most four score component columns on a Mid-Term report
+  card. Set the **Displayed Columns** of the Report Card Type in the order of
+  the **Sequence** of the components; a fifth component and the ones after it
+  are not printed.
+* The **Phase** of the grade is filled on the grade form and printed in the page
+  header of the report card.
+* To show the Print wizard of the SSI document form, configure the
+  **Print Document Type** in the user interface; it is not part of this module.
 
 Bug Tracker
 ===========
