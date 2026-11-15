@@ -1,0 +1,496 @@
+# T-01 (odoo-development-unit-test/test-traps.md): the `setup:` block replays
+# before every scenario inside one un-rolled-back transaction, so every
+# unique-constrained value it creates (codes, logins) is generated per replay
+# from a count of the existing records, and documents keep the default name
+# `/`. The assertions of each scenario are limited to the aliases the scenario
+# builds itself, never to a count over the whole model.
+options:
+  auto_refresh: true
+
+setup:
+  steps:
+    - step: "Create the partner of Operating Unit A"
+      action: "create"
+      model: "res.partner"
+      save_as: "ou_a_partner"
+      values:
+        name: "SAOU Operating Unit A Partner"
+
+    - step: "Create Operating Unit A"
+      action: "create"
+      model: "operating.unit"
+      save_as: "ou_a"
+      values:
+        name: "SAOU Operating Unit A"
+        code: "EVAL: 'SAOUA%d' % env['operating.unit'].search_count([])"
+        company_id: "REF: base.main_company"
+        partner_id: "REC: ou_a_partner.id"
+
+    - step: "Create the partner of Operating Unit B"
+      action: "create"
+      model: "res.partner"
+      save_as: "ou_b_partner"
+      values:
+        name: "SAOU Operating Unit B Partner"
+
+    - step: "Create Operating Unit B"
+      action: "create"
+      model: "operating.unit"
+      save_as: "ou_b"
+      values:
+        name: "SAOU Operating Unit B"
+        code: "EVAL: 'SAOUB%d' % env['operating.unit'].search_count([])"
+        company_id: "REF: base.main_company"
+        partner_id: "REC: ou_b_partner.id"
+
+    # The users are in the Operating Unit groups only. They are not in the
+    # Company groups, because a Company group implies the Operating Unit group
+    # and its own rule would show every document of the company: group rules
+    # are OR-combined, so it would hide the effect of the Operating Unit rule.
+    - step: "Create the user of Operating Unit A"
+      action: "create"
+      model: "res.users"
+      save_as: "user_ou_a"
+      values:
+        name: "SAOU User OU-A"
+        login: "EVAL: 'saou_a_%d@ssi-school.test' % env['res.users'].search_count([])"
+        company_id: "REF: base.main_company"
+        groups_id:
+          - - 6
+            - 0
+            - - "REF: base.group_user"
+              - "REF:
+                ssi_school_academic_operating_unit.school_score_sheet_operating_unit_group"
+              - "REF:
+                ssi_school_academic_operating_unit.school_report_card_operating_unit_group"
+        assigned_operating_unit_ids:
+          - - 6
+            - 0
+            - - "REC: ou_a.id"
+        default_operating_unit_id: "REC: ou_a.id"
+
+    - step: "Create the user of Operating Unit B"
+      action: "create"
+      model: "res.users"
+      save_as: "user_ou_b"
+      values:
+        name: "SAOU User OU-B"
+        login: "EVAL: 'saou_b_%d@ssi-school.test' % env['res.users'].search_count([])"
+        company_id: "REF: base.main_company"
+        groups_id:
+          - - 6
+            - 0
+            - - "REF: base.group_user"
+              - "REF:
+                ssi_school_academic_operating_unit.school_score_sheet_operating_unit_group"
+              - "REF:
+                ssi_school_academic_operating_unit.school_report_card_operating_unit_group"
+        assigned_operating_unit_ids:
+          - - 6
+            - 0
+            - - "REC: ou_b.id"
+        default_operating_unit_id: "REC: ou_b.id"
+
+    - step: "Create the grade type"
+      action: "create"
+      model: "school_grade_type"
+      save_as: "grade_type"
+      values:
+        name: "SAOU Grade Type"
+        code: "EVAL: 'SAOUGT%d' % env['school_grade_type'].search_count([])"
+
+    - step: "Create the school"
+      action: "create"
+      model: "school"
+      save_as: "school"
+      values:
+        name: "SAOU School"
+        code: "EVAL: 'SAOUSC%d' % env['school'].search_count([])"
+        grade_type_id: "REC: grade_type.id"
+
+    - step: "Create the academic year"
+      action: "create"
+      model: "school_academic_year"
+      save_as: "academic_year"
+      values:
+        name: "SAOU Academic Year"
+        code: "EVAL: 'SAOUAY%d' % env['school_academic_year'].search_count([])"
+        date_start: 2026-07-01
+        date_end: 2027-06-30
+
+    - step: "Create the academic term open for enrollment"
+      action: "create"
+      model: "school_academic_term"
+      save_as: "academic_term"
+      values:
+        name: "SAOU Term"
+        code: "EVAL: 'SAOUTM%d' % env['school_academic_term'].search_count([])"
+        date_start: 2026-07-01
+        date_end: 2026-12-31
+        year_id: "REC: academic_year.id"
+        enrollment_state: "open"
+
+    - step: "Create the grade"
+      action: "create"
+      model: "school_grade"
+      save_as: "grade"
+      values:
+        name: "SAOU Grade"
+        code: "EVAL: 'SAOUGR%d' % env['school_grade'].search_count([])"
+        type_id: "REC: grade_type.id"
+
+    - step: "Create the grade class"
+      action: "create"
+      model: "school_grade_class"
+      save_as: "grade_class"
+      values:
+        name: "SAOU Class"
+        code: "EVAL: 'SAOUCL%d' % env['school_grade_class'].search_count([])"
+        school_id: "REC: school.id"
+        grade_id: "REC: grade.id"
+
+    - step: "Create the subject of the score sheet of Operating Unit A"
+      action: "create"
+      model: "school_subject"
+      save_as: "subject_a"
+      values:
+        name: "SAOU Subject A"
+        code: "EVAL: 'SAOUSA%d' % env['school_subject'].search_count([])"
+        grade_ids:
+          - - 6
+            - 0
+            - - "REC: grade.id"
+
+    - step: "Create the subject of the score sheet of Operating Unit B"
+      action: "create"
+      model: "school_subject"
+      save_as: "subject_b"
+      values:
+        name: "SAOU Subject B"
+        code: "EVAL: 'SAOUSB%d' % env['school_subject'].search_count([])"
+        grade_ids:
+          - - 6
+            - 0
+            - - "REC: grade.id"
+
+    - step: "Create the home address partner of the teacher"
+      action: "create"
+      model: "res.partner"
+      save_as: "teacher_partner"
+      values:
+        name: "SAOU Teacher Home Address"
+
+    - step: "Create the employee of the teacher"
+      action: "create"
+      model: "hr.employee"
+      save_as: "employee"
+      values:
+        name: "SAOU Teacher Employee"
+        company_id: "base.main_company"
+        address_home_id: "REC: teacher_partner.id"
+
+    - step: "Create the teacher"
+      action: "create"
+      model: "school_teacher"
+      save_as: "teacher"
+      values:
+        name: "SAOU Teacher"
+        code: "EVAL: 'SAOUTC%d' % env['school_teacher'].search_count([])"
+        employee_id: "REC: employee.id"
+
+    - step: "Create the averaged score component"
+      action: "create"
+      model: "school_score_component"
+      save_as: "component"
+      values:
+        name: "SAOU UH 1"
+        code: "EVAL: 'SAOUC%d' % env['school_score_component'].search_count([])"
+        category: "daily_test"
+        sequence: 10
+
+    - step: "Create the mid-term report card type, fully averaged"
+      action: "create"
+      model: "school_report_card_type"
+      save_as: "type_a"
+      values:
+        name: "SAOU Mid-Term A"
+        code: "EVAL: 'SAOURA%d' % env['school_report_card_type'].search_count([])"
+        term_type: "mid_term"
+        average_weight: 100.0
+        average_component_ids:
+          - - 6
+            - 0
+            - - "REC: component.id"
+
+    - step: "Create the final report card type, fully averaged"
+      action: "create"
+      model: "school_report_card_type"
+      save_as: "type_b"
+      values:
+        name: "SAOU Final B"
+        code: "EVAL: 'SAOURB%d' % env['school_report_card_type'].search_count([])"
+        term_type: "final"
+        average_weight: 100.0
+        average_component_ids:
+          - - 6
+            - 0
+            - - "REC: component.id"
+
+    - step: "Create the contact of the student"
+      action: "create"
+      model: "res.partner"
+      save_as: "contact"
+      values:
+        name: "SAOU Student Contact"
+
+    - step: "Create the student"
+      action: "create"
+      model: "school_student"
+      save_as: "student"
+      values:
+        name: "SAOU Student"
+        code: "EVAL: 'SAOUST%d' % env['school_student'].search_count([])"
+        contact_id: "REC: contact.id"
+        school_id: "REC: school.id"
+
+    - step: "Create the enrollment of the student"
+      action: "create"
+      model: "school_enrollment"
+      save_as: "enrollment"
+      values:
+        academic_year_id: "REC: academic_year.id"
+        academic_term_id: "REC: academic_term.id"
+        school_id: "REC: school.id"
+        grade_id: "REC: grade.id"
+        grade_class_id: "REC: grade_class.id"
+        student_id: "REC: student.id"
+        currency_id: "EVAL: env.company.currency_id.id"
+
+    - step: "Confirm the enrollment"
+      action: "call"
+      target: "enrollment"
+      method: "action_confirm"
+      as_user: "base.user_admin"
+      asserts:
+        state:
+          type: "value"
+          expected: "confirm"
+
+    - step: "Approve the enrollment, which opens it"
+      action: "call"
+      target: "enrollment"
+      method: "action_approve_approval"
+      as_user: "base.user_admin"
+      asserts:
+        state:
+          type: "value"
+          expected: "open"
+
+scenarios:
+  - name: "School Academic Operating Unit - Documents store their operating unit"
+    steps:
+      - step: "Create the score sheet of Operating Unit A"
+        action: "create"
+        model: "school_score_sheet"
+        save_as: "sheet_a"
+        values:
+          academic_term_id: "REC: academic_term.id"
+          grade_class_id: "REC: grade_class.id"
+          subject_id: "REC: subject_a.id"
+          teacher_id: "REC: teacher.id"
+          date: 2026-08-10
+          user_id: "REF: base.user_admin"
+          operating_unit_id: "REC: ou_a.id"
+
+      - step: "Create the score sheet of Operating Unit B"
+        action: "create"
+        model: "school_score_sheet"
+        save_as: "sheet_b"
+        values:
+          academic_term_id: "REC: academic_term.id"
+          grade_class_id: "REC: grade_class.id"
+          subject_id: "REC: subject_b.id"
+          teacher_id: "REC: teacher.id"
+          date: 2026-08-10
+          user_id: "REF: base.user_admin"
+          operating_unit_id: "REC: ou_b.id"
+
+      - step: "Create the report card of Operating Unit A"
+        action: "create"
+        model: "school_report_card"
+        save_as: "card_a"
+        values:
+          enrollment_id: "REC: enrollment.id"
+          type_id: "REC: type_a.id"
+          print_date: 2026-12-20
+          print_city: "Jakarta"
+          user_id: "REF: base.user_admin"
+          operating_unit_id: "REC: ou_a.id"
+
+      - step: "Create the report card of Operating Unit B"
+        action: "create"
+        model: "school_report_card"
+        save_as: "card_b"
+        values:
+          enrollment_id: "REC: enrollment.id"
+          type_id: "REC: type_b.id"
+          print_date: 2026-12-20
+          print_city: "Jakarta"
+          user_id: "REF: base.user_admin"
+          operating_unit_id: "REC: ou_b.id"
+
+      - step: "Assert the score sheet of Operating Unit A stores its unit"
+        action: "assert"
+        target: "sheet_a"
+        asserts:
+          operating_unit_id:
+            type: "m2o"
+            expected: "REC: ou_a"
+
+      - step: "Assert the score sheet of Operating Unit B stores its unit"
+        action: "assert"
+        target: "sheet_b"
+        asserts:
+          operating_unit_id:
+            type: "m2o"
+            expected: "REC: ou_b"
+
+      - step: "Assert the report card of Operating Unit A stores its unit"
+        action: "assert"
+        target: "card_a"
+        asserts:
+          operating_unit_id:
+            type: "m2o"
+            expected: "REC: ou_a"
+
+      - step: "Assert the report card of Operating Unit B stores its unit"
+        action: "assert"
+        target: "card_b"
+        asserts:
+          operating_unit_id:
+            type: "m2o"
+            expected: "REC: ou_b"
+
+  - name: "School Academic Operating Unit - Users only see their own operating unit"
+    steps:
+      - step: "Create the score sheet of Operating Unit A"
+        action: "create"
+        model: "school_score_sheet"
+        save_as: "sheet_a"
+        values:
+          academic_term_id: "REC: academic_term.id"
+          grade_class_id: "REC: grade_class.id"
+          subject_id: "REC: subject_a.id"
+          teacher_id: "REC: teacher.id"
+          date: 2026-08-10
+          user_id: "REF: base.user_admin"
+          operating_unit_id: "REC: ou_a.id"
+
+      - step: "Create the score sheet of Operating Unit B"
+        action: "create"
+        model: "school_score_sheet"
+        save_as: "sheet_b"
+        values:
+          academic_term_id: "REC: academic_term.id"
+          grade_class_id: "REC: grade_class.id"
+          subject_id: "REC: subject_b.id"
+          teacher_id: "REC: teacher.id"
+          date: 2026-08-10
+          user_id: "REF: base.user_admin"
+          operating_unit_id: "REC: ou_b.id"
+
+      - step: "Create the report card of Operating Unit A"
+        action: "create"
+        model: "school_report_card"
+        save_as: "card_a"
+        values:
+          enrollment_id: "REC: enrollment.id"
+          type_id: "REC: type_a.id"
+          print_date: 2026-12-20
+          print_city: "Jakarta"
+          user_id: "REF: base.user_admin"
+          operating_unit_id: "REC: ou_a.id"
+
+      - step: "Create the report card of Operating Unit B"
+        action: "create"
+        model: "school_report_card"
+        save_as: "card_b"
+        values:
+          enrollment_id: "REC: enrollment.id"
+          type_id: "REC: type_b.id"
+          print_date: 2026-12-20
+          print_city: "Jakarta"
+          user_id: "REF: base.user_admin"
+          operating_unit_id: "REC: ou_b.id"
+
+      - step: "The Operating Unit A user finds only the score sheet of unit A"
+        action: "search"
+        model: "school_score_sheet"
+        as_user: "user_ou_a"
+        domain:
+          - ["id", "in", "EVAL: [registry['sheet_a'].id, registry['sheet_b'].id]"]
+        save_as: "seen_sheets_a"
+        expect_count: 1
+
+      - step: "The Operating Unit B user finds only the score sheet of unit B"
+        action: "search"
+        model: "school_score_sheet"
+        as_user: "user_ou_b"
+        domain:
+          - ["id", "in", "EVAL: [registry['sheet_a'].id, registry['sheet_b'].id]"]
+        save_as: "seen_sheets_b"
+        expect_count: 1
+
+      - step: "The Operating Unit A user finds only the report card of unit A"
+        action: "search"
+        model: "school_report_card"
+        as_user: "user_ou_a"
+        domain:
+          - ["id", "in", "EVAL: [registry['card_a'].id, registry['card_b'].id]"]
+        save_as: "seen_cards_a"
+        expect_count: 1
+
+      - step: "The Operating Unit B user finds only the report card of unit B"
+        action: "search"
+        model: "school_report_card"
+        as_user: "user_ou_b"
+        domain:
+          - ["id", "in", "EVAL: [registry['card_a'].id, registry['card_b'].id]"]
+        save_as: "seen_cards_b"
+        expect_count: 1
+
+      - step: "The Operating Unit A user reads the score sheet of its own unit"
+        action: "call"
+        target: "sheet_a"
+        method: "read"
+        as_user: "user_ou_a"
+        args:
+          - ["id"]
+
+      - step: "The Operating Unit A user reads the report card of its own unit"
+        action: "call"
+        target: "card_a"
+        method: "read"
+        as_user: "user_ou_a"
+        args:
+          - ["id"]
+
+      - step: "The Operating Unit B user cannot read the score sheet of unit A"
+        action: "call"
+        target: "sheet_a"
+        method: "read"
+        as_user: "user_ou_b"
+        args:
+          - ["id"]
+        expect_error:
+          type: "AccessError"
+
+      - step: "The Operating Unit B user cannot read the report card of unit A"
+        action: "call"
+        target: "card_a"
+        method: "read"
+        as_user: "user_ou_b"
+        args:
+          - ["id"]
+        expect_error:
+          type: "AccessError"
