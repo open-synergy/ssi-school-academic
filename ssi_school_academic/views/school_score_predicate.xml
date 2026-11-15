@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 OpenSynergy Indonesia
+     Copyright 2026 PT. Simetri Sinergi Indonesia
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+<record id="school_score_predicate_view_search" model="ir.ui.view">
+    <field name="name">school_score_predicate - search</field>
+    <field name="model">school_score_predicate</field>
+    <field
+            name="inherit_id"
+            ref="ssi_master_data_mixin.mixin_master_data_view_search"
+        />
+    <field name="mode">primary</field>
+    <field name="arch" type="xml">
+        <data>
+            <xpath expr="//search" position="inside">
+                <field name="grade_ids" />
+            </xpath>
+        </data>
+    </field>
+</record>
+
+<record id="school_score_predicate_view_tree" model="ir.ui.view">
+    <field name="name">school_score_predicate - tree</field>
+    <field name="model">school_score_predicate</field>
+    <field name="inherit_id" ref="ssi_master_data_mixin.mixin_master_data_view_tree" />
+    <field name="mode">primary</field>
+    <field name="arch" type="xml">
+        <data>
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="grade_ids" widget="many2many_tags" />
+            </xpath>
+        </data>
+    </field>
+</record>
+
+<record id="school_score_predicate_view_form" model="ir.ui.view">
+    <field name="name">school_score_predicate - form</field>
+    <field name="model">school_score_predicate</field>
+    <field name="inherit_id" ref="ssi_master_data_mixin.mixin_master_data_view_form" />
+    <field name="mode">primary</field>
+    <field name="arch" type="xml">
+        <data>
+            <xpath expr="//notebook/page[@name='note']" position="before">
+                <page name="applicability" string="Applicability">
+                    <group name="applicability_group_1">
+                        <field name="grade_ids" widget="many2many_tags" />
+                    </group>
+                </page>
+                <page name="predicate_line" string="Predicate Lines">
+                    <field name="line_ids" nolabel="1">
+                        <tree editable="bottom">
+                            <field name="name" />
+                            <field name="description" />
+                            <field name="min_score" />
+                        </tree>
+                        <form>
+                            <group name="line_group_1">
+                                <field name="name" />
+                                <field name="description" />
+                                <field name="min_score" />
+                            </group>
+                        </form>
+                    </field>
+                </page>
+            </xpath>
+        </data>
+    </field>
+</record>
+
+<record id="school_score_predicate_action" model="ir.actions.act_window">
+    <field name="name">Score Predicates</field>
+    <field name="type">ir.actions.act_window</field>
+    <field name="res_model">school_score_predicate</field>
+    <field name="view_mode">tree,form</field>
+</record>
+
+<menuitem
+        id="school_score_predicate_menu"
+        name="Score Predicates"
+        parent="ssi_school.menu_subject_configuration"
+        action="school_score_predicate_action"
+        groups="school_score_predicate_group"
+        sequence="40"
+    />
+
+</odoo>
