@@ -742,3 +742,111 @@ scenarios:
           state:
             type: "value"
             expected: "draft"
+
+  - name: "School Score Sheet - The scored flag tells zero from empty"
+    steps:
+      - step: "Create the draft score sheet"
+        action: "create"
+        model: "school_score_sheet"
+        save_as: "sheet"
+        values:
+          academic_term_id: "REC: academic_term.id"
+          grade_class_id: "REC: grade_class.id"
+          subject_id: "REC: subject.id"
+          teacher_id: "REC: teacher.id"
+          date: 2026-08-10
+          user_id: "REF: base.user_admin"
+
+      - step: "Generate the lines"
+        action: "call"
+        target: "sheet"
+        method: "action_generate_lines"
+        as_user: "base.user_admin"
+        asserts:
+          line_ids:
+            type: "o2m"
+            check: "count"
+            expected_count: 4
+
+      - step: "No generated line is scored"
+        action: "search"
+        model: "school_score_sheet_line"
+        domain:
+          - ["sheet_id", "=", "REC: sheet.id"]
+          - ["is_scored", "=", true]
+        save_as: "scored_lines"
+        expect_count: 0
+
+      - step: "Find the line of the first student and component"
+        action: "search"
+        model: "school_score_sheet_line"
+        domain:
+          - ["sheet_id", "=", "REC: sheet.id"]
+          - ["enrollment_id", "=", "REC: enrollment_1.id"]
+          - ["component_id", "=", "REC: component_1.id"]
+        save_as: "line"
+        expect_count: 1
+
+      - step: "Writing a score of zero marks the line as scored"
+        action: "write"
+        target: "line"
+        values:
+          score: 0.0
+
+      - step: "A score of zero is scored"
+        action: "assert"
+        target: "line"
+        asserts:
+          is_scored:
+            type: "value"
+            expected: true
+
+      - step: "Emptying the score clears the flag"
+        action: "write"
+        target: "line"
+        values:
+          score: false
+
+      - step: "An emptied score is not scored"
+        action: "assert"
+        target: "line"
+        asserts:
+          is_scored:
+            type: "value"
+            expected: false
+
+      - step: "Writing a filled score marks the line as scored again"
+        action: "write"
+        target: "line"
+        values:
+          score: 55.0
+
+      - step: "A filled score is scored"
+        action: "assert"
+        target: "line"
+        asserts:
+          is_scored:
+            type: "value"
+            expected: true
+
+      - step: "Remove the line to create it again with a score"
+        action: "unlink"
+        target: "line"
+
+      - step: "A line created with a score of zero"
+        action: "create"
+        model: "school_score_sheet_line"
+        save_as: "zero_line"
+        values:
+          sheet_id: "REC: sheet.id"
+          enrollment_id: "REC: enrollment_1.id"
+          component_id: "REC: component_1.id"
+          score: 0.0
+
+      - step: "A line created with a score of zero is scored"
+        action: "assert"
+        target: "zero_line"
+        asserts:
+          is_scored:
+            type: "value"
+            expected: true

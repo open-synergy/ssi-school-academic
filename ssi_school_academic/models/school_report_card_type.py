@@ -254,10 +254,12 @@ Solution: Enter a rounding threshold above 0 and below 1
     def compute_final_score(self, scores):
         """Compute the rounded final score from the component scores.
 
-        The averaged components give one part (their mean) and every
-        weight line gives one part. A part without a score is left out
-        and the remaining weights are normalized, so a missing score
-        never pulls the final score down to 0.
+        The averaged components give one part (their mean, rounded to
+        a whole number half-up before it is weighted) and every weight
+        line gives one part, left unrounded. A part without a score is
+        left out and the remaining weights are normalized, so a missing
+        score never pulls the final score down to 0. A score of 0 that
+        is in the dict counts as a score and enters the mean.
 
         :param dict scores: score per component, ``{component_id:
             float}``; a component without a score is not in the dict.
@@ -273,9 +275,8 @@ Solution: Enter a rounding threshold above 0 and below 1
             if component.id in scores
         ]
         if average_scores:
-            parts.append(
-                (self.average_weight, sum(average_scores) / len(average_scores))
-            )
+            mean = sum(average_scores) / len(average_scores)
+            parts.append((self.average_weight, float_round(mean, precision_digits=0)))
         for line in self.weight_ids:
             if line.component_id.id in scores:
                 parts.append((line.weight, scores[line.component_id.id]))

@@ -14,7 +14,11 @@ Exam), one record per slot. Report card types set how the final score is
 calculated: the averaged components, the weights, the printed columns, and
 the rounding threshold. Teachers record the scores of a subject on a score
 sheet per grade class and academic term: the lines are generated from the open
-enrollments of the class, filled in, and approved.
+enrollments of the class, filled in, and approved. The homeroom teacher then
+makes the report card of a student for an open enrollment: one line per
+subject with the final score, the minimum score and the predicate computed
+from the score sheets that are done, plus the co-curricular, extracurricular,
+absence and note parts written by hand, finished through approval.
 
 
 Work Instruction
@@ -36,6 +40,13 @@ Work Instruction
 * `Reject School Score Sheet <docs/school_score_sheet/05-reject.html>`_
 * `Cancel School Score Sheet <docs/school_score_sheet/06-cancel.html>`_
 * `Restart School Score Sheet Approval Process <docs/school_score_sheet/07-restart-approval.html>`_
+* `Create School Report Card <docs/school_report_card/01-create.html>`_
+* `Generate Lines of School Report Card <docs/school_report_card/02-generate-lines.html>`_
+* `Compute Scores of School Report Card <docs/school_report_card/03-compute-scores.html>`_
+* `Confirm School Report Card <docs/school_report_card/04-confirm.html>`_
+* `Approve School Report Card <docs/school_report_card/05-approve.html>`_
+* `Reject School Report Card <docs/school_report_card/06-reject.html>`_
+* `Cancel School Report Card <docs/school_report_card/07-cancel.html>`_
 
 
 Installation

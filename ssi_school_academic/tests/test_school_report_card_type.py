@@ -69,12 +69,12 @@ class TestSchoolReportCardType(YamlTransactionCase):
         self.run_yaml_scenario("test_school_report_card_type.yaml")
 
     def test_final_score_below_threshold(self):
-        """Assert a raw score of 87.53 rounds down to 87.0.
+        """Assert a raw score of 87.45 rounds down to 87.0.
 
         Pure Python -- trigger P1 (L-01: the ``call`` action discards
         the return value of ``compute_final_score``).
         """
-        scores = {self.uh1.id: 87.5, self.task1.id: 87.5, self.pts.id: 87.6}
+        scores = {self.uh1.id: 87.0, self.task1.id: 87.0, self.pts.id: 88.5}
         self.assertEqual(self.mid_type.compute_final_score(scores), 87.0)
 
     def test_final_score_at_threshold(self):
@@ -125,3 +125,45 @@ class TestSchoolReportCardType(YamlTransactionCase):
             self.pas.id: 70.0,
         }
         self.assertEqual(self.final_type.compute_final_score(scores), 79.0)
+
+    def test_final_score_zero_counts_in_average(self):
+        """Assert a filled score of 0 enters the average: 53.0.
+
+        Pure Python -- trigger P1 (L-01: the ``call`` action discards
+        the return value of ``compute_final_score``).
+        """
+        average_type = self.env["school_report_card_type"].create(
+            {
+                "name": "Average Only P1",
+                "code": "RCTYPEP3",
+                "term_type": "final",
+                "average_weight": 100.0,
+                "average_component_ids": [
+                    (6, 0, [self.uh1.id, self.task1.id, self.pts.id])
+                ],
+            }
+        )
+        scores = {self.uh1.id: 80.0, self.task1.id: 80.0, self.pts.id: 0.0}
+        self.assertEqual(average_type.compute_final_score(scores), 53.0)
+
+    def test_final_score_average_rounds_half_up(self):
+        """Assert averages of 87.5 and 86.5 round up to 88 and 87.
+
+        Pure Python -- trigger P1 (L-01: the ``call`` action discards
+        the return value of ``compute_final_score``). Python's own
+        ``round`` sends 86.5 to 86 (nearest even), which is why the
+        average is rounded with ``float_round``.
+        """
+        scores = {self.uh1.id: 87.0, self.task1.id: 88.0}
+        self.assertEqual(self.mid_type.compute_final_score(scores), 88.0)
+        scores = {self.uh1.id: 86.0, self.task1.id: 87.0}
+        self.assertEqual(self.mid_type.compute_final_score(scores), 87.0)
+
+    def test_final_score_average_rounds_down_below_half(self):
+        """Assert an average of 87.49 rounds down to 87 before the weight.
+
+        Pure Python -- trigger P1 (L-01: the ``call`` action discards
+        the return value of ``compute_final_score``).
+        """
+        scores = {self.uh1.id: 87.0, self.task1.id: 87.98}
+        self.assertEqual(self.mid_type.compute_final_score(scores), 87.0)
