@@ -236,6 +236,18 @@ msgid ""
 msgstr ""
 
 #. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_report_card.py:0
+#, python-format
+msgid ""
+"\n"
+"Document Type: %s\n"
+"Context: Print report card\n"
+"Database ID: %s\n"
+"Problem: You are not allowed to print this report card\n"
+"Solution: Ask the administrator to add you to the report card Viewer group\n"
+msgstr ""
+
+#. module: ssi_school_academic
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__name
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__name
 msgid "# Document"
@@ -264,7 +276,14 @@ msgid "# Subject"
 msgstr ""
 
 #. module: ssi_school_academic
+#: model:ir.actions.report,print_report_name:ssi_school_academic.report_school_report_card
+msgid "'Report Card - %s' % (object.student_id.name or '')"
+msgstr ""
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_report_card.py:0
 #: model_terms:ir.ui.view,arch_db:ssi_school_academic.school_report_card_view_form
+#, python-format
 msgid "Absences"
 msgstr ""
 
@@ -282,8 +301,10 @@ msgid "Academic Term"
 msgstr ""
 
 #. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_report_card.py:0
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__academic_year_id
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__academic_year_id
+#, python-format
 msgid "Academic Year"
 msgstr ""
 
@@ -358,7 +379,9 @@ msgid "Activities"
 msgstr ""
 
 #. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_report_card.py:0
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_extracurricular__name
+#, python-format
 msgid "Activity"
 msgstr ""
 
@@ -390,6 +413,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__activity_type_icon
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject__activity_type_icon
 msgid "Activity Type Icon"
+msgstr ""
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_report_card.py:0
+#, python-format
+msgid "Address"
 msgstr ""
 
 #. module: ssi_school_academic
@@ -581,12 +610,20 @@ msgid "City printed next to the signature date."
 msgstr ""
 
 #. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_report_card.py:0
+#, python-format
+msgid "Class"
+msgstr ""
+
+#. module: ssi_school_academic
 #: model_terms:ir.ui.view,arch_db:ssi_school_academic.school_subject_view_form
 msgid "Classification"
 msgstr ""
 
 #. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_report_card.py:0
 #: model_terms:ir.ui.view,arch_db:ssi_school_academic.school_report_card_view_form
+#, python-format
 msgid "Co-Curricular"
 msgstr ""
 
@@ -636,6 +673,12 @@ msgid ""
 "\n"
 "* Automatically filled with user's company.\n"
 "  Default company can be changed"
+msgstr ""
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_report_card.py:0
+#, python-format
+msgid "Competency Achievement"
 msgstr ""
 
 #. module: ssi_school_academic
@@ -697,6 +740,13 @@ msgid "Created on"
 msgstr ""
 
 #. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_grade__phase
+msgid ""
+"Curriculum phase of the grade, for example E or F. It is printed in the "
+"header of the report card. Leave empty when not applicable."
+msgstr ""
+
+#. module: ssi_school_academic
 #: model:ir.model.fields.selection,name:ssi_school_academic.selection__school_score_component__category__daily_test
 msgid "Daily Test"
 msgstr ""
@@ -728,9 +778,11 @@ msgid ""
 msgstr ""
 
 #. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_report_card.py:0
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_co_curricular__description
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_extracurricular__description
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate_line__description
+#, python-format
 msgid "Description"
 msgstr ""
 
@@ -752,6 +804,7 @@ msgid "Display"
 msgstr ""
 
 #. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_grade__display_name
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__display_name
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_co_curricular__display_name
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_extracurricular__display_name
@@ -794,7 +847,21 @@ msgid "Enrollment of the student the score is given to. It must be open."
 msgstr ""
 
 #. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_report_card.py:0
+#, python-format
+msgid "Expertise Concentration"
+msgstr ""
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_report_card.py:0
+#, python-format
+msgid "Expertise Program"
+msgstr ""
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_report_card.py:0
 #: model_terms:ir.ui.view,arch_db:ssi_school_academic.school_report_card_view_form
+#, python-format
 msgid "Extracurricular"
 msgstr ""
 
@@ -819,7 +886,9 @@ msgid "Final Exam"
 msgstr ""
 
 #. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_report_card.py:0
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_line__final_score
+#, python-format
 msgid "Final Score"
 msgstr ""
 
@@ -886,6 +955,12 @@ msgstr ""
 #. module: ssi_school_academic
 #: model:ir.model.fields.selection,name:ssi_school_academic.selection__school_subject__subject_group__general
 msgid "General"
+msgstr ""
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_report_card.py:0
+#, python-format
+msgid "General Subjects"
 msgstr ""
 
 #. module: ssi_school_academic
@@ -979,7 +1054,15 @@ msgid "Homeroom"
 msgstr ""
 
 #. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_report_card.py:0
+#, python-format
+msgid "Homeroom Teacher"
+msgstr ""
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_report_card.py:0
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__homeroom_note
+#, python-format
 msgid "Homeroom Teacher Note"
 msgstr ""
 
@@ -989,6 +1072,7 @@ msgid "Homeroom of the selected Enrollment."
 msgstr ""
 
 #. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_grade__id
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__id
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_co_curricular__id
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_extracurricular__id
@@ -1084,6 +1168,7 @@ msgid ""
 msgstr ""
 
 #. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_grade____last_update
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card____last_update
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_co_curricular____last_update
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_extracurricular____last_update
@@ -1137,6 +1222,12 @@ msgstr ""
 #. module: ssi_school_academic
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_line__learning_objective
 msgid "Learning Objective Achievement"
+msgstr ""
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_report_card.py:0
+#, python-format
+msgid "Learning Result Report"
 msgstr ""
 
 #. module: ssi_school_academic
@@ -1232,6 +1323,12 @@ msgid "Mid-Term Exam"
 msgstr ""
 
 #. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_report_card.py:0
+#, python-format
+msgid "Mid-Term Semester"
+msgstr ""
+
+#. module: ssi_school_academic
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_line__minimum_score
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate_line__min_score
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject_minimum_score__minimum_score
@@ -1274,16 +1371,30 @@ msgid "My Activity Deadline"
 msgstr ""
 
 #. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_report_card.py:0
+#, python-format
+msgid "NUPTK"
+msgstr ""
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_report_card.py:0
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type__name
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_component__name
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__name
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject__name
+#, python-format
 msgid "Name"
 msgstr ""
 
 #. module: ssi_school_academic
 #: model:ir.model.fields,help:ssi_school_academic.field_school_report_card_extracurricular__name
 msgid "Name of the extracurricular activity."
+msgstr ""
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_report_card.py:0
+#, python-format
+msgid "National Student ID (NISN)"
 msgstr ""
 
 #. module: ssi_school_academic
@@ -1326,6 +1437,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__next_approval_ids
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__next_approval_ids
 msgid "Next Approvals"
+msgstr ""
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_report_card.py:0
+#, python-format
+msgid "No"
 msgstr ""
 
 #. module: ssi_school_academic
@@ -1428,7 +1545,15 @@ msgid ""
 msgstr ""
 
 #. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_report_card.py:0
+#, python-format
+msgid "Parent / Guardian"
+msgstr ""
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_report_card.py:0
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__parent_response
+#, python-format
 msgid "Parent Response"
 msgstr ""
 
@@ -1444,8 +1569,21 @@ msgid ""
 msgstr ""
 
 #. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_report_card.py:0
+#, python-format
+msgid "Permission"
+msgstr ""
+
+#. module: ssi_school_academic
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__permission_days
 msgid "Permission Days"
+msgstr ""
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_report_card.py:0
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_grade__phase
+#, python-format
+msgid "Phase"
 msgstr ""
 
 #. module: ssi_school_academic
@@ -1527,6 +1665,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__rejected
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__rejected
 msgid "Rejected"
+msgstr ""
+
+#. module: ssi_school_academic
+#: model:ir.actions.report,name:ssi_school_academic.report_school_report_card
+msgid "Report Card"
 msgstr ""
 
 #. module: ssi_school_academic
@@ -1620,6 +1763,17 @@ msgstr ""
 #. module: ssi_school_academic
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type__rounding_threshold
 msgid "Rounding Threshold"
+msgstr ""
+
+#. module: ssi_school_academic
+#: model:ir.model,name:ssi_school_academic.model_school_grade
+msgid "School Grade"
+msgstr ""
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_report_card.py:0
+#, python-format
+msgid "School Name"
 msgstr ""
 
 #. module: ssi_school_academic
@@ -1791,6 +1945,12 @@ msgid "Scores"
 msgstr ""
 
 #. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_report_card.py:0
+#, python-format
+msgid "Semester"
+msgstr ""
+
+#. module: ssi_school_academic
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_component__sequence
 msgid "Sequence"
 msgstr ""
@@ -1806,6 +1966,12 @@ msgstr ""
 #. module: ssi_school_academic
 #: model:ir.model.fields,help:ssi_school_academic.field_school_report_card_extracurricular__description
 msgid "Short description of the student's result in the activity."
+msgstr ""
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_report_card.py:0
+#, python-format
+msgid "Sick"
 msgstr ""
 
 #. module: ssi_school_academic
@@ -1840,16 +2006,24 @@ msgid "Student"
 msgstr ""
 
 #. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_report_card.py:0
+#, python-format
+msgid "Student ID (NIS)"
+msgstr ""
+
+#. module: ssi_school_academic
 #: model:ir.model.fields,help:ssi_school_academic.field_school_report_card__student_id
 #: model:ir.model.fields,help:ssi_school_academic.field_school_score_sheet_line__student_id
 msgid "Student of the selected Enrollment."
 msgstr ""
 
 #. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_report_card.py:0
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_line__subject_id
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__subject_id
 #: model:res.groups,name:ssi_school_academic.school_subject_group
 #: model_terms:ir.ui.view,arch_db:ssi_school_academic.school_score_sheet_view_search
+#, python-format
 msgid "Subject"
 msgstr ""
 
@@ -2036,6 +2210,12 @@ msgid "Vocational"
 msgstr ""
 
 #. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_report_card.py:0
+#, python-format
+msgid "Vocational Subjects"
+msgstr ""
+
+#. module: ssi_school_academic
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__website_message_ids
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type__website_message_ids
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_component__website_message_ids
@@ -2077,6 +2257,12 @@ msgstr ""
 #. module: ssi_school_academic
 #: model:ir.model.fields,help:ssi_school_academic.field_school_report_card_type_weight__weight
 msgid "Weight, in percent, of the component in the final score."
+msgstr ""
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_report_card.py:0
+#, python-format
+msgid "Without Reason"
 msgstr ""
 
 #. module: ssi_school_academic
