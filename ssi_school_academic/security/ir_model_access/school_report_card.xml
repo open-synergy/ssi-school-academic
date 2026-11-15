@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 OpenSynergy Indonesia
+     Copyright 2026 PT. Simetri Sinergi Indonesia
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+<record id="school_report_card_all_access" model="ir.model.access">
+    <field name="name">school_report_card - all</field>
+    <field name="model_id" ref="model_school_report_card" />
+    <field name="perm_read" eval="1" />
+    <field name="perm_create" eval="0" />
+    <field name="perm_write" eval="0" />
+    <field name="perm_unlink" eval="0" />
+</record>
+<record id="school_report_card_user_access" model="ir.model.access">
+    <field name="name">school_report_card - user</field>
+    <field name="model_id" ref="model_school_report_card" />
+    <field name="group_id" ref="school_report_card_user_group" />
+    <field name="perm_read" eval="1" />
+    <field name="perm_create" eval="1" />
+    <field name="perm_write" eval="1" />
+    <field name="perm_unlink" eval="1" />
+</record>
+<record id="school_report_card_line_all_access" model="ir.model.access">
+    <field name="name">school_report_card_line - all</field>
+    <field name="model_id" ref="model_school_report_card_line" />
+    <field name="perm_read" eval="1" />
+    <field name="perm_create" eval="0" />
+    <field name="perm_write" eval="0" />
+    <field name="perm_unlink" eval="0" />
+</record>
+<record id="school_report_card_line_user_access" model="ir.model.access">
+    <field name="name">school_report_card_line - user</field>
+    <field name="model_id" ref="model_school_report_card_line" />
+    <field name="group_id" ref="school_report_card_user_group" />
+    <field name="perm_read" eval="1" />
+    <field name="perm_create" eval="1" />
+    <field name="perm_write" eval="1" />
+    <field name="perm_unlink" eval="1" />
+</record>
+<record id="school_report_card_co_curricular_all_access" model="ir.model.access">
+    <field name="name">school_report_card_co_curricular - all</field>
+    <field name="model_id" ref="model_school_report_card_co_curricular" />
+    <field name="perm_read" eval="1" />
+    <field name="perm_create" eval="0" />
+    <field name="perm_write" eval="0" />
+    <field name="perm_unlink" eval="0" />
+</record>
+<record id="school_report_card_co_curricular_user_access" model="ir.model.access">
+    <field name="name">school_report_card_co_curricular - user</field>
+    <field name="model_id" ref="model_school_report_card_co_curricular" />
+    <field name="group_id" ref="school_report_card_user_group" />
+    <field name="perm_read" eval="1" />
+    <field name="perm_create" eval="1" />
+    <field name="perm_write" eval="1" />
+    <field name="perm_unlink" eval="1" />
+</record>
+<record id="school_report_card_extracurricular_all_access" model="ir.model.access">
+    <field name="name">school_report_card_extracurricular - all</field>
+    <field name="model_id" ref="model_school_report_card_extracurricular" />
+    <field name="perm_read" eval="1" />
+    <field name="perm_create" eval="0" />
+    <field name="perm_write" eval="0" />
+    <field name="perm_unlink" eval="0" />
+</record>
+<record id="school_report_card_extracurricular_user_access" model="ir.model.access">
+    <field name="name">school_report_card_extracurricular - user</field>
+    <field name="model_id" ref="model_school_report_card_extracurricular" />
+    <field name="group_id" ref="school_report_card_user_group" />
+    <field name="perm_read" eval="1" />
+    <field name="perm_create" eval="1" />
+    <field name="perm_write" eval="1" />
+    <field name="perm_unlink" eval="1" />
+</record>
+</odoo>

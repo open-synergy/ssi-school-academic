@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 OpenSynergy Indonesia
+     Copyright 2026 PT. Simetri Sinergi Indonesia
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+<record id="school_report_card_view_search" model="ir.ui.view">
+    <field name="name">school_report_card - search</field>
+    <field name="model">school_report_card</field>
+    <field
+            name="inherit_id"
+            ref="ssi_transaction_mixin.mixin_transaction_view_search"
+        />
+    <field name="mode">primary</field>
+    <field name="arch" type="xml">
+        <data>
+            <xpath expr="//search" position="inside">
+                <field name="student_id" />
+                <field name="academic_term_id" />
+                <field name="grade_class_id" />
+                <field name="type_id" />
+                <group expand="0" string="Group By">
+                    <filter
+                            name="group_by_academic_term_id"
+                            string="Academic Term"
+                            context="{'group_by': 'academic_term_id'}"
+                        />
+                    <filter
+                            name="group_by_grade_class_id"
+                            string="Grade Class"
+                            context="{'group_by': 'grade_class_id'}"
+                        />
+                    <filter
+                            name="group_by_type_id"
+                            string="Report Card Type"
+                            context="{'group_by': 'type_id'}"
+                        />
+                </group>
+            </xpath>
+        </data>
+    </field>
+</record>
+
+<record id="school_report_card_view_tree" model="ir.ui.view">
+    <field name="name">school_report_card - tree</field>
+    <field name="model">school_report_card</field>
+    <field name="mode">primary</field>
+    <field name="inherit_id" ref="ssi_transaction_mixin.mixin_transaction_view_tree" />
+    <field name="arch" type="xml">
+        <data>
+            <xpath expr="//field[@name='company_id']" position="after">
+                <field name="student_id" />
+                <field name="academic_term_id" />
+                <field name="grade_class_id" />
+                <field name="type_id" />
+                <field name="print_date" />
+            </xpath>
+        </data>
+    </field>
+</record>
+
+<record id="school_report_card_view_form" model="ir.ui.view">
+    <field name="name">school_report_card - form</field>
+    <field name="model">school_report_card</field>
+    <field name="mode">primary</field>
+    <field name="inherit_id" ref="ssi_transaction_mixin.mixin_transaction_view_form" />
+    <field name="arch" type="xml">
+        <data>
+            <xpath expr="//field[@name='user_id']" position="after">
+                <field name="enrollment_id" />
+                <field name="student_id" />
+                <field name="type_id" />
+            </xpath>
+            <xpath expr="//header" position="inside">
+                <button
+                        name="action_generate_lines"
+                        type="object"
+                        string="Generate Lines"
+                        class="oe_highlight"
+                        confirm="This replaces every line with one line per subject of the grade and computes the scores. Continue?"
+                        attrs="{'invisible':[('generate_lines_ok','=',False)]}"
+                    />
+                <button
+                        name="action_compute_scores"
+                        type="object"
+                        string="Compute Scores"
+                        confirm="This overwrites the final score of every line from the score sheets that are done. Continue?"
+                        attrs="{'invisible':[('compute_scores_ok','=',False)]}"
+                    />
+            </xpath>
+            <xpath expr="//group[@name='header_right']" position="inside">
+                <field name="academic_year_id" />
+                <field name="academic_term_id" />
+                <field name="grade_id" />
+                <field name="grade_class_id" />
+                <field name="homeroom_id" />
+                <field name="print_city" />
+                <field name="print_date" />
+            </xpath>
+            <xpath expr="//page[1]" position="before">
+                <page name="subject" string="Subjects">
+                    <field name="line_ids" colspan="4" nolabel="1">
+                        <tree editable="bottom">
+                            <field name="subject_id" />
+                            <field name="subject_group" />
+                            <field name="final_score" />
+                            <field name="minimum_score" />
+                            <field name="predicate_line_id" />
+                            <field name="learning_objective" />
+                        </tree>
+                        <form>
+                            <group col="2">
+                                <field name="subject_id" />
+                                <field name="subject_group" />
+                                <field name="final_score" />
+                                <field name="minimum_score" />
+                                <field name="predicate_line_id" />
+                                <field name="learning_objective" />
+                            </group>
+                        </form>
+                    </field>
+                </page>
+                <page name="co_curricular" string="Co-Curricular">
+                    <field name="co_curricular_ids" colspan="4" nolabel="1">
+                        <tree editable="bottom">
+                            <field name="theme" />
+                            <field name="description" />
+                        </tree>
+                        <form>
+                            <group col="2">
+                                <field name="theme" />
+                                <field name="description" />
+                            </group>
+                        </form>
+                    </field>
+                </page>
+                <page name="extracurricular" string="Extracurricular">
+                    <field name="extracurricular_ids" colspan="4" nolabel="1">
+                        <tree editable="bottom">
+                            <field name="name" />
+                            <field name="description" />
+                        </tree>
+                        <form>
+                            <group col="2">
+                                <field name="name" />
+                                <field name="description" />
+                            </group>
+                        </form>
+                    </field>
+                </page>
+                <page name="attendance_note" string="Attendance and Notes">
+                    <group name="attendance" string="Absences" col="3">
+                        <field name="sick_days" />
+                        <field name="permission_days" />
+                        <field name="absent_days" />
+                    </group>
+                    <group name="notes" string="Notes" col="1">
+                        <field name="homeroom_note" />
+                        <field name="parent_response" />
+                    </group>
+                </page>
+            </xpath>
+            <xpath expr="//group[@name='policy_2']" position="inside">
+                <field name="generate_lines_ok" />
+                <field name="compute_scores_ok" />
+            </xpath>
+        </data>
+    </field>
+</record>
+
+<record id="school_report_card_action" model="ir.actions.act_window">
+    <field name="name">School Report Cards</field>
+    <field name="type">ir.actions.act_window</field>
+    <field name="res_model">school_report_card</field>
+    <field name="view_mode">tree,form</field>
+</record>
+
+<menuitem
+        id="school_report_card_menu"
+        name="Report Cards"
+        parent="ssi_school.menu_school_classroom"
+        action="school_report_card_action"
+        groups="school_report_card_viewer_group"
+        sequence="60"
+    />
+</odoo>

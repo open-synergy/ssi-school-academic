@@ -1,0 +1,1578 @@
+# T-01 (odoo-development-unit-test/test-traps.md): the `setup:` block replays
+# before every scenario inside one un-rolled-back transaction, so every
+# unique-constrained code it creates is generated per replay from a count of
+# the existing records, and documents keep the default name `/`. Every
+# scenario builds its own score sheet, because aliases do not survive from a
+# scenario to the next and the grade, term and subject are new per replay.
+options:
+  auto_refresh: true
+
+setup:
+  steps:
+    - step: "Create the grade type"
+      action: "create"
+      model: "school_grade_type"
+      save_as: "grade_type"
+      values:
+        name: "SRC Grade Type"
+        code: "EVAL: 'SRCGT%d' % env['school_grade_type'].search_count([])"
+
+    - step: "Create the school"
+      action: "create"
+      model: "school"
+      save_as: "school"
+      values:
+        name: "SRC School"
+        code: "EVAL: 'SRCSC%d' % env['school'].search_count([])"
+        grade_type_id: "REC: grade_type.id"
+
+    - step: "Create the academic year"
+      action: "create"
+      model: "school_academic_year"
+      save_as: "academic_year"
+      values:
+        name: "SRC Academic Year"
+        code: "EVAL: 'SRCAY%d' % env['school_academic_year'].search_count([])"
+        date_start: 2026-07-01
+        date_end: 2027-06-30
+
+    - step: "Create the academic term open for enrollment"
+      action: "create"
+      model: "school_academic_term"
+      save_as: "academic_term"
+      values:
+        name: "SRC Term"
+        code: "EVAL: 'SRCTM%d' % env['school_academic_term'].search_count([])"
+        date_start: 2026-07-01
+        date_end: 2026-12-31
+        year_id: "REC: academic_year.id"
+        enrollment_state: "open"
+
+    - step: "Create the grade"
+      action: "create"
+      model: "school_grade"
+      save_as: "grade"
+      values:
+        name: "SRC Grade"
+        code: "EVAL: 'SRCGR%d' % env['school_grade'].search_count([])"
+        type_id: "REC: grade_type.id"
+
+    - step: "Create the grade class"
+      action: "create"
+      model: "school_grade_class"
+      save_as: "grade_class"
+      values:
+        name: "SRC Class"
+        code: "EVAL: 'SRCCL%d' % env['school_grade_class'].search_count([])"
+        school_id: "REC: school.id"
+        grade_id: "REC: grade.id"
+
+    - step: "Create the subject taught in the grade, with a minimum score of 70"
+      action: "create"
+      model: "school_subject"
+      save_as: "subject"
+      values:
+        name: "SRC Subject"
+        code: "EVAL: 'SRCSJ%d' % env['school_subject'].search_count([])"
+        grade_ids:
+          - - 6
+            - 0
+            - - "REC: grade.id"
+        minimum_score_ids:
+          - - 0
+            - 0
+            - grade_id: "REC: grade.id"
+              minimum_score: 70.0
+
+    - step: "Create a subject that is not taught in the grade"
+      action: "create"
+      model: "school_subject"
+      save_as: "other_subject"
+      values:
+        name: "SRC Other Subject"
+        code: "EVAL: 'SRCOS%d' % env['school_subject'].search_count([])"
+
+    - step: "Create the predicate table of the grade"
+      action: "create"
+      model: "school_score_predicate"
+      save_as: "predicate"
+      values:
+        name: "SRC Predicate"
+        code: "EVAL: 'SRCPR%d' % env['school_score_predicate'].search_count([])"
+        grade_ids:
+          - - 6
+            - 0
+            - - "REC: grade.id"
+        line_ids:
+          - - 0
+            - 0
+            - name: "A"
+              min_score: 88.0
+          - - 0
+            - 0
+            - name: "B"
+              min_score: 80.0
+          - - 0
+            - 0
+            - name: "C"
+              min_score: 0.0
+
+    - step: "Create the home address partner of the teacher"
+      action: "create"
+      model: "res.partner"
+      save_as: "teacher_partner"
+      values:
+        name: "SRC Teacher Home Address"
+
+    - step: "Create the employee of the teacher"
+      action: "create"
+      model: "hr.employee"
+      save_as: "employee"
+      values:
+        name: "SRC Teacher Employee"
+        company_id: "base.main_company"
+        address_home_id: "REC: teacher_partner.id"
+
+    - step: "Create the teacher"
+      action: "create"
+      model: "school_teacher"
+      save_as: "teacher"
+      values:
+        name: "SRC Teacher"
+        code: "EVAL: 'SRCTC%d' % env['school_teacher'].search_count([])"
+        employee_id: "REC: employee.id"
+
+    - step: "Create the score component UH 1"
+      action: "create"
+      model: "school_score_component"
+      save_as: "component_1"
+      values:
+        name: "SRC UH 1"
+        code: "EVAL: 'SRCC%d' % env['school_score_component'].search_count([])"
+        category: "daily_test"
+        sequence: 10
+
+    - step: "Create the score component UH 2"
+      action: "create"
+      model: "school_score_component"
+      save_as: "component_2"
+      values:
+        name: "SRC UH 2"
+        code: "EVAL: 'SRCC%d' % env['school_score_component'].search_count([])"
+        category: "daily_test"
+        sequence: 20
+
+    - step: "Create the score component UH 3"
+      action: "create"
+      model: "school_score_component"
+      save_as: "component_3"
+      values:
+        name: "SRC UH 3"
+        code: "EVAL: 'SRCC%d' % env['school_score_component'].search_count([])"
+        category: "daily_test"
+        sequence: 30
+
+    - step: "Create the score component PTS"
+      action: "create"
+      model: "school_score_component"
+      save_as: "component_pts"
+      values:
+        name: "SRC PTS"
+        code: "EVAL: 'SRCC%d' % env['school_score_component'].search_count([])"
+        category: "mid_term_exam"
+        sequence: 40
+
+    - step: "Create the mid-term type, 70% average of UH 1 and UH 2, 30% PTS"
+      action: "create"
+      model: "school_report_card_type"
+      save_as: "mid_type"
+      values:
+        name: "SRC Mid-Term"
+        code: "EVAL: 'SRCRT%d' % env['school_report_card_type'].search_count([])"
+        term_type: "mid_term"
+        average_weight: 70.0
+        average_component_ids:
+          - - 6
+            - 0
+            - - "REC: component_1.id"
+              - "REC: component_2.id"
+        weight_ids:
+          - - 0
+            - 0
+            - component_id: "REC: component_pts.id"
+              weight: 30.0
+
+    - step: "Create the contact of the first student"
+      action: "create"
+      model: "res.partner"
+      save_as: "contact_1"
+      values:
+        name: "SRC Student Contact 1"
+
+    - step: "Create the first student"
+      action: "create"
+      model: "school_student"
+      save_as: "student_1"
+      values:
+        name: "SRC Student 1"
+        code: "EVAL: 'SRCST%d' % env['school_student'].search_count([])"
+        contact_id: "REC: contact_1.id"
+        school_id: "REC: school.id"
+
+    - step: "Create the enrollment of the first student"
+      action: "create"
+      model: "school_enrollment"
+      save_as: "enrollment_1"
+      values:
+        academic_year_id: "REC: academic_year.id"
+        academic_term_id: "REC: academic_term.id"
+        school_id: "REC: school.id"
+        grade_id: "REC: grade.id"
+        grade_class_id: "REC: grade_class.id"
+        student_id: "REC: student_1.id"
+        currency_id: "EVAL: env.company.currency_id.id"
+
+    - step: "Confirm the first enrollment"
+      action: "call"
+      target: "enrollment_1"
+      method: "action_confirm"
+      as_user: "base.user_admin"
+      asserts:
+        state:
+          type: "value"
+          expected: "confirm"
+
+    - step: "Approve the first enrollment, which opens it"
+      action: "call"
+      target: "enrollment_1"
+      method: "action_approve_approval"
+      as_user: "base.user_admin"
+      asserts:
+        state:
+          type: "value"
+          expected: "open"
+
+    - step: "Create the contact of the second student"
+      action: "create"
+      model: "res.partner"
+      save_as: "contact_2"
+      values:
+        name: "SRC Student Contact 2"
+
+    - step: "Create the second student"
+      action: "create"
+      model: "school_student"
+      save_as: "student_2"
+      values:
+        name: "SRC Student 2"
+        code: "EVAL: 'SRCST%d' % env['school_student'].search_count([])"
+        contact_id: "REC: contact_2.id"
+        school_id: "REC: school.id"
+
+    - step: "Create the enrollment of the second student, left in draft"
+      action: "create"
+      model: "school_enrollment"
+      save_as: "enrollment_2"
+      values:
+        academic_year_id: "REC: academic_year.id"
+        academic_term_id: "REC: academic_term.id"
+        school_id: "REC: school.id"
+        grade_id: "REC: grade.id"
+        grade_class_id: "REC: grade_class.id"
+        student_id: "REC: student_2.id"
+        currency_id: "EVAL: env.company.currency_id.id"
+
+    - step: "Assert the second enrollment is draft"
+      action: "assert"
+      target: "enrollment_2"
+      asserts:
+        state:
+          type: "value"
+          expected: "draft"
+
+scenarios:
+  - name: "School Report Card - Generate lines and compute the final score"
+    steps:
+      - step: "Create the score sheet of the subject"
+        action: "create"
+        model: "school_score_sheet"
+        save_as: "sheet"
+        values:
+          academic_term_id: "REC: academic_term.id"
+          grade_class_id: "REC: grade_class.id"
+          subject_id: "REC: subject.id"
+          teacher_id: "REC: teacher.id"
+          date: 2026-08-10
+          user_id: "REF: base.user_admin"
+          line_ids:
+            - - 0
+              - 0
+              - enrollment_id: "REC: enrollment_1.id"
+                component_id: "REC: component_1.id"
+                score: 90.0
+            - - 0
+              - 0
+              - enrollment_id: "REC: enrollment_1.id"
+                component_id: "REC: component_2.id"
+                score: 85.0
+            - - 0
+              - 0
+              - enrollment_id: "REC: enrollment_1.id"
+                component_id: "REC: component_pts.id"
+                score: 86.0
+
+      - step: "Confirm the score sheet"
+        action: "call"
+        target: "sheet"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve the score sheet, which finishes it"
+        action: "call"
+        target: "sheet"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "done"
+
+      - step: "Create the report card"
+        action: "create"
+        model: "school_report_card"
+        save_as: "card"
+        values:
+          enrollment_id: "REC: enrollment_1.id"
+          type_id: "REC: mid_type.id"
+          print_date: 2026-12-20
+          print_city: "Jakarta"
+          user_id: "REF: base.user_admin"
+
+      - step: "Generate the lines"
+        action: "call"
+        target: "card"
+        method: "action_generate_lines"
+        as_user: "base.user_admin"
+        refresh: true
+
+      - step: "Only the subject of the grade got a line"
+        action: "assert"
+        target: "card"
+        asserts:
+          line_ids:
+            type: "o2m"
+            check: "count"
+            expected_count: 1
+
+      - step: "Find the line of the subject"
+        action: "search"
+        model: "school_report_card_line"
+        domain:
+          - ["report_card_id", "=", "REC: card.id"]
+          - ["subject_id", "=", "REC: subject.id"]
+        save_as: "line"
+        expect_count: 1
+
+      - step: "Assert the final score of the line"
+        action: "assert"
+        target: "line"
+        asserts:
+          final_score:
+            type: "value"
+            expected: 87.0
+          minimum_score:
+            type: "value"
+            expected: 70.0
+          predicate_line_id.name:
+            type: "value"
+            expected: "B"
+
+      - step: "The subject group follows the subject"
+        action: "assert"
+        target: "line"
+        asserts:
+          subject_group:
+            type: "value"
+            expected: "general"
+
+      - step: "Write the learning objective of the line"
+        action: "write"
+        target: "line"
+        values:
+          learning_objective: "Understands the basic concepts."
+
+      - step: "The learning objective is kept"
+        action: "assert"
+        target: "line"
+        asserts:
+          learning_objective:
+            type: "value"
+            expected: "Understands the basic concepts."
+
+      - step: "Generating again replaces the lines instead of adding"
+        action: "call"
+        target: "card"
+        method: "action_generate_lines"
+        as_user: "base.user_admin"
+        refresh: true
+
+      - step: "The card still has one line"
+        action: "assert"
+        target: "card"
+        asserts:
+          line_ids:
+            type: "o2m"
+            check: "count"
+            expected_count: 1
+
+  - name: "School Report Card - Rounding threshold with a mid-term score of 91.0"
+    steps:
+      - step: "Create the report card"
+        action: "create"
+        model: "school_report_card"
+        save_as: "card"
+        values:
+          enrollment_id: "REC: enrollment_1.id"
+          type_id: "REC: mid_type.id"
+          print_date: 2026-12-20
+          print_city: "Jakarta"
+          user_id: "REF: base.user_admin"
+
+      - step: "Generate the lines before any score sheet is done"
+        action: "call"
+        target: "card"
+        method: "action_generate_lines"
+        as_user: "base.user_admin"
+        refresh: true
+
+      - step: "Find the line of the subject"
+        action: "search"
+        model: "school_report_card_line"
+        domain:
+          - ["report_card_id", "=", "REC: card.id"]
+          - ["subject_id", "=", "REC: subject.id"]
+        save_as: "line"
+        expect_count: 1
+
+      - step: "Assert the final score of the line"
+        action: "assert"
+        target: "line"
+        asserts:
+          final_score:
+            type: "value"
+            expected: 0.0
+          minimum_score:
+            type: "value"
+            expected: 70.0
+          predicate_line_id.name:
+            type: "value"
+            expected: "C"
+
+      - step: "Create the score sheet of the subject"
+        action: "create"
+        model: "school_score_sheet"
+        save_as: "sheet"
+        values:
+          academic_term_id: "REC: academic_term.id"
+          grade_class_id: "REC: grade_class.id"
+          subject_id: "REC: subject.id"
+          teacher_id: "REC: teacher.id"
+          date: 2026-08-10
+          user_id: "REF: base.user_admin"
+          line_ids:
+            - - 0
+              - 0
+              - enrollment_id: "REC: enrollment_1.id"
+                component_id: "REC: component_1.id"
+                score: 86.0
+            - - 0
+              - 0
+              - enrollment_id: "REC: enrollment_1.id"
+                component_id: "REC: component_2.id"
+                score: 86.0
+            - - 0
+              - 0
+              - enrollment_id: "REC: enrollment_1.id"
+                component_id: "REC: component_pts.id"
+                score: 91.0
+
+      - step: "Confirm the score sheet"
+        action: "call"
+        target: "sheet"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve the score sheet, which finishes it"
+        action: "call"
+        target: "sheet"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "done"
+
+      - step: "Compute the scores"
+        action: "call"
+        target: "card"
+        method: "action_compute_scores"
+        as_user: "base.user_admin"
+        refresh: true
+
+      - step: "Refresh the line"
+        action: "search"
+        model: "school_report_card_line"
+        domain:
+          - ["report_card_id", "=", "REC: card.id"]
+          - ["subject_id", "=", "REC: subject.id"]
+        save_as: "line_after"
+        expect_count: 1
+
+      - step: "Assert the final score of the line"
+        action: "assert"
+        target: "line_after"
+        asserts:
+          final_score:
+            type: "value"
+            expected: 87.0
+          minimum_score:
+            type: "value"
+            expected: 70.0
+          predicate_line_id.name:
+            type: "value"
+            expected: "B"
+
+  - name: "School Report Card - Rounding threshold with a mid-term score of 91.1"
+    steps:
+      - step: "Create the report card"
+        action: "create"
+        model: "school_report_card"
+        save_as: "card"
+        values:
+          enrollment_id: "REC: enrollment_1.id"
+          type_id: "REC: mid_type.id"
+          print_date: 2026-12-20
+          print_city: "Jakarta"
+          user_id: "REF: base.user_admin"
+
+      - step: "Generate the lines before any score sheet is done"
+        action: "call"
+        target: "card"
+        method: "action_generate_lines"
+        as_user: "base.user_admin"
+        refresh: true
+
+      - step: "Find the line of the subject"
+        action: "search"
+        model: "school_report_card_line"
+        domain:
+          - ["report_card_id", "=", "REC: card.id"]
+          - ["subject_id", "=", "REC: subject.id"]
+        save_as: "line"
+        expect_count: 1
+
+      - step: "Assert the final score of the line"
+        action: "assert"
+        target: "line"
+        asserts:
+          final_score:
+            type: "value"
+            expected: 0.0
+          minimum_score:
+            type: "value"
+            expected: 70.0
+          predicate_line_id.name:
+            type: "value"
+            expected: "C"
+
+      - step: "Create the score sheet of the subject"
+        action: "create"
+        model: "school_score_sheet"
+        save_as: "sheet"
+        values:
+          academic_term_id: "REC: academic_term.id"
+          grade_class_id: "REC: grade_class.id"
+          subject_id: "REC: subject.id"
+          teacher_id: "REC: teacher.id"
+          date: 2026-08-10
+          user_id: "REF: base.user_admin"
+          line_ids:
+            - - 0
+              - 0
+              - enrollment_id: "REC: enrollment_1.id"
+                component_id: "REC: component_1.id"
+                score: 86.0
+            - - 0
+              - 0
+              - enrollment_id: "REC: enrollment_1.id"
+                component_id: "REC: component_2.id"
+                score: 86.0
+            - - 0
+              - 0
+              - enrollment_id: "REC: enrollment_1.id"
+                component_id: "REC: component_pts.id"
+                score: 91.1
+
+      - step: "Confirm the score sheet"
+        action: "call"
+        target: "sheet"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve the score sheet, which finishes it"
+        action: "call"
+        target: "sheet"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "done"
+
+      - step: "Compute the scores"
+        action: "call"
+        target: "card"
+        method: "action_compute_scores"
+        as_user: "base.user_admin"
+        refresh: true
+
+      - step: "Refresh the line"
+        action: "search"
+        model: "school_report_card_line"
+        domain:
+          - ["report_card_id", "=", "REC: card.id"]
+          - ["subject_id", "=", "REC: subject.id"]
+        save_as: "line_after"
+        expect_count: 1
+
+      - step: "Assert the final score of the line"
+        action: "assert"
+        target: "line_after"
+        asserts:
+          final_score:
+            type: "value"
+            expected: 87.0
+          minimum_score:
+            type: "value"
+            expected: 70.0
+          predicate_line_id.name:
+            type: "value"
+            expected: "B"
+
+  - name: "School Report Card - Rounding threshold with a mid-term score of 91.2"
+    steps:
+      - step: "Create the report card"
+        action: "create"
+        model: "school_report_card"
+        save_as: "card"
+        values:
+          enrollment_id: "REC: enrollment_1.id"
+          type_id: "REC: mid_type.id"
+          print_date: 2026-12-20
+          print_city: "Jakarta"
+          user_id: "REF: base.user_admin"
+
+      - step: "Generate the lines before any score sheet is done"
+        action: "call"
+        target: "card"
+        method: "action_generate_lines"
+        as_user: "base.user_admin"
+        refresh: true
+
+      - step: "Find the line of the subject"
+        action: "search"
+        model: "school_report_card_line"
+        domain:
+          - ["report_card_id", "=", "REC: card.id"]
+          - ["subject_id", "=", "REC: subject.id"]
+        save_as: "line"
+        expect_count: 1
+
+      - step: "Assert the final score of the line"
+        action: "assert"
+        target: "line"
+        asserts:
+          final_score:
+            type: "value"
+            expected: 0.0
+          minimum_score:
+            type: "value"
+            expected: 70.0
+          predicate_line_id.name:
+            type: "value"
+            expected: "C"
+
+      - step: "Create the score sheet of the subject"
+        action: "create"
+        model: "school_score_sheet"
+        save_as: "sheet"
+        values:
+          academic_term_id: "REC: academic_term.id"
+          grade_class_id: "REC: grade_class.id"
+          subject_id: "REC: subject.id"
+          teacher_id: "REC: teacher.id"
+          date: 2026-08-10
+          user_id: "REF: base.user_admin"
+          line_ids:
+            - - 0
+              - 0
+              - enrollment_id: "REC: enrollment_1.id"
+                component_id: "REC: component_1.id"
+                score: 86.0
+            - - 0
+              - 0
+              - enrollment_id: "REC: enrollment_1.id"
+                component_id: "REC: component_2.id"
+                score: 86.0
+            - - 0
+              - 0
+              - enrollment_id: "REC: enrollment_1.id"
+                component_id: "REC: component_pts.id"
+                score: 91.2
+
+      - step: "Confirm the score sheet"
+        action: "call"
+        target: "sheet"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve the score sheet, which finishes it"
+        action: "call"
+        target: "sheet"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "done"
+
+      - step: "Compute the scores"
+        action: "call"
+        target: "card"
+        method: "action_compute_scores"
+        as_user: "base.user_admin"
+        refresh: true
+
+      - step: "Refresh the line"
+        action: "search"
+        model: "school_report_card_line"
+        domain:
+          - ["report_card_id", "=", "REC: card.id"]
+          - ["subject_id", "=", "REC: subject.id"]
+        save_as: "line_after"
+        expect_count: 1
+
+      - step: "Assert the final score of the line"
+        action: "assert"
+        target: "line_after"
+        asserts:
+          final_score:
+            type: "value"
+            expected: 88.0
+          minimum_score:
+            type: "value"
+            expected: 70.0
+          predicate_line_id.name:
+            type: "value"
+            expected: "A"
+
+  - name: "School Report Card - A score of zero counts in the average"
+    steps:
+      - step: "Create the type averaging the three daily tests"
+        action: "create"
+        model: "school_report_card_type"
+        save_as: "avg_type"
+        values:
+          name: "SRC Average Only"
+          code: "EVAL: 'SRCAV%d' % env['school_report_card_type'].search_count([])"
+          term_type: "final"
+          average_weight: 100.0
+          average_component_ids:
+            - - 6
+              - 0
+              - - "REC: component_1.id"
+                - "REC: component_2.id"
+                - "REC: component_3.id"
+      - step: "Create the score sheet of the subject"
+        action: "create"
+        model: "school_score_sheet"
+        save_as: "sheet"
+        values:
+          academic_term_id: "REC: academic_term.id"
+          grade_class_id: "REC: grade_class.id"
+          subject_id: "REC: subject.id"
+          teacher_id: "REC: teacher.id"
+          date: 2026-08-10
+          user_id: "REF: base.user_admin"
+          line_ids:
+            - - 0
+              - 0
+              - enrollment_id: "REC: enrollment_1.id"
+                component_id: "REC: component_1.id"
+                score: 80.0
+            - - 0
+              - 0
+              - enrollment_id: "REC: enrollment_1.id"
+                component_id: "REC: component_2.id"
+                score: 80.0
+            - - 0
+              - 0
+              - enrollment_id: "REC: enrollment_1.id"
+                component_id: "REC: component_3.id"
+                score: 0.0
+
+      - step: "Confirm the score sheet"
+        action: "call"
+        target: "sheet"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve the score sheet, which finishes it"
+        action: "call"
+        target: "sheet"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "done"
+
+      - step: "Create the report card"
+        action: "create"
+        model: "school_report_card"
+        save_as: "card"
+        values:
+          enrollment_id: "REC: enrollment_1.id"
+          type_id: "REC: avg_type.id"
+          print_date: 2026-12-20
+          print_city: "Jakarta"
+          user_id: "REF: base.user_admin"
+
+      - step: "Generate the lines"
+        action: "call"
+        target: "card"
+        method: "action_generate_lines"
+        as_user: "base.user_admin"
+        refresh: true
+
+      - step: "Find the line of the subject"
+        action: "search"
+        model: "school_report_card_line"
+        domain:
+          - ["report_card_id", "=", "REC: card.id"]
+          - ["subject_id", "=", "REC: subject.id"]
+        save_as: "line"
+        expect_count: 1
+
+      - step: "Assert the final score of the line"
+        action: "assert"
+        target: "line"
+        asserts:
+          final_score:
+            type: "value"
+            expected: 53.0
+          minimum_score:
+            type: "value"
+            expected: 70.0
+
+  - name: "School Report Card - A score that is not filled stays out of the average"
+    steps:
+      - step: "Create the type averaging the three daily tests"
+        action: "create"
+        model: "school_report_card_type"
+        save_as: "avg_type"
+        values:
+          name: "SRC Average Only"
+          code: "EVAL: 'SRCAV%d' % env['school_report_card_type'].search_count([])"
+          term_type: "final"
+          average_weight: 100.0
+          average_component_ids:
+            - - 6
+              - 0
+              - - "REC: component_1.id"
+                - "REC: component_2.id"
+                - "REC: component_3.id"
+      - step: "Create the score sheet of the subject"
+        action: "create"
+        model: "school_score_sheet"
+        save_as: "sheet"
+        values:
+          academic_term_id: "REC: academic_term.id"
+          grade_class_id: "REC: grade_class.id"
+          subject_id: "REC: subject.id"
+          teacher_id: "REC: teacher.id"
+          date: 2026-08-10
+          user_id: "REF: base.user_admin"
+          line_ids:
+            - - 0
+              - 0
+              - enrollment_id: "REC: enrollment_1.id"
+                component_id: "REC: component_1.id"
+                score: 80.0
+            - - 0
+              - 0
+              - enrollment_id: "REC: enrollment_1.id"
+                component_id: "REC: component_2.id"
+                score: 80.0
+            - - 0
+              - 0
+              - enrollment_id: "REC: enrollment_1.id"
+                component_id: "REC: component_3.id"
+
+      - step: "Confirm the score sheet"
+        action: "call"
+        target: "sheet"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve the score sheet, which finishes it"
+        action: "call"
+        target: "sheet"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "done"
+
+      - step: "Create the report card"
+        action: "create"
+        model: "school_report_card"
+        save_as: "card"
+        values:
+          enrollment_id: "REC: enrollment_1.id"
+          type_id: "REC: avg_type.id"
+          print_date: 2026-12-20
+          print_city: "Jakarta"
+          user_id: "REF: base.user_admin"
+
+      - step: "Generate the lines"
+        action: "call"
+        target: "card"
+        method: "action_generate_lines"
+        as_user: "base.user_admin"
+        refresh: true
+
+      - step: "Find the line of the subject"
+        action: "search"
+        model: "school_report_card_line"
+        domain:
+          - ["report_card_id", "=", "REC: card.id"]
+          - ["subject_id", "=", "REC: subject.id"]
+        save_as: "line"
+        expect_count: 1
+
+      - step: "Assert the final score of the line"
+        action: "assert"
+        target: "line"
+        asserts:
+          final_score:
+            type: "value"
+            expected: 80.0
+          minimum_score:
+            type: "value"
+            expected: 70.0
+
+  - name: "School Report Card - A score sheet that is not done is not counted"
+    steps:
+      - step: "Create the score sheet of the subject"
+        action: "create"
+        model: "school_score_sheet"
+        save_as: "sheet"
+        values:
+          academic_term_id: "REC: academic_term.id"
+          grade_class_id: "REC: grade_class.id"
+          subject_id: "REC: subject.id"
+          teacher_id: "REC: teacher.id"
+          date: 2026-08-10
+          user_id: "REF: base.user_admin"
+          line_ids:
+            - - 0
+              - 0
+              - enrollment_id: "REC: enrollment_1.id"
+                component_id: "REC: component_1.id"
+                score: 90.0
+            - - 0
+              - 0
+              - enrollment_id: "REC: enrollment_1.id"
+                component_id: "REC: component_2.id"
+                score: 85.0
+            - - 0
+              - 0
+              - enrollment_id: "REC: enrollment_1.id"
+                component_id: "REC: component_pts.id"
+                score: 86.0
+
+      - step: "Create the report card"
+        action: "create"
+        model: "school_report_card"
+        save_as: "card"
+        values:
+          enrollment_id: "REC: enrollment_1.id"
+          type_id: "REC: mid_type.id"
+          print_date: 2026-12-20
+          print_city: "Jakarta"
+          user_id: "REF: base.user_admin"
+
+      - step: "Generate the lines"
+        action: "call"
+        target: "card"
+        method: "action_generate_lines"
+        as_user: "base.user_admin"
+        refresh: true
+
+      - step: "Find the line of the subject"
+        action: "search"
+        model: "school_report_card_line"
+        domain:
+          - ["report_card_id", "=", "REC: card.id"]
+          - ["subject_id", "=", "REC: subject.id"]
+        save_as: "line"
+        expect_count: 1
+
+      - step: "Assert the final score of the line"
+        action: "assert"
+        target: "line"
+        asserts:
+          final_score:
+            type: "value"
+            expected: 0.0
+          minimum_score:
+            type: "value"
+            expected: 70.0
+          predicate_line_id.name:
+            type: "value"
+            expected: "C"
+
+  - name: "School Report Card - Without a predicate table the predicate stays empty"
+    steps:
+      - step: "Archive the predicate table of the grade"
+        action: "write"
+        target: "predicate"
+        values:
+          active: false
+      - step: "Create the score sheet of the subject"
+        action: "create"
+        model: "school_score_sheet"
+        save_as: "sheet"
+        values:
+          academic_term_id: "REC: academic_term.id"
+          grade_class_id: "REC: grade_class.id"
+          subject_id: "REC: subject.id"
+          teacher_id: "REC: teacher.id"
+          date: 2026-08-10
+          user_id: "REF: base.user_admin"
+          line_ids:
+            - - 0
+              - 0
+              - enrollment_id: "REC: enrollment_1.id"
+                component_id: "REC: component_1.id"
+                score: 90.0
+            - - 0
+              - 0
+              - enrollment_id: "REC: enrollment_1.id"
+                component_id: "REC: component_2.id"
+                score: 85.0
+            - - 0
+              - 0
+              - enrollment_id: "REC: enrollment_1.id"
+                component_id: "REC: component_pts.id"
+                score: 86.0
+
+      - step: "Confirm the score sheet"
+        action: "call"
+        target: "sheet"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve the score sheet, which finishes it"
+        action: "call"
+        target: "sheet"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "done"
+
+      - step: "Create the report card"
+        action: "create"
+        model: "school_report_card"
+        save_as: "card"
+        values:
+          enrollment_id: "REC: enrollment_1.id"
+          type_id: "REC: mid_type.id"
+          print_date: 2026-12-20
+          print_city: "Jakarta"
+          user_id: "REF: base.user_admin"
+
+      - step: "Generate the lines"
+        action: "call"
+        target: "card"
+        method: "action_generate_lines"
+        as_user: "base.user_admin"
+        refresh: true
+
+      - step: "Find the line of the subject"
+        action: "search"
+        model: "school_report_card_line"
+        domain:
+          - ["report_card_id", "=", "REC: card.id"]
+          - ["subject_id", "=", "REC: subject.id"]
+        save_as: "line"
+        expect_count: 1
+
+      - step: "The line keeps its score and has no predicate"
+        action: "assert"
+        target: "line"
+        asserts:
+          final_score:
+            type: "value"
+            expected: 87.0
+          predicate_line_id:
+            type: "value"
+            operator: "is_falsy"
+
+  - name: "School Report Card - Manual parts, confirm and approve"
+    steps:
+      - step: "Create the report card"
+        action: "create"
+        model: "school_report_card"
+        save_as: "card"
+        values:
+          enrollment_id: "REC: enrollment_1.id"
+          type_id: "REC: mid_type.id"
+          print_date: 2026-12-20
+          print_city: "Jakarta"
+          user_id: "REF: base.user_admin"
+          sick_days: 2
+          permission_days: 1
+          absent_days: 0
+          homeroom_note: "Keep it up."
+          parent_response: "Thank you."
+          co_curricular_ids:
+            - - 0
+              - 0
+              - theme: "Local Wisdom"
+                description: "Made a batik project."
+            - - 0
+              - 0
+              - theme: "Entrepreneurship"
+                description: "Sold handmade crafts."
+          extracurricular_ids:
+            - - 0
+              - 0
+              - name: "Scouts"
+                description: "Active member."
+
+      - step: "The manual parts are kept on the mid-term report card"
+        action: "assert"
+        target: "card"
+        asserts:
+          sick_days:
+            type: "value"
+            expected: 2
+          permission_days:
+            type: "value"
+            expected: 1
+          homeroom_note:
+            type: "value"
+            expected: "Keep it up."
+          parent_response:
+            type: "value"
+            expected: "Thank you."
+          co_curricular_ids:
+            type: "o2m"
+            check: "count"
+            expected_count: 2
+          extracurricular_ids:
+            type: "o2m"
+            check: "count"
+            expected_count: 1
+
+      - step: "Create the final type"
+        action: "create"
+        model: "school_report_card_type"
+        save_as: "final_type"
+        values:
+          name: "SRC Final"
+          code: "EVAL: 'SRCFT%d' % env['school_report_card_type'].search_count([])"
+          term_type: "final"
+          average_weight: 100.0
+          average_component_ids:
+            - - 6
+              - 0
+              - - "REC: component_1.id"
+
+      - step: "Create the final report card with manual parts"
+        action: "create"
+        model: "school_report_card"
+        save_as: "final_card"
+        values:
+          enrollment_id: "REC: enrollment_1.id"
+          type_id: "REC: final_type.id"
+          print_date: 2026-12-20
+          print_city: "Jakarta"
+          user_id: "REF: base.user_admin"
+          sick_days: 3
+          homeroom_note: "Well done."
+          co_curricular_ids:
+            - - 0
+              - 0
+              - theme: "Healthy Living"
+          extracurricular_ids:
+            - - 0
+              - 0
+              - name: "Football"
+
+      - step: "The manual parts are kept on the final report card"
+        action: "assert"
+        target: "final_card"
+        asserts:
+          sick_days:
+            type: "value"
+            expected: 3
+          homeroom_note:
+            type: "value"
+            expected: "Well done."
+          co_curricular_ids:
+            type: "o2m"
+            check: "count"
+            expected_count: 1
+          extracurricular_ids:
+            type: "o2m"
+            check: "count"
+            expected_count: 1
+
+      - step: "Confirm the report card"
+        action: "call"
+        target: "card"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve the report card, which finishes it"
+        action: "call"
+        target: "card"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "done"
+
+      - step: "The finished report card got its document number"
+        action: "assert"
+        target: "card"
+        asserts:
+          name:
+            type: "value"
+            operator: "not_equals"
+            expected: "/"
+
+  - name: "School Report Card - Rejected report cards"
+    steps:
+      - step: "A report card of a draft enrollment is rejected"
+        action: "create"
+        model: "school_report_card"
+        values:
+          enrollment_id: "REC: enrollment_2.id"
+          type_id: "REC: mid_type.id"
+          print_date: 2026-12-20
+          print_city: "Jakarta"
+          user_id: "REF: base.user_admin"
+        expect_error:
+          type: "ValidationError"
+          message_contains: "open enrollments"
+
+      - step: "A negative number of sick days is rejected"
+        action: "create"
+        model: "school_report_card"
+        values:
+          enrollment_id: "REC: enrollment_1.id"
+          type_id: "REC: mid_type.id"
+          print_date: 2026-12-20
+          print_city: "Jakarta"
+          user_id: "REF: base.user_admin"
+          sick_days: -1
+        expect_error:
+          type: "ValidationError"
+          message_contains: "cannot be negative"
+
+      - step: "Create the report card"
+        action: "create"
+        model: "school_report_card"
+        save_as: "card"
+        values:
+          enrollment_id: "REC: enrollment_1.id"
+          type_id: "REC: mid_type.id"
+          print_date: 2026-12-20
+          print_city: "Jakarta"
+          user_id: "REF: base.user_admin"
+
+      - step: "A second report card for the same enrollment and type is rejected"
+        action: "create"
+        model: "school_report_card"
+        values:
+          enrollment_id: "REC: enrollment_1.id"
+          type_id: "REC: mid_type.id"
+          print_date: 2026-12-20
+          print_city: "Jakarta"
+          user_id: "REF: base.user_admin"
+        expect_error:
+          type: "ValidationError"
+          message_contains: "already exists"
+
+      - step: "A negative number of permission days is rejected"
+        action: "write"
+        target: "card"
+        values:
+          permission_days: -1
+        expect_error:
+          type: "ValidationError"
+          message_contains: "cannot be negative"
+
+      - step: "A negative number of absent days is rejected"
+        action: "write"
+        target: "card"
+        values:
+          absent_days: -2
+        expect_error:
+          type: "ValidationError"
+          message_contains: "cannot be negative"
+
+      - step: "Generate the lines"
+        action: "call"
+        target: "card"
+        method: "action_generate_lines"
+        as_user: "base.user_admin"
+        refresh: true
+
+      - step: "A second line of the same subject is rejected"
+        action: "create"
+        model: "school_report_card_line"
+        values:
+          report_card_id: "REC: card.id"
+          subject_id: "REC: subject.id"
+        expect_error:
+          type: "ValidationError"
+          message_contains: "once per report card"
+
+  - name: "School Report Card - Confirm checks the enrollment again"
+    steps:
+      - step: "Create the report card"
+        action: "create"
+        model: "school_report_card"
+        save_as: "card"
+        values:
+          enrollment_id: "REC: enrollment_1.id"
+          type_id: "REC: mid_type.id"
+          print_date: 2026-12-20
+          print_city: "Jakarta"
+          user_id: "REF: base.user_admin"
+
+      - step: "The enrollment of the report card leaves the open state"
+        action: "write"
+        target: "enrollment_1"
+        values:
+          state: "draft"
+
+      - step: "Confirming a report card whose enrollment is not open is rejected"
+        action: "call"
+        target: "card"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        expect_error:
+          type: "ValidationError"
+          message_contains: "open enrollments"
+
+      - step: "The report card is still a draft"
+        action: "assert"
+        target: "card"
+        asserts:
+          state:
+            type: "value"
+            expected: "draft"
+
+  - name: "School Report Card - The report card of a done enrollment stays openable"
+    steps:
+      - step: "Create the report card"
+        action: "create"
+        model: "school_report_card"
+        save_as: "card"
+        values:
+          enrollment_id: "REC: enrollment_1.id"
+          type_id: "REC: mid_type.id"
+          print_date: 2026-12-20
+          print_city: "Jakarta"
+          user_id: "REF: base.user_admin"
+
+      - step: "The enrollment of the report card is done"
+        action: "write"
+        target: "enrollment_1"
+        values:
+          state: "done"
+
+      - step: "The report card is still editable"
+        action: "write"
+        target: "card"
+        values:
+          sick_days: 4
+
+      - step: "The report card is kept as it was"
+        action: "assert"
+        target: "card"
+        asserts:
+          state:
+            type: "value"
+            expected: "draft"
+          sick_days:
+            type: "value"
+            expected: 4
+          enrollment_id.state:
+            type: "value"
+            expected: "done"
+
+  - name: "School Report Card - Lines and scores can only be computed in draft"
+    steps:
+      - step: "Create the report card"
+        action: "create"
+        model: "school_report_card"
+        save_as: "card"
+        values:
+          enrollment_id: "REC: enrollment_1.id"
+          type_id: "REC: mid_type.id"
+          print_date: 2026-12-20
+          print_city: "Jakarta"
+          user_id: "REF: base.user_admin"
+
+      - step: "Confirm the report card"
+        action: "call"
+        target: "card"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Generating the lines of a confirmed report card is rejected"
+        action: "call"
+        target: "card"
+        method: "action_generate_lines"
+        as_user: "base.user_admin"
+        expect_error:
+          type: "UserError"
+          message_contains: "draft state"
+
+      - step: "Computing the scores of a confirmed report card is rejected"
+        action: "call"
+        target: "card"
+        method: "action_compute_scores"
+        as_user: "base.user_admin"
+        expect_error:
+          type: "UserError"
+          message_contains: "draft state"
+
+  - name: "School Report Card - One live report card per enrollment and type"
+    steps:
+      - step: "Create the report card"
+        action: "create"
+        model: "school_report_card"
+        save_as: "card"
+        values:
+          enrollment_id: "REC: enrollment_1.id"
+          type_id: "REC: mid_type.id"
+          print_date: 2026-12-20
+          print_city: "Jakarta"
+          user_id: "REF: base.user_admin"
+
+      - step: "Create the cancel reason"
+        action: "create"
+        model: "base.cancel_reason"
+        save_as: "cancel_reason"
+        values:
+          name: "SRC Cancel Reason"
+          code: "EVAL: 'SRCCR%d' % env['base.cancel_reason'].search_count([])"
+
+      - step: "Cancel the report card via the wizard"
+        action: "wizard"
+        model: "base.select_cancel_reason"
+        target: "card"
+        as_user: "base.user_admin"
+        values:
+          cancel_reason_id: "REC: cancel_reason.id"
+        method: "action_confirm"
+        asserts:
+          state:
+            type: "value"
+            expected: "cancel"
+
+      - step:
+          "A new report card for the same enrollment and type is accepted after the
+          cancel"
+        action: "create"
+        model: "school_report_card"
+        save_as: "new_card"
+        values:
+          enrollment_id: "REC: enrollment_1.id"
+          type_id: "REC: mid_type.id"
+          print_date: 2026-12-20
+          print_city: "Jakarta"
+          user_id: "REF: base.user_admin"
+
+      - step: "The new report card is a draft"
+        action: "assert"
+        target: "new_card"
+        asserts:
+          state:
+            type: "value"
+            expected: "draft"

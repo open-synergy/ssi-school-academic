@@ -54,6 +54,53 @@ class SchoolScoreSheetLine(models.Model):
         help="Score between 0 and 100. Leave it empty while the "
         "student is not scored yet; that is not the same as zero.",
     )
+    is_scored = fields.Boolean(
+        string="Scored",
+        default=False,
+        readonly=True,
+        help="Set when a score was entered, zero included, and cleared "
+        "when the score is emptied. A float field reads 0.0 for both "
+        "an empty score and a zero score, so this flag tells them "
+        "apart.",
+    )
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        """Create lines and set the scored flag of each one.
+
+        :param list vals_list: values of the lines to create.
+        :return: the new lines.
+        :rtype: recordset of ``school_score_sheet_line``
+        """
+        for vals in vals_list:
+            if "score" in vals:
+                vals["is_scored"] = self._is_score_filled(vals["score"])
+        return super().create(vals_list)
+
+    def write(self, vals):
+        """Write lines and keep the scored flag in step with the score.
+
+        :param dict vals: values to write.
+        :return: True
+        :rtype: bool
+        """
+        if "score" in vals:
+            vals = dict(vals, is_scored=self._is_score_filled(vals["score"]))
+        return super().write(vals)
+
+    @api.model
+    def _is_score_filled(self, score):
+        """Tell whether a written score value counts as entered.
+
+        A zero is an entered score. Only ``False`` and ``None`` mean the
+        score was emptied, so the test cannot use Python truthiness,
+        which treats ``0.0`` as false.
+
+        :param score: the value written to ``score``.
+        :return: True when the score was entered, zero included.
+        :rtype: bool
+        """
+        return score is not False and score is not None
 
     @api.constrains("score")
     def _check_score_range(self):
