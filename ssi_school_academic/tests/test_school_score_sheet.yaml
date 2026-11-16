@@ -863,3 +863,98 @@ scenarios:
           is_scored:
             type: "value"
             expected: true
+
+  - name: "School Score Sheet - The score value follows the flag"
+    steps:
+      - step: "Create the draft score sheet"
+        action: "create"
+        model: "school_score_sheet"
+        save_as: "sheet"
+        values:
+          academic_term_id: "REC: academic_term.id"
+          grade_class_id: "REC: grade_class.id"
+          subject_id: "REC: subject.id"
+          teacher_id: "REC: teacher.id"
+          date: 2026-08-10
+          user_id: "REF: base.user_admin"
+
+      - step: "Generate the lines"
+        action: "call"
+        target: "sheet"
+        method: "action_generate_lines"
+        as_user: "base.user_admin"
+
+      - step: "Find the line of the first student and component"
+        action: "search"
+        model: "school_score_sheet_line"
+        domain:
+          - ["sheet_id", "=", "REC: sheet.id"]
+          - ["enrollment_id", "=", "REC: enrollment_1.id"]
+          - ["component_id", "=", "REC: component_1.id"]
+        save_as: "line"
+        expect_count: 1
+
+      - step: "A generated line has no score entered"
+        action: "assert"
+        target: "line"
+        asserts:
+          is_scored:
+            type: "value"
+            expected: false
+
+      - step: "Write a score of zero, as the web client does"
+        action: "write"
+        target: "line"
+        values:
+          score: 0.0
+
+      - step: "The zero is kept and counted"
+        action: "assert"
+        target: "line"
+        asserts:
+          is_scored:
+            type: "value"
+            expected: true
+          score:
+            type: "value"
+            expected: 0.0
+
+      - step: "Write a filled score"
+        action: "write"
+        target: "line"
+        values:
+          score: 85.0
+
+      - step: "The filled score is kept and counted"
+        action: "assert"
+        target: "line"
+        asserts:
+          is_scored:
+            type: "value"
+            expected: true
+          score:
+            type: "value"
+            expected: 85.0
+
+      - step: "A negative score is still rejected"
+        action: "write"
+        target: "line"
+        values:
+          score: -1.0
+        expect_error:
+          type: "ValidationError"
+          message_contains: "between 0 and 100"
+
+      - step: "Empty the score, as the web client does"
+        action: "write"
+        target: "line"
+        values:
+          score: false
+
+      - step: "The emptied score is not counted"
+        action: "assert"
+        target: "line"
+        asserts:
+          is_scored:
+            type: "value"
+            expected: false

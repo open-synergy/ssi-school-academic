@@ -101,7 +101,8 @@
                                 />
                             <field name="student_id" />
                             <field name="component_id" />
-                            <field name="score" />
+                            <field name="score" widget="score_entry" />
+                            <field name="is_scored" invisible="1" />
                         </tree>
                         <form>
                             <group col="2">
@@ -111,7 +112,8 @@
                                     />
                                 <field name="student_id" />
                                 <field name="component_id" />
-                                <field name="score" />
+                                <field name="score" widget="score_entry" />
+                                <field name="is_scored" invisible="1" />
                             </group>
                         </form>
                     </field>

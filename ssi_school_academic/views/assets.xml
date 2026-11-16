@@ -4,6 +4,19 @@
      License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
 <odoo>
     <template
+        id="assets_backend"
+        name="ssi_school_academic assets backend"
+        inherit_id="web.assets_backend"
+    >
+        <xpath expr="." position="inside">
+            <script
+                type="text/javascript"
+                src="/ssi_school_academic/static/src/js/score_entry_widget.js"
+            />
+        </xpath>
+    </template>
+
+    <template
         id="assets_tests"
         name="ssi_school_academic assets tests"
         inherit_id="web.assets_tests"
@@ -28,6 +41,10 @@
             <script
                 type="text/javascript"
                 src="/ssi_school_academic/static/tests/tours/school_score_sheet_tour.js"
+            />
+            <script
+                type="text/javascript"
+                src="/ssi_school_academic/static/tests/tours/school_score_sheet_enter_scores_tour.js"
             />
             <script
                 type="text/javascript"

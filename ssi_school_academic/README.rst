@@ -42,6 +42,7 @@ Work Instruction
 * `Reject School Score Sheet <docs/school_score_sheet/05-reject.html>`_
 * `Cancel School Score Sheet <docs/school_score_sheet/06-cancel.html>`_
 * `Restart School Score Sheet Approval Process <docs/school_score_sheet/07-restart-approval.html>`_
+* `Enter Scores of School Score Sheet <docs/school_score_sheet/08-enter-scores.html>`_
 * `Create School Report Card <docs/school_report_card/01-create.html>`_
 * `Generate Lines of School Report Card <docs/school_report_card/02-generate-lines.html>`_
 * `Compute Scores of School Report Card <docs/school_report_card/03-compute-scores.html>`_
@@ -68,6 +69,9 @@ To install this module, you need to:
 Usage
 =====
 
+* In the **Scores** tab of a score sheet, a **Score** cell that was never filled shows
+  empty. Type ``0`` to enter a zero score: it counts in the average and the final score.
+  Empty the cell to take the score back: an empty cell does not count.
 * The print shows at most four score component columns on a Mid-Term report
   card. Set the **Displayed Columns** of the Report Card Type in the order of
   the **Sequence** of the components; a fifth component and the ones after it
