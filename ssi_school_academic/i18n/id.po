@@ -15,6 +15,18 @@ msgstr ""
 "Language: id\n"
 
 #. module: ssi_school_academic
+#: model:ir.model.fields.selection,name:ssi_school_academic.selection__school_report_card__state__draft
+#: model:ir.model.fields.selection,name:ssi_school_academic.selection__school_score_sheet__state__draft
+msgid "Draft"
+msgstr "Draf"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields.selection,name:ssi_school_academic.selection__school_report_card__state__cancel
+#: model:ir.model.fields.selection,name:ssi_school_academic.selection__school_score_sheet__state__cancel
+msgid "Cancelled"
+msgstr "Dibatalkan"
+
+#. module: ssi_school_academic
 #: code:addons/ssi_school_academic/models/school_report_card.py:0
 #, python-format
 msgid ""
@@ -941,6 +953,12 @@ msgid "Displayed Columns"
 msgstr "Kolom yang Ditampilkan"
 
 #. module: ssi_school_academic
+#: model:ir.model.fields.selection,name:ssi_school_academic.selection__school_report_card__state__done
+#: model:ir.model.fields.selection,name:ssi_school_academic.selection__school_score_sheet__state__done
+msgid "Done"
+msgstr "Selesai"
+
+#. module: ssi_school_academic
 #: model:ir.model.fields,help:ssi_school_academic.field_school_report_card__done_ok
 #: model:ir.model.fields,help:ssi_school_academic.field_school_score_sheet__done_ok
 msgid ""
@@ -1555,6 +1573,12 @@ msgstr "Persetujuan Berikutnya"
 #. module: ssi_school_academic
 #: code:addons/ssi_school_academic/models/school_report_card.py:0
 #, python-format
+msgid "No."
+msgstr "No."
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_report_card.py:0
+#, python-format
 msgid "No"
 msgstr "No"
 
@@ -1782,6 +1806,8 @@ msgstr "Kebijakan penolakan\\n\\n* Jika pengguna aktif dapat melihat dan mengeks
 #. module: ssi_school_academic
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__rejected
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__rejected
+#: model:ir.model.fields.selection,name:ssi_school_academic.selection__school_report_card__state__reject
+#: model:ir.model.fields.selection,name:ssi_school_academic.selection__school_score_sheet__state__reject
 msgid "Rejected"
 msgstr "Ditolak"
 
@@ -2333,6 +2359,12 @@ msgstr "Kejuruan"
 #, python-format
 msgid "Vocational Subjects"
 msgstr "Kelompok Mata Pelajaran Kejuruan"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields.selection,name:ssi_school_academic.selection__school_report_card__state__confirm
+#: model:ir.model.fields.selection,name:ssi_school_academic.selection__school_score_sheet__state__confirm
+msgid "Waiting for Approval"
+msgstr "Menunggu Persetujuan"
 
 #. module: ssi_school_academic
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__website_message_ids
