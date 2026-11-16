@@ -17,7 +17,7 @@ class TestUiSchoolScoreSheet(HttpSavepointCase):
         """Create the master data and score sheets required by the tours.
 
         Every scenario owns a dedicated Subject (suffixed CREATE,
-        GENERATE, CONFIRM, APPROVE, REJECT, CANCEL, RESTART). The
+        GENERATE, ENTER, CONFIRM, APPROVE, REJECT, CANCEL, RESTART). The
         unique key of a sheet is its term, class and subject, so each
         scenario can move its own sheet without affecting another one,
         and no suffix is a prefix of another, so the list always shows
@@ -79,6 +79,16 @@ class TestUiSchoolScoreSheet(HttpSavepointCase):
                 "sequence": 10,
             }
         )
+        # A second component gives every student two lines, so the
+        # Enter Scores scenario has lines it never touches.
+        cls.component_2 = cls.env["school_score_component"].create(
+            {
+                "name": "TOUR SSS Daily Test 2",
+                "code": "/",
+                "category": "daily_test",
+                "sequence": 20,
+            }
+        )
         cls.enrollments = cls.env["school_enrollment"]
         for index in (1, 2):
             cls.enrollments |= cls._create_open_enrollment(
@@ -99,6 +109,10 @@ class TestUiSchoolScoreSheet(HttpSavepointCase):
 
         # ── Generate Lines tour: a Draft sheet without lines ──
         cls._create_sheet("GENERATE")
+
+        # ── Enter Scores tour: a Draft sheet with unscored lines ──
+        cls.enter_sheet = cls._create_sheet("ENTER")
+        cls._add_lines(cls.enter_sheet)
 
         # ── Confirm tour: a Draft sheet with lines ──
         confirm = cls._create_sheet("CONFIRM")
@@ -238,6 +252,35 @@ class TestUiSchoolScoreSheet(HttpSavepointCase):
             "ssi_school_academic_school_score_sheet_generate_lines",
             login="admin",
         )
+
+    def test_enter_scores(self):
+        """Run the enter scores tour for ``school_score_sheet``.
+
+        The tour types a zero and a filled score on the first two lines.
+        The values are read here, in Python, not in the tour: the zero
+        must be saved as a scored line and the untouched lines must stay
+        unscored.
+
+        IK: docs/school_score_sheet/08-enter-scores.md
+        """
+        self.start_tour(
+            "/web",
+            "ssi_school_academic_school_score_sheet_enter_scores",
+            login="admin",
+        )
+        self.enter_sheet.invalidate_cache()
+        lines = self.enter_sheet.line_ids
+        scored = lines.filtered("is_scored")
+        unscored = lines - scored
+        self.assertEqual(len(lines), 4)
+        self.assertEqual(sorted(scored.mapped("score")), [0.0, 90.0])
+        self.assertEqual(len(unscored), 2)
+        self.assertEqual(lines[0].score, 0.0)
+        self.assertTrue(lines[0].is_scored)
+        self.assertEqual(lines[1].score, 90.0)
+        self.assertTrue(lines[1].is_scored)
+        self.assertFalse(lines[2].is_scored)
+        self.assertFalse(lines[3].is_scored)
 
     def test_confirm(self):
         """Run the confirm tour for ``school_score_sheet``.
