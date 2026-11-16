@@ -599,6 +599,12 @@ msgid ""
 msgstr ""
 
 #. module: ssi_school_academic
+#: model:ir.model.fields.selection,name:ssi_school_academic.selection__school_report_card__state__cancel
+#: model:ir.model.fields.selection,name:ssi_school_academic.selection__school_score_sheet__state__cancel
+msgid "Cancelled"
+msgstr ""
+
+#. module: ssi_school_academic
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_component__category
 #: model_terms:ir.ui.view,arch_db:ssi_school_academic.school_score_component_view_search
 msgid "Category"
@@ -827,12 +833,24 @@ msgid "Displayed Columns"
 msgstr ""
 
 #. module: ssi_school_academic
+#: model:ir.model.fields.selection,name:ssi_school_academic.selection__school_report_card__state__done
+#: model:ir.model.fields.selection,name:ssi_school_academic.selection__school_score_sheet__state__done
+msgid "Done"
+msgstr ""
+
+#. module: ssi_school_academic
 #: model:ir.model.fields,help:ssi_school_academic.field_school_report_card__done_ok
 #: model:ir.model.fields,help:ssi_school_academic.field_school_score_sheet__done_ok
 msgid ""
 "Done policy\n"
 "\n"
 "* If active user can see and execute 'Done' button"
+msgstr ""
+
+#. module: ssi_school_academic
+#: model:ir.model.fields.selection,name:ssi_school_academic.selection__school_report_card__state__draft
+#: model:ir.model.fields.selection,name:ssi_school_academic.selection__school_score_sheet__state__draft
+msgid "Draft"
 msgstr ""
 
 #. module: ssi_school_academic
@@ -1442,7 +1460,7 @@ msgstr ""
 #. module: ssi_school_academic
 #: code:addons/ssi_school_academic/models/school_report_card.py:0
 #, python-format
-msgid "No"
+msgid "No."
 msgstr ""
 
 #. module: ssi_school_academic
@@ -1664,6 +1682,8 @@ msgstr ""
 #. module: ssi_school_academic
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__rejected
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__rejected
+#: model:ir.model.fields.selection,name:ssi_school_academic.selection__school_report_card__state__reject
+#: model:ir.model.fields.selection,name:ssi_school_academic.selection__school_score_sheet__state__reject
 msgid "Rejected"
 msgstr ""
 
@@ -2220,6 +2240,12 @@ msgstr ""
 #: code:addons/ssi_school_academic/models/school_report_card.py:0
 #, python-format
 msgid "Vocational Subjects"
+msgstr ""
+
+#. module: ssi_school_academic
+#: model:ir.model.fields.selection,name:ssi_school_academic.selection__school_report_card__state__confirm
+#: model:ir.model.fields.selection,name:ssi_school_academic.selection__school_score_sheet__state__confirm
+msgid "Waiting for Approval"
 msgstr ""
 
 #. module: ssi_school_academic
