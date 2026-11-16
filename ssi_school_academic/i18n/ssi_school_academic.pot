@@ -1873,6 +1873,13 @@ msgid "Score Components"
 msgstr ""
 
 #. module: ssi_school_academic
+#. openerp-web
+#: code:addons/ssi_school_academic/static/src/js/score_entry_widget.js:0
+#, python-format
+msgid "Score Entry"
+msgstr ""
+
+#. module: ssi_school_academic
 #: model:res.groups,name:ssi_school_academic.school_score_predicate_group
 msgid "Score Predicate"
 msgstr ""
