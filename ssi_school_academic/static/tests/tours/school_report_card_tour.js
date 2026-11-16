@@ -204,9 +204,9 @@ odoo.define("ssi_school_academic.school_report_card_tour", function (require) {
                 {
                     // Post-Condition: the Predicate follows the computed
                     // Final Score. The fixture lines were generated before
-                    // the score sheet was done, so they start with the
-                    // lowest predicate and a row can only show the top one
-                    // once the scores were computed.
+                    // the score sheet was done, so they start without a
+                    // score and a predicate, and a row can only show the
+                    // top predicate once the scores were computed.
                     content: "The line earns the top predicate",
                     trigger:
                         ".o_field_one2many[name='line_ids'] .o_data_row:contains(TOUR SRC Top)",

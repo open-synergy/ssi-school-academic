@@ -383,6 +383,9 @@ scenarios:
         action: "assert"
         target: "line"
         asserts:
+          is_scored:
+            type: "value"
+            expected: true
           final_score:
             type: "value"
             expected: 87.0
@@ -470,9 +473,12 @@ scenarios:
           minimum_score:
             type: "value"
             expected: 70.0
-          predicate_line_id.name:
+          is_scored:
             type: "value"
-            expected: "C"
+            expected: false
+          predicate_line_id:
+            type: "value"
+            operator: "is_falsy"
 
       - step: "Create the score sheet of the subject"
         action: "create"
@@ -593,9 +599,12 @@ scenarios:
           minimum_score:
             type: "value"
             expected: 70.0
-          predicate_line_id.name:
+          is_scored:
             type: "value"
-            expected: "C"
+            expected: false
+          predicate_line_id:
+            type: "value"
+            operator: "is_falsy"
 
       - step: "Create the score sheet of the subject"
         action: "create"
@@ -716,9 +725,12 @@ scenarios:
           minimum_score:
             type: "value"
             expected: 70.0
-          predicate_line_id.name:
+          is_scored:
             type: "value"
-            expected: "C"
+            expected: false
+          predicate_line_id:
+            type: "value"
+            operator: "is_falsy"
 
       - step: "Create the score sheet of the subject"
         action: "create"
@@ -1076,9 +1088,12 @@ scenarios:
           minimum_score:
             type: "value"
             expected: 70.0
-          predicate_line_id.name:
+          is_scored:
             type: "value"
-            expected: "C"
+            expected: false
+          predicate_line_id:
+            type: "value"
+            operator: "is_falsy"
 
   - name: "School Report Card - Without a predicate table the predicate stays empty"
     steps:
@@ -1479,6 +1494,226 @@ scenarios:
           enrollment_id.state:
             type: "value"
             expected: "done"
+
+  - name: "School Report Card - A subject without any score is not scored"
+    steps:
+      - step: "Create a second subject taught in the grade"
+        action: "create"
+        model: "school_subject"
+        save_as: "subject_b"
+        values:
+          name: "SRC Subject B"
+          code: "EVAL: 'SRCSB%d' % env['school_subject'].search_count([])"
+          grade_ids:
+            - - 6
+              - 0
+              - - "REC: grade.id"
+
+      - step: "Create the score sheet of the subject"
+        action: "create"
+        model: "school_score_sheet"
+        save_as: "sheet"
+        values:
+          academic_term_id: "REC: academic_term.id"
+          grade_class_id: "REC: grade_class.id"
+          subject_id: "REC: subject.id"
+          teacher_id: "REC: teacher.id"
+          date: 2026-08-10
+          user_id: "REF: base.user_admin"
+          line_ids:
+            - - 0
+              - 0
+              - enrollment_id: "REC: enrollment_1.id"
+                component_id: "REC: component_1.id"
+                score: 90.0
+            - - 0
+              - 0
+              - enrollment_id: "REC: enrollment_1.id"
+                component_id: "REC: component_2.id"
+                score: 85.0
+            - - 0
+              - 0
+              - enrollment_id: "REC: enrollment_1.id"
+                component_id: "REC: component_pts.id"
+                score: 86.0
+
+      - step: "Confirm the score sheet"
+        action: "call"
+        target: "sheet"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve the score sheet, which finishes it"
+        action: "call"
+        target: "sheet"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "done"
+
+      - step: "Create the report card"
+        action: "create"
+        model: "school_report_card"
+        save_as: "card"
+        values:
+          enrollment_id: "REC: enrollment_1.id"
+          type_id: "REC: mid_type.id"
+          print_date: 2026-12-20
+          print_city: "Jakarta"
+          user_id: "REF: base.user_admin"
+
+      - step: "Generate the lines"
+        action: "call"
+        target: "card"
+        method: "action_generate_lines"
+        as_user: "base.user_admin"
+        refresh: true
+
+      - step: "Both subjects of the grade got a line"
+        action: "assert"
+        target: "card"
+        asserts:
+          line_ids:
+            type: "o2m"
+            check: "count"
+            expected_count: 2
+
+      - step: "Find the line of the subject with a done score sheet"
+        action: "search"
+        model: "school_report_card_line"
+        domain:
+          - ["report_card_id", "=", "REC: card.id"]
+          - ["subject_id", "=", "REC: subject.id"]
+        save_as: "line"
+        expect_count: 1
+
+      - step: "The scored line keeps its score and predicate"
+        action: "assert"
+        target: "line"
+        asserts:
+          is_scored:
+            type: "value"
+            expected: true
+          final_score:
+            type: "value"
+            expected: 87.0
+          predicate_line_id.name:
+            type: "value"
+            expected: "B"
+
+      - step: "Find the line of the subject without a score sheet"
+        action: "search"
+        model: "school_report_card_line"
+        domain:
+          - ["report_card_id", "=", "REC: card.id"]
+          - ["subject_id", "=", "REC: subject_b.id"]
+        save_as: "line_b"
+        expect_count: 1
+
+      - step: "The line without any score is not scored and has no predicate"
+        action: "assert"
+        target: "line_b"
+        asserts:
+          is_scored:
+            type: "value"
+            expected: false
+          final_score:
+            type: "value"
+            expected: 0.0
+          predicate_line_id:
+            type: "value"
+            operator: "is_falsy"
+
+  - name: "School Report Card - A typed zero is a score"
+    steps:
+      - step: "Create the score sheet of the subject"
+        action: "create"
+        model: "school_score_sheet"
+        save_as: "sheet"
+        values:
+          academic_term_id: "REC: academic_term.id"
+          grade_class_id: "REC: grade_class.id"
+          subject_id: "REC: subject.id"
+          teacher_id: "REC: teacher.id"
+          date: 2026-08-10
+          user_id: "REF: base.user_admin"
+          line_ids:
+            - - 0
+              - 0
+              - enrollment_id: "REC: enrollment_1.id"
+                component_id: "REC: component_1.id"
+                score: 0.0
+
+      - step: "Confirm the score sheet"
+        action: "call"
+        target: "sheet"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve the score sheet, which finishes it"
+        action: "call"
+        target: "sheet"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "done"
+
+      - step: "Create the report card"
+        action: "create"
+        model: "school_report_card"
+        save_as: "card"
+        values:
+          enrollment_id: "REC: enrollment_1.id"
+          type_id: "REC: mid_type.id"
+          print_date: 2026-12-20
+          print_city: "Jakarta"
+          user_id: "REF: base.user_admin"
+
+      - step: "Generate the lines"
+        action: "call"
+        target: "card"
+        method: "action_generate_lines"
+        as_user: "base.user_admin"
+        refresh: true
+
+      - step: "Find the line of the subject"
+        action: "search"
+        model: "school_report_card_line"
+        domain:
+          - ["report_card_id", "=", "REC: card.id"]
+          - ["subject_id", "=", "REC: subject.id"]
+        save_as: "line"
+        expect_count: 1
+
+      - step: "The line is scored and earns the predicate of zero"
+        action: "assert"
+        target: "line"
+        asserts:
+          is_scored:
+            type: "value"
+            expected: true
+          final_score:
+            type: "value"
+            expected: 0.0
+          predicate_line_id.name:
+            type: "value"
+            expected: "C"
 
   - name: "School Report Card - Lines and scores can only be computed in draft"
     steps:

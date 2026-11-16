@@ -29,5 +29,7 @@
   done.
 - A score of 0 that was entered counts in the average; a score that was left empty does
   not.
-- The **Predicate** of every line follows its Final Score.
+- A line whose subject has no entered score at all shows **-** as its Final Score and
+  has no Predicate; the line stays on the report card.
+- The **Predicate** of every other line follows its Final Score.
 - Status stays **Draft**.

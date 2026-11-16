@@ -28,6 +28,7 @@
 - Every line of the report card is replaced by new lines: one line per active subject
   taught in the Grade.
 - Each line shows the **Final Score** computed from the score sheets that are done, the
-  **Minimum Score**, and the **Predicate** of that score.
+  **Minimum Score**, and the **Predicate** of that score. A line whose subject has no
+  entered score yet shows **-** as its Final Score and has no Predicate.
 - Subjects not taught in the Grade get no line.
 - Status stays **Draft**.

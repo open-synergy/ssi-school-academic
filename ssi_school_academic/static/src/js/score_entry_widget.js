@@ -13,7 +13,8 @@ odoo.define("ssi_school_academic.FieldScoreEntry", function (require) {
     // A Float field reads 0.0 for both an empty score and a zero score. The
     // read-only Boolean field ``is_scored`` of the same line tells them apart,
     // so this widget shows an empty cell while ``is_scored`` is false, and it
-    // lets a typed zero count as a change.
+    // lets a typed zero count as a change. The shown text of an unscored cell
+    // is empty unless the node option ``empty_text`` sets another one.
     var FieldScoreEntry = basic_fields.FieldFloat.extend({
         description: _lt("Score Entry"),
         className: "o_field_float o_field_number o_field_score_entry",
@@ -48,7 +49,8 @@ odoo.define("ssi_school_academic.FieldScoreEntry", function (require) {
         },
 
         /**
-         * Show an empty cell while the score is not entered.
+         * Show an empty cell, or the ``empty_text`` node option, while the
+         * score is not entered.
          *
          * @override
          * @private
@@ -56,7 +58,7 @@ odoo.define("ssi_school_academic.FieldScoreEntry", function (require) {
          */
         _formatValue: function () {
             if (!this._isScored()) {
-                return "";
+                return this.nodeOptions.empty_text || "";
             }
             return this._super.apply(this, arguments);
         },
