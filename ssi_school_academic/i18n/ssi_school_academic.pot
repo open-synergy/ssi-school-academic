@@ -1962,6 +1962,7 @@ msgid "Score sheet this line belongs to."
 msgstr ""
 
 #. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_line__is_scored
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet_line__is_scored
 msgid "Scored"
 msgstr ""
@@ -1980,6 +1981,14 @@ msgstr ""
 #. module: ssi_school_academic
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_component__sequence
 msgid "Sequence"
+msgstr ""
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card_line__is_scored
+msgid ""
+"Set by the Compute Scores button of the report card when the subject has at "
+"least one entered score, a typed zero included. A line that is not scored "
+"has no final score and no predicate."
 msgstr ""
 
 #. module: ssi_school_academic
