@@ -457,15 +457,27 @@ Solution: Restart the document before running this action
     def _compute_scores(self):
         """Fill the final score of every line.
 
+        A line without any entered score is left not scored, with an
+        empty final score, instead of getting a computed zero.
+
         :raises UserError: when the report card is not in draft state.
         :return: nothing
         """
         self.ensure_one()
         self._check_draft_state("Compute scores")
         for line in self.line_ids:
-            line.final_score = self.type_id.compute_final_score(
-                line._get_component_scores()
-            )
+            component_scores = line._get_component_scores()
+            if component_scores:
+                line.write(
+                    {
+                        "is_scored": True,
+                        "final_score": self.type_id.compute_final_score(
+                            component_scores
+                        ),
+                    }
+                )
+            else:
+                line.write({"is_scored": False, "final_score": False})
 
     def _get_subject_domain(self):
         """Return the domain of the subjects that get a line.
@@ -620,7 +632,9 @@ Solution: Ask the administrator to add you to the report card Viewer group
         Rows are grouped by subject group, General first and then
         Vocational, and ordered by the subject name. A group without a
         row is left out. A component the subject has no score for is
-        printed as ``-``, and a column without a component stays empty.
+        printed as ``-``, and a column without a component stays empty. A
+        row that is not scored prints ``-`` as its final score and as its
+        learning objective when that is empty.
 
         :param components: displayed score components, at most four
         :param bool show_components: whether the component columns
@@ -651,13 +665,19 @@ Solution: Ask the administrator to add you to the report card Viewer group
                             )
                         else:
                             scores[position] = "-"
+                if line.is_scored:
+                    final = self._format_print_score(line.final_score)
+                    objective = line.learning_objective or ""
+                else:
+                    final = "-"
+                    objective = line.learning_objective or "-"
                 rows.append(
                     {
                         "no": str(index),
                         "subject": line.subject_id.name or "",
                         "scores": scores,
-                        "final": self._format_print_score(line.final_score),
-                        "objective": line.learning_objective or "",
+                        "final": final,
+                        "objective": objective,
                     }
                 )
             if rows:

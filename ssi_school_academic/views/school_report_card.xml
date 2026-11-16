@@ -102,7 +102,12 @@
                         <tree editable="bottom">
                             <field name="subject_id" />
                             <field name="subject_group" />
-                            <field name="final_score" />
+                            <field
+                                    name="final_score"
+                                    widget="score_entry"
+                                    options="{'empty_text': '-'}"
+                                />
+                            <field name="is_scored" invisible="1" />
                             <field name="minimum_score" />
                             <field name="predicate_line_id" />
                             <field name="learning_objective" />
@@ -111,7 +116,12 @@
                             <group col="2">
                                 <field name="subject_id" />
                                 <field name="subject_group" />
-                                <field name="final_score" />
+                                <field
+                                        name="final_score"
+                                        widget="score_entry"
+                                        options="{'empty_text': '-'}"
+                                    />
+                                <field name="is_scored" invisible="1" />
                                 <field name="minimum_score" />
                                 <field name="predicate_line_id" />
                                 <field name="learning_objective" />

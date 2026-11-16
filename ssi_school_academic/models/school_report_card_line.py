@@ -13,7 +13,8 @@ class SchoolReportCardLine(models.Model):
     minimum score (KKM) of that subject on the grade of the report card
     and the predicate the final score earns. The final score is filled
     by the compute scores action of the report card from the score
-    sheets that are done.
+    sheets that are done. A line whose subject has no entered score at
+    all is not scored: it has no final score and no predicate.
     """
 
     _name = "school_report_card_line"
@@ -47,6 +48,15 @@ class SchoolReportCardLine(models.Model):
         readonly=True,
         help="Final score of the subject. It is filled by the Compute "
         "Scores button of the report card, not typed by hand.",
+    )
+    is_scored = fields.Boolean(
+        string="Scored",
+        readonly=True,
+        default=False,
+        help="Set by the Compute Scores button of the report card when "
+        "the subject has at least one entered score, a typed zero "
+        "included. A line that is not scored has no final score and no "
+        "predicate.",
     )
     minimum_score = fields.Float(
         string="Minimum Score",
@@ -92,12 +102,13 @@ class SchoolReportCardLine(models.Model):
                     result = line.minimum_score
             record.minimum_score = result
 
-    @api.depends("final_score", "report_card_id.grade_id")
+    @api.depends("final_score", "is_scored", "report_card_id.grade_id")
     def _compute_predicate_line_id(self):
         """Compute the predicate the final score earns.
 
         Takes the active predicate table of the grade and asks it for
-        the line of the final score; empty when no table applies.
+        the line of the final score; empty when no table applies or
+        when the line is not scored.
         """
         predicate_model = self.env["school_score_predicate"]
         for record in self:
@@ -105,7 +116,7 @@ class SchoolReportCardLine(models.Model):
             table = predicate_model._get_predicate_for_grade(
                 record.report_card_id.grade_id
             )
-            if table:
+            if table and record.is_scored:
                 result = table.get_predicate_line(record.final_score)
             record.predicate_line_id = result
 

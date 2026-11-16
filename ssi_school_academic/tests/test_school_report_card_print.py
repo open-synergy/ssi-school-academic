@@ -199,11 +199,11 @@ class TestSchoolReportCardPrint(
                 "learning_objective": "PRT understands the concepts.",
             }
         )
-        first.final_score = 87.0
+        first.write({"is_scored": True, "final_score": 87.0})
         second = line_model.create(
             {"report_card_id": card.id, "subject_id": self.subject_2.id}
         )
-        second.final_score = 90.0
+        second.write({"is_scored": True, "final_score": 90.0})
         return card
 
     def _render(self, card):
@@ -292,6 +292,27 @@ class TestSchoolReportCardPrint(
         data = card.get_report_card_print_data()
         self.assertFalse(data["show_components"])
         self.assertEqual(data["period"], "Semester")
+
+    def test_print_unscored_line(self):
+        """Check a line without any score prints a dash (P1, L-01).
+
+        The row of the unscored subject has ``-`` as its final score
+        and as its learning objective, and not ``0``, while the scored
+        rows keep their score.
+        """
+        card = self._create_card(self.final_type)
+        subject = self._create_subject("PRT Subject 3", "general", 3)
+        self.env["school_report_card_line"].create(
+            {"report_card_id": card.id, "subject_id": subject.id}
+        )
+        text = self._render(card)
+        self.assertRegex(text, r"PRT Subject 3\s+-\s+-")
+        self.assertIn("87", text)
+        rows = card.get_report_card_print_data()["groups"][0]["rows"]
+        unscored = [row for row in rows if row["subject"] == "PRT Subject 3"]
+        self.assertEqual(len(unscored), 1)
+        self.assertEqual(unscored[0]["final"], "-")
+        self.assertEqual(unscored[0]["objective"], "-")
 
     def test_label_no(self):
         """Check the number column label is not the core ``No`` (P1, L-01).
