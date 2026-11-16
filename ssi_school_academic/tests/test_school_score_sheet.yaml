@@ -958,3 +958,14 @@ scenarios:
           is_scored:
             type: "value"
             expected: false
+
+  - name: "School Score Sheet - The state values belong to this module"
+    steps:
+      - step: "The reject selection value has an external id of this module"
+        action: "search"
+        model: "ir.model.data"
+        domain:
+          - ["module", "=", "ssi_school_academic"]
+          - ["name", "=", "selection__school_score_sheet__state__reject"]
+        save_as: "selection_data"
+        expect_count: 1
