@@ -293,6 +293,18 @@ class TestSchoolReportCardPrint(
         self.assertFalse(data["show_components"])
         self.assertEqual(data["period"], "Semester")
 
+    def test_label_no(self):
+        """Check the number column label is not the core ``No`` (P1, L-01).
+
+        The source text of the label is ``No.`` so the translation of
+        the core ``No`` (``Tidak`` in Indonesian) is never applied. In
+        English the label is the source text. The placeholder key is
+        unchanged.
+        """
+        card = self._create_card(self.final_type)
+        data = card.with_context(lang="en_US").get_report_card_print_data()
+        self.assertEqual(data["labels"]["no"], "No.")
+
     def test_empty_blocks_hidden(self):
         """Check the empty blocks are not printed (P1, L-01).
 

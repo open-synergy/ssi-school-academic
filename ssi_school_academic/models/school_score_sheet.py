@@ -73,6 +73,25 @@ class SchoolScoreSheet(models.Model):
     # Sequence attribute
     _create_sequence_state = "done"
 
+    # Redeclare the state selection so that the translation entries of
+    # the state values belong to this module. The values and labels are
+    # identical with the mixins, only the module is recorded.
+    state = fields.Selection(
+        selection_add=[
+            ("draft", "Draft"),
+            ("confirm", "Waiting for Approval"),
+            ("reject", "Rejected"),
+            ("done", "Done"),
+            ("cancel", "Cancelled"),
+        ],
+        ondelete={
+            "confirm": "set default",
+            "reject": "set default",
+            "done": "set default",
+            "cancel": "set default",
+        },
+    )
+
     date = fields.Date(
         string="Date",
         default=lambda r: datetime_date.today(),

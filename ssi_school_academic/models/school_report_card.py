@@ -74,6 +74,25 @@ class SchoolReportCard(models.Model):
     # Sequence attribute
     _create_sequence_state = "done"
 
+    # Redeclare the state selection so that the translation entries of
+    # the state values belong to this module. The values and labels are
+    # identical with the mixins, only the module is recorded.
+    state = fields.Selection(
+        selection_add=[
+            ("draft", "Draft"),
+            ("confirm", "Waiting for Approval"),
+            ("reject", "Rejected"),
+            ("done", "Done"),
+            ("cancel", "Cancelled"),
+        ],
+        ondelete={
+            "confirm": "set default",
+            "reject": "set default",
+            "done": "set default",
+            "cancel": "set default",
+        },
+    )
+
     enrollment_id = fields.Many2one(
         string="Enrollment",
         comodel_name="school_enrollment",
@@ -671,7 +690,7 @@ Solution: Ask the administrator to add you to the report card Viewer group
             "academic_year": _("Academic Year"),
             "general": _("General Subjects"),
             "vocational": _("Vocational Subjects"),
-            "no": _("No"),
+            "no": _("No."),
             "subject": _("Subject"),
             "final": _("Final Score"),
             "achievement": _("Competency Achievement"),

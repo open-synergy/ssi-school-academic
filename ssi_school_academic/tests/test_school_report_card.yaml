@@ -1576,3 +1576,14 @@ scenarios:
           state:
             type: "value"
             expected: "draft"
+
+  - name: "School Report Card - The state values belong to this module"
+    steps:
+      - step: "The done selection value has an external id of this module"
+        action: "search"
+        model: "ir.model.data"
+        domain:
+          - ["module", "=", "ssi_school_academic"]
+          - ["name", "=", "selection__school_report_card__state__done"]
+        save_as: "selection_data"
+        expect_count: 1
