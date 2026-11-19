@@ -254,6 +254,12 @@ msgid "# Document"
 msgstr ""
 
 #. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_print_report_card_ledger_line__wizard_id
+#: model:ir.model.fields,field_description:ssi_school_academic.field_print_report_card_ledger_subject__wizard_id
+msgid "# Ledger"
+msgstr ""
+
+#. module: ssi_school_academic
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate_line__predicate_id
 msgid "# Predicate Table"
 msgstr ""
@@ -271,6 +277,11 @@ msgid "# Report Card Type"
 msgstr ""
 
 #. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_print_report_card_ledger_cell__line_id
+msgid "# Row"
+msgstr ""
+
+#. module: ssi_school_academic
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject_minimum_score__subject_id
 msgid "# Subject"
 msgstr ""
@@ -278,6 +289,16 @@ msgstr ""
 #. module: ssi_school_academic
 #: model:ir.actions.report,print_report_name:ssi_school_academic.report_school_report_card
 msgid "'Report Card - %s' % (object.student_id.name or '')"
+msgstr ""
+
+#. module: ssi_school_academic
+#: model:ir.actions.report,print_report_name:ssi_school_academic.action_report_print_report_card_ledger_pdf
+msgid "'Report Card Ledger - %s' % (object.grade_class_id.name or '')"
+msgstr ""
+
+#. module: ssi_school_academic
+#: model_terms:ir.ui.view,arch_db:ssi_school_academic.report_print_report_card_ledger_document
+msgid "<strong>Average</strong>"
 msgstr ""
 
 #. module: ssi_school_academic
@@ -293,8 +314,10 @@ msgid "Absent Days"
 msgstr ""
 
 #. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_print_report_card_ledger__academic_term_id
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__academic_term_id
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__academic_term_id
+#: model_terms:ir.ui.view,arch_db:ssi_school_academic.report_print_report_card_ledger_document
 #: model_terms:ir.ui.view,arch_db:ssi_school_academic.school_report_card_view_search
 #: model_terms:ir.ui.view,arch_db:ssi_school_academic.school_score_sheet_view_search
 msgid "Academic Term"
@@ -306,6 +329,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__academic_year_id
 #, python-format
 msgid "Academic Year"
+msgstr ""
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_print_report_card_ledger__academic_term_id
+msgid "Academic term of the enrollments listed on the ledger."
 msgstr ""
 
 #. module: ssi_school_academic
@@ -512,6 +540,9 @@ msgid "Attendance and Notes"
 msgstr ""
 
 #. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_print_report_card_ledger_line__average
+#: model:ir.model.fields,field_description:ssi_school_academic.field_print_report_card_ledger_subject__average
+#: model_terms:ir.ui.view,arch_db:ssi_school_academic.report_print_report_card_ledger_document
 #: model_terms:ir.ui.view,arch_db:ssi_school_academic.school_report_card_type_view_form
 msgid "Average"
 msgstr ""
@@ -519,6 +550,18 @@ msgstr ""
 #. module: ssi_school_academic
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type__average_weight
 msgid "Average Weight (%)"
+msgstr ""
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_print_report_card_ledger_line__average
+msgid "Average of the scored cells of the row."
+msgstr ""
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_print_report_card_ledger_subject__average
+msgid ""
+"Average of the scored cells of this column. It is shown as a dash when no "
+"cell of the column is scored."
 msgstr ""
 
 #. module: ssi_school_academic
@@ -530,6 +573,11 @@ msgstr ""
 #. module: ssi_school_academic
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type__average_component_ids
 msgid "Averaged Components"
+msgstr ""
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_print_report_card_ledger_cell__is_below_minimum
+msgid "Below Minimum"
 msgstr ""
 
 #. module: ssi_school_academic
@@ -597,6 +645,11 @@ msgid "Can Restart Approval"
 msgstr ""
 
 #. module: ssi_school_academic
+#: model_terms:ir.ui.view,arch_db:ssi_school_academic.print_report_card_ledger_view_form
+msgid "Cancel"
+msgstr ""
+
+#. module: ssi_school_academic
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__cancel_reason_id
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__cancel_reason_id
 msgid "Cancel Reason"
@@ -624,14 +677,51 @@ msgid "Category"
 msgstr ""
 
 #. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_print_report_card_ledger_line__cell_ids
+msgid "Cells"
+msgstr ""
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_print_report_card_ledger_line__has_score
+msgid ""
+"Checked when at least one cell of the row is scored. A row without score has"
+" no total, average and rank."
+msgstr ""
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_print_report_card_ledger_subject__has_average
+msgid "Checked when at least one cell of this column is scored."
+msgstr ""
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_print_report_card_ledger_cell__has_score
+msgid ""
+"Checked when the cell holds a score. A cell without score is shown as a dash"
+" and is not counted."
+msgstr ""
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_print_report_card_ledger_cell__is_below_minimum
+msgid ""
+"Checked when the score is lower than the minimum score (KKM) of the subject."
+" A subject without minimum score is never below minimum."
+msgstr ""
+
+#. module: ssi_school_academic
 #: model:ir.model.fields,help:ssi_school_academic.field_school_report_card__print_city
 msgid "City printed next to the signature date."
 msgstr ""
 
 #. module: ssi_school_academic
 #: code:addons/ssi_school_academic/models/school_report_card.py:0
+#: model_terms:ir.ui.view,arch_db:ssi_school_academic.report_print_report_card_ledger_document
 #, python-format
 msgid "Class"
+msgstr ""
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_print_report_card_ledger__grade_class_id
+msgid "Class whose students are listed on the ledger."
 msgstr ""
 
 #. module: ssi_school_academic
@@ -663,6 +753,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__code
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject__code
 msgid "Code"
+msgstr ""
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_print_report_card_ledger__subject_ids
+msgid "Columns"
 msgstr ""
 
 #. module: ssi_school_academic
@@ -726,6 +821,10 @@ msgid ""
 msgstr ""
 
 #. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_print_report_card_ledger__create_uid
+#: model:ir.model.fields,field_description:ssi_school_academic.field_print_report_card_ledger_cell__create_uid
+#: model:ir.model.fields,field_description:ssi_school_academic.field_print_report_card_ledger_line__create_uid
+#: model:ir.model.fields,field_description:ssi_school_academic.field_print_report_card_ledger_subject__create_uid
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__create_uid
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_co_curricular__create_uid
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_extracurricular__create_uid
@@ -744,6 +843,10 @@ msgid "Created by"
 msgstr ""
 
 #. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_print_report_card_ledger__create_date
+#: model:ir.model.fields,field_description:ssi_school_academic.field_print_report_card_ledger_cell__create_date
+#: model:ir.model.fields,field_description:ssi_school_academic.field_print_report_card_ledger_line__create_date
+#: model:ir.model.fields,field_description:ssi_school_academic.field_print_report_card_ledger_subject__create_date
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__create_date
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_co_curricular__create_date
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_extracurricular__create_date
@@ -826,6 +929,10 @@ msgid "Display"
 msgstr ""
 
 #. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_print_report_card_ledger__display_name
+#: model:ir.model.fields,field_description:ssi_school_academic.field_print_report_card_ledger_cell__display_name
+#: model:ir.model.fields,field_description:ssi_school_academic.field_print_report_card_ledger_line__display_name
+#: model:ir.model.fields,field_description:ssi_school_academic.field_print_report_card_ledger_subject__display_name
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_grade__display_name
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__display_name
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_co_curricular__display_name
@@ -871,9 +978,15 @@ msgid "Draft"
 msgstr ""
 
 #. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_print_report_card_ledger_line__enrollment_id
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__enrollment_id
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet_line__enrollment_id
 msgid "Enrollment"
+msgstr ""
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_print_report_card_ledger_line__enrollment_id
+msgid "Enrollment of the student on the class and term."
 msgstr ""
 
 #. module: ssi_school_academic
@@ -939,6 +1052,11 @@ msgstr ""
 #. module: ssi_school_academic
 #: model:ir.model.fields,help:ssi_school_academic.field_school_report_card__line_ids
 msgid "Final score of the student, one line per subject."
+msgstr ""
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_print_report_card_ledger_cell__score
+msgid "Final score of the subject on the done report card."
 msgstr ""
 
 #. module: ssi_school_academic
@@ -1027,6 +1145,7 @@ msgid "Grade"
 msgstr ""
 
 #. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_print_report_card_ledger__grade_class_id
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__grade_class_id
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__grade_class_id
 #: model_terms:ir.ui.view,arch_db:ssi_school_academic.school_report_card_view_search
@@ -1105,6 +1224,17 @@ msgid ""
 msgstr ""
 
 #. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_print_report_card_ledger_subject__has_average
+msgid "Has Average"
+msgstr ""
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_print_report_card_ledger_cell__has_score
+#: model:ir.model.fields,field_description:ssi_school_academic.field_print_report_card_ledger_line__has_score
+msgid "Has Score"
+msgstr ""
+
+#. module: ssi_school_academic
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__homeroom_id
 msgid "Homeroom"
 msgstr ""
@@ -1128,6 +1258,10 @@ msgid "Homeroom of the selected Enrollment."
 msgstr ""
 
 #. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_print_report_card_ledger__id
+#: model:ir.model.fields,field_description:ssi_school_academic.field_print_report_card_ledger_cell__id
+#: model:ir.model.fields,field_description:ssi_school_academic.field_print_report_card_ledger_line__id
+#: model:ir.model.fields,field_description:ssi_school_academic.field_print_report_card_ledger_subject__id
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_grade__id
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__id
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_co_curricular__id
@@ -1231,6 +1365,10 @@ msgid ""
 msgstr ""
 
 #. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_print_report_card_ledger____last_update
+#: model:ir.model.fields,field_description:ssi_school_academic.field_print_report_card_ledger_cell____last_update
+#: model:ir.model.fields,field_description:ssi_school_academic.field_print_report_card_ledger_line____last_update
+#: model:ir.model.fields,field_description:ssi_school_academic.field_print_report_card_ledger_subject____last_update
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_grade____last_update
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card____last_update
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_co_curricular____last_update
@@ -1250,6 +1388,10 @@ msgid "Last Modified on"
 msgstr ""
 
 #. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_print_report_card_ledger__write_uid
+#: model:ir.model.fields,field_description:ssi_school_academic.field_print_report_card_ledger_cell__write_uid
+#: model:ir.model.fields,field_description:ssi_school_academic.field_print_report_card_ledger_line__write_uid
+#: model:ir.model.fields,field_description:ssi_school_academic.field_print_report_card_ledger_subject__write_uid
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__write_uid
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_co_curricular__write_uid
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_extracurricular__write_uid
@@ -1268,6 +1410,10 @@ msgid "Last Updated by"
 msgstr ""
 
 #. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_print_report_card_ledger__write_date
+#: model:ir.model.fields,field_description:ssi_school_academic.field_print_report_card_ledger_cell__write_date
+#: model:ir.model.fields,field_description:ssi_school_academic.field_print_report_card_ledger_line__write_date
+#: model:ir.model.fields,field_description:ssi_school_academic.field_print_report_card_ledger_subject__write_date
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__write_date
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_co_curricular__write_date
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_extracurricular__write_date
@@ -1294,6 +1440,16 @@ msgstr ""
 #: code:addons/ssi_school_academic/models/school_report_card.py:0
 #, python-format
 msgid "Learning Result Report"
+msgstr ""
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_print_report_card_ledger_subject__wizard_id
+msgid "Ledger this column belongs to."
+msgstr ""
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_print_report_card_ledger_line__wizard_id
+msgid "Ledger this row belongs to."
 msgstr ""
 
 #. module: ssi_school_academic
@@ -1462,6 +1618,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_component__name
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__name
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject__name
+#: model_terms:ir.ui.view,arch_db:ssi_school_academic.report_print_report_card_ledger_document
 #, python-format
 msgid "Name"
 msgstr ""
@@ -1469,6 +1626,13 @@ msgstr ""
 #. module: ssi_school_academic
 #: model:ir.model.fields,help:ssi_school_academic.field_school_report_card_extracurricular__name
 msgid "Name of the extracurricular activity."
+msgstr ""
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_print_report_card_ledger_line__student_name
+msgid ""
+"Name of the student, read with full rights so the printed ledger does not "
+"depend on the access rules of the student."
 msgstr ""
 
 #. module: ssi_school_academic
@@ -1520,6 +1684,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__next_approval_ids
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__next_approval_ids
 msgid "Next Approvals"
+msgstr ""
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_print_report_card_ledger_line__sequence
+#: model_terms:ir.ui.view,arch_db:ssi_school_academic.report_print_report_card_ledger_document
+msgid "No"
 msgstr ""
 
 #. module: ssi_school_academic
@@ -1606,6 +1776,11 @@ msgstr ""
 #: model:ir.model.fields,help:ssi_school_academic.field_school_score_sheet__message_has_error_counter
 #: model:ir.model.fields,help:ssi_school_academic.field_school_subject__message_has_error_counter
 msgid "Number of messages with delivery error"
+msgstr ""
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_print_report_card_ledger_line__sequence
+msgid "Number of the row on the ledger."
 msgstr ""
 
 #. module: ssi_school_academic
@@ -1701,6 +1876,16 @@ msgid "Policy that determines whether the Generate Lines button is visible."
 msgstr ""
 
 #. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_print_report_card_ledger_cell__sequence
+msgid "Position of the cell in its row, the same as its column."
+msgstr ""
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_print_report_card_ledger_subject__sequence
+msgid "Position of the column on the ledger."
+msgstr ""
+
+#. module: ssi_school_academic
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_line__predicate_line_id
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate_line__name
 msgid "Predicate"
@@ -1735,6 +1920,11 @@ msgid ""
 msgstr ""
 
 #. module: ssi_school_academic
+#: model_terms:ir.ui.view,arch_db:ssi_school_academic.print_report_card_ledger_view_form
+msgid "Print"
+msgstr ""
+
+#. module: ssi_school_academic
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__print_city
 msgid "Print City"
 msgstr ""
@@ -1745,8 +1935,41 @@ msgid "Print Date"
 msgstr ""
 
 #. module: ssi_school_academic
+#: model:ir.model,name:ssi_school_academic.model_print_report_card_ledger
+msgid "Print Report Card Ledger"
+msgstr ""
+
+#. module: ssi_school_academic
+#: model:ir.model,name:ssi_school_academic.model_print_report_card_ledger_cell
+msgid "Print Report Card Ledger Cell"
+msgstr ""
+
+#. module: ssi_school_academic
+#: model:ir.model,name:ssi_school_academic.model_print_report_card_ledger_line
+msgid "Print Report Card Ledger Line"
+msgstr ""
+
+#. module: ssi_school_academic
+#: model:ir.model,name:ssi_school_academic.model_print_report_card_ledger_subject
+msgid "Print Report Card Ledger Subject"
+msgstr ""
+
+#. module: ssi_school_academic
 #: model_terms:ir.ui.view,arch_db:ssi_school_academic.school_report_card_type_view_form
 msgid "Printed Columns"
+msgstr ""
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_print_report_card_ledger_line__rank
+#: model_terms:ir.ui.view,arch_db:ssi_school_academic.report_print_report_card_ledger_document
+msgid "Rank"
+msgstr ""
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_print_report_card_ledger_line__rank
+msgid ""
+"Rank of the student among the rows that have a score. Zero means no rank and"
+" is shown as a dash."
 msgstr ""
 
 #. module: ssi_school_academic
@@ -1772,14 +1995,25 @@ msgid "Report Card"
 msgstr ""
 
 #. module: ssi_school_academic
+#: model:ir.actions.act_window,name:ssi_school_academic.print_report_card_ledger_action
+#: model:ir.actions.report,name:ssi_school_academic.action_report_print_report_card_ledger_html
+#: model:ir.actions.report,name:ssi_school_academic.action_report_print_report_card_ledger_pdf
+#: model:ir.ui.menu,name:ssi_school_academic.print_report_card_ledger_menu
+#: model_terms:ir.ui.view,arch_db:ssi_school_academic.report_print_report_card_ledger_document
+msgid "Report Card Ledger"
+msgstr ""
+
+#. module: ssi_school_academic
 #: model:ir.model,name:ssi_school_academic.model_school_report_card_main_subject
 #: model:res.groups,name:ssi_school_academic.school_report_card_main_subject_group
 msgid "Report Card Main Subject"
 msgstr ""
 
 #. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_print_report_card_ledger__type_id
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__type_id
 #: model:res.groups,name:ssi_school_academic.school_report_card_type_group
+#: model_terms:ir.ui.view,arch_db:ssi_school_academic.report_print_report_card_ledger_document
 #: model_terms:ir.ui.view,arch_db:ssi_school_academic.school_report_card_view_search
 msgid "Report Card Type"
 msgstr ""
@@ -1869,6 +2103,16 @@ msgstr ""
 #. module: ssi_school_academic
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type__rounding_threshold
 msgid "Rounding Threshold"
+msgstr ""
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_print_report_card_ledger_cell__line_id
+msgid "Row of the ledger this cell belongs to."
+msgstr ""
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_print_report_card_ledger__line_ids
+msgid "Rows"
 msgstr ""
 
 #. module: ssi_school_academic
@@ -1962,6 +2206,7 @@ msgid "School Subject Minimum Score"
 msgstr ""
 
 #. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_print_report_card_ledger_cell__score
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet_line__score
 msgid "Score"
 msgstr ""
@@ -2011,6 +2256,11 @@ msgstr ""
 msgid ""
 "Score between 0 and 100. Leave it empty while the student is not scored yet;"
 " that is not the same as zero."
+msgstr ""
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_print_report_card_ledger_line__cell_ids
+msgid "Score cells of this row, one for every subject column."
 msgstr ""
 
 #. module: ssi_school_academic
@@ -2065,6 +2315,8 @@ msgid "Semester"
 msgstr ""
 
 #. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_print_report_card_ledger_cell__sequence
+#: model:ir.model.fields,field_description:ssi_school_academic.field_print_report_card_ledger_subject__sequence
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_component__sequence
 msgid "Sequence"
 msgstr ""
@@ -2088,6 +2340,11 @@ msgstr ""
 #. module: ssi_school_academic
 #: model:ir.model.fields,help:ssi_school_academic.field_school_report_card_extracurricular__description
 msgid "Short description of the student's result in the activity."
+msgstr ""
+
+#. module: ssi_school_academic
+#: model_terms:ir.ui.view,arch_db:ssi_school_academic.print_report_card_ledger_view_form
+msgid "Show"
 msgstr ""
 
 #. module: ssi_school_academic
@@ -2123,9 +2380,16 @@ msgid ""
 msgstr ""
 
 #. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_print_report_card_ledger_line__student_id
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__student_id
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet_line__student_id
 msgid "Student"
+msgstr ""
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_print_report_card_ledger_line__student_code
+#: model_terms:ir.ui.view,arch_db:ssi_school_academic.report_print_report_card_ledger_document
+msgid "Student ID"
 msgstr ""
 
 #. module: ssi_school_academic
@@ -2135,13 +2399,35 @@ msgid "Student ID (NIS)"
 msgstr ""
 
 #. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_print_report_card_ledger_line__student_name
+msgid "Student Name"
+msgstr ""
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_print_report_card_ledger_line__student_code
+msgid "Student identification number (NIS) of the student."
+msgstr ""
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_print_report_card_ledger_line__student_id
+msgid "Student of the enrollment."
+msgstr ""
+
+#. module: ssi_school_academic
 #: model:ir.model.fields,help:ssi_school_academic.field_school_report_card__student_id
 #: model:ir.model.fields,help:ssi_school_academic.field_school_score_sheet_line__student_id
 msgid "Student of the selected Enrollment."
 msgstr ""
 
 #. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_print_report_card_ledger__line_ids
+msgid "Student rows of the ledger."
+msgstr ""
+
+#. module: ssi_school_academic
 #: code:addons/ssi_school_academic/models/school_report_card.py:0
+#: model:ir.model.fields,field_description:ssi_school_academic.field_print_report_card_ledger_cell__subject_id
+#: model:ir.model.fields,field_description:ssi_school_academic.field_print_report_card_ledger_subject__subject_id
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_line__subject_id
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__subject_id
 #: model:res.groups,name:ssi_school_academic.school_subject_group
@@ -2160,6 +2446,21 @@ msgstr ""
 #. module: ssi_school_academic
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__line_ids
 msgid "Subject Lines"
+msgstr ""
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_print_report_card_ledger__subject_ids
+msgid "Subject columns of the ledger."
+msgstr ""
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_print_report_card_ledger_cell__subject_id
+msgid "Subject of the column this cell belongs to."
+msgstr ""
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_print_report_card_ledger_subject__subject_id
+msgid "Subject shown in this column."
 msgstr ""
 
 #. module: ssi_school_academic
@@ -2191,6 +2492,11 @@ msgstr ""
 msgid ""
 "Subjects that break a tie in the rank of the students. At least one subject "
 "is required."
+msgstr ""
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_print_report_card_ledger_line__total
+msgid "Sum of the scored cells of the row."
 msgstr ""
 
 #. module: ssi_school_academic
@@ -2242,6 +2548,12 @@ msgid ""
 msgstr ""
 
 #. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_print_report_card_ledger_line__total
+#: model_terms:ir.ui.view,arch_db:ssi_school_academic.report_print_report_card_ledger_document
+msgid "Total"
+msgstr ""
+
+#. module: ssi_school_academic
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type__total_weight
 msgid "Total Weight"
 msgstr ""
@@ -2269,6 +2581,11 @@ msgstr ""
 #: model:ir.model.fields,help:ssi_school_academic.field_school_score_sheet__activity_exception_decoration
 #: model:ir.model.fields,help:ssi_school_academic.field_school_subject__activity_exception_decoration
 msgid "Type of the exception activity on record."
+msgstr ""
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_print_report_card_ledger__type_id
+msgid "Type of the report cards whose scores fill the ledger."
 msgstr ""
 
 #. module: ssi_school_academic
