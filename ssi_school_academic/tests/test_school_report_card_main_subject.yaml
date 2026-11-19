@@ -1,0 +1,251 @@
+# T-01 (odoo-development-unit-test/test-traps.md): `setup:` replays before
+# every scenario without rollback, so each replay creates its own grade and
+# the scenarios never share an active grade/program pair.
+options:
+  auto_refresh: true
+
+setup:
+  steps:
+    - step: "Create the grade type"
+      action: "create"
+      model: "school_grade_type"
+      save_as: "grade_type"
+      values:
+        name: "RCMS Grade Type"
+        code: "/"
+        sequence: 10
+    - step: "Create the grade"
+      action: "create"
+      model: "school_grade"
+      save_as: "grade"
+      values:
+        name: "RCMS Grade"
+        code: "/"
+        sequence: 10
+        type_id: "REC: grade_type.id"
+    - step: "Create subject A"
+      action: "create"
+      model: "school_subject"
+      save_as: "subject_a"
+      values:
+        name: "RCMS Subject A"
+        code: "/"
+        subject_group: "vocational"
+    - step: "Create subject B"
+      action: "create"
+      model: "school_subject"
+      save_as: "subject_b"
+      values:
+        name: "RCMS Subject B"
+        code: "/"
+        subject_group: "vocational"
+
+scenarios:
+  - name: "Create, Edit And Archive Main Subject"
+    steps:
+      - step: "Create the main subject of program P"
+        action: "create"
+        model: "school_report_card_main_subject"
+        save_as: "main"
+        values:
+          name: "RCMS Main P"
+          code: "/"
+          grade_id: "REC: grade.id"
+          expertise_program: "RCMS Program P"
+          subject_ids:
+            - - 6
+              - 0
+              - - "REC: subject_a.id"
+                - "REC: subject_b.id"
+      - step: "Assert the created fields"
+        action: "assert"
+        target: "main"
+        asserts:
+          grade_id:
+            type: "m2o"
+            expected: "REC: grade"
+          expertise_program:
+            type: "value"
+            expected: "RCMS Program P"
+          subject_ids:
+            type: "m2m"
+            check: "count"
+            expected_count: 2
+      - step: "Write a single subject"
+        action: "write"
+        target: "main"
+        values:
+          subject_ids:
+            - - 6
+              - 0
+              - - "REC: subject_a.id"
+      - step: "Assert one subject is left"
+        action: "assert"
+        target: "main"
+        asserts:
+          subject_ids:
+            type: "m2m"
+            check: "count"
+            expected_count: 1
+      - step: "Archive the record"
+        action: "write"
+        target: "main"
+        values:
+          active: false
+      - step: "Assert the record is archived"
+        action: "assert"
+        target: "main"
+        asserts:
+          active:
+            type: "value"
+            expected: false
+
+  - name: "Program And Fallback Records Are Both Valid"
+    steps:
+      - step: "Create the fallback record without a program"
+        action: "create"
+        model: "school_report_card_main_subject"
+        save_as: "fallback"
+        values:
+          name: "RCMS Fallback"
+          code: "/"
+          grade_id: "REC: grade.id"
+          subject_ids:
+            - - 6
+              - 0
+              - - "REC: subject_a.id"
+      - step: "Create the record of program P for the same grade"
+        action: "create"
+        model: "school_report_card_main_subject"
+        save_as: "program_p"
+        values:
+          name: "RCMS Program P"
+          code: "/"
+          grade_id: "REC: grade.id"
+          expertise_program: "RCMS Program P"
+          subject_ids:
+            - - 6
+              - 0
+              - - "REC: subject_b.id"
+      - step: "Assert the fallback has no program"
+        action: "assert"
+        target: "fallback"
+        asserts:
+          expertise_program:
+            type: "value"
+            expected: false
+
+  - name: "Reject Duplicate Active Grade And Program"
+    steps:
+      - step: "Create the first record of program P"
+        action: "create"
+        model: "school_report_card_main_subject"
+        save_as: "first"
+        values:
+          name: "RCMS First"
+          code: "/"
+          grade_id: "REC: grade.id"
+          expertise_program: "RCMS Program P"
+          subject_ids:
+            - - 6
+              - 0
+              - - "REC: subject_a.id"
+      - step: "Reject a second active record of the same grade and program"
+        action: "create"
+        model: "school_report_card_main_subject"
+        expect_error:
+          type: "ValidationError"
+          message_contains: "Only one active main subject record"
+        values:
+          name: "RCMS Second"
+          code: "/"
+          grade_id: "REC: grade.id"
+          expertise_program: "RCMS Program P"
+          subject_ids:
+            - - 6
+              - 0
+              - - "REC: subject_b.id"
+      - step: "Archive the first record"
+        action: "write"
+        target: "first"
+        values:
+          active: false
+      - step: "A new active record is accepted once the first is archived"
+        action: "create"
+        model: "school_report_card_main_subject"
+        save_as: "third"
+        values:
+          name: "RCMS Third"
+          code: "/"
+          grade_id: "REC: grade.id"
+          expertise_program: "RCMS Program P"
+          subject_ids:
+            - - 6
+              - 0
+              - - "REC: subject_b.id"
+
+  - name: "Reject Duplicate Fallback Record"
+    steps:
+      - step: "Create the first fallback record"
+        action: "create"
+        model: "school_report_card_main_subject"
+        save_as: "first"
+        values:
+          name: "RCMS Fallback One"
+          code: "/"
+          grade_id: "REC: grade.id"
+          subject_ids:
+            - - 6
+              - 0
+              - - "REC: subject_a.id"
+      - step: "Reject a second fallback record for the same grade"
+        action: "create"
+        model: "school_report_card_main_subject"
+        expect_error:
+          type: "ValidationError"
+          message_contains: "Only one active main subject record"
+        values:
+          name: "RCMS Fallback Two"
+          code: "/"
+          grade_id: "REC: grade.id"
+          expertise_program: ""
+          subject_ids:
+            - - 6
+              - 0
+              - - "REC: subject_b.id"
+
+  - name: "Reject Main Subject Without Subjects"
+    steps:
+      - step: "Reject a record without any subject"
+        action: "create"
+        model: "school_report_card_main_subject"
+        expect_error:
+          type: "ValidationError"
+          message_contains: "At least one main subject"
+        values:
+          name: "RCMS Empty"
+          code: "/"
+          grade_id: "REC: grade.id"
+      - step: "Create a valid record"
+        action: "create"
+        model: "school_report_card_main_subject"
+        save_as: "main"
+        values:
+          name: "RCMS Valid"
+          code: "/"
+          grade_id: "REC: grade.id"
+          subject_ids:
+            - - 6
+              - 0
+              - - "REC: subject_a.id"
+      - step: "Reject emptying the subjects"
+        action: "write"
+        target: "main"
+        expect_error:
+          type: "ValidationError"
+          message_contains: "At least one main subject"
+        values:
+          subject_ids:
+            - - 6
+              - 0
+              - []
