@@ -334,6 +334,7 @@ msgstr ""
 
 #. module: ssi_school_academic
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__message_needaction
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_main_subject__message_needaction
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type__message_needaction
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_component__message_needaction
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__message_needaction
@@ -343,6 +344,7 @@ msgid "Action Needed"
 msgstr ""
 
 #. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_main_subject__active
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type__active
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_component__active
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__active
@@ -370,6 +372,7 @@ msgstr ""
 
 #. module: ssi_school_academic
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__activity_ids
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_main_subject__activity_ids
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type__activity_ids
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_component__activity_ids
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__activity_ids
@@ -387,6 +390,7 @@ msgstr ""
 
 #. module: ssi_school_academic
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__activity_exception_decoration
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_main_subject__activity_exception_decoration
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type__activity_exception_decoration
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_component__activity_exception_decoration
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__activity_exception_decoration
@@ -397,6 +401,7 @@ msgstr ""
 
 #. module: ssi_school_academic
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__activity_state
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_main_subject__activity_state
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type__activity_state
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_component__activity_state
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__activity_state
@@ -407,6 +412,7 @@ msgstr ""
 
 #. module: ssi_school_academic
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__activity_type_icon
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_main_subject__activity_type_icon
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type__activity_type_icon
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_component__activity_type_icon
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__activity_type_icon
@@ -484,7 +490,14 @@ msgid "Assignment"
 msgstr ""
 
 #. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_report_card_main_subject.py:0
+#, python-format
+msgid "At least one main subject is required."
+msgstr ""
+
+#. module: ssi_school_academic
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__message_attachment_count
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_main_subject__message_attachment_count
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type__message_attachment_count
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_component__message_attachment_count
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__message_attachment_count
@@ -644,6 +657,7 @@ msgid "Co-curricular themes written by hand."
 msgstr ""
 
 #. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_main_subject__code
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type__code
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_component__code
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__code
@@ -716,6 +730,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_co_curricular__create_uid
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_extracurricular__create_uid
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_line__create_uid
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_main_subject__create_uid
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type__create_uid
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type_weight__create_uid
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_component__create_uid
@@ -733,6 +748,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_co_curricular__create_date
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_extracurricular__create_date
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_line__create_date
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_main_subject__create_date
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type__create_date
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type_weight__create_date
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_component__create_date
@@ -815,6 +831,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_co_curricular__display_name
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_extracurricular__display_name
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_line__display_name
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_main_subject__display_name
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type__display_name
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type_weight__display_name
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_component__display_name
@@ -872,8 +889,17 @@ msgstr ""
 
 #. module: ssi_school_academic
 #: code:addons/ssi_school_academic/models/school_report_card.py:0
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_main_subject__expertise_program
 #, python-format
 msgid "Expertise Program"
+msgstr ""
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card_main_subject__expertise_program
+msgid ""
+"Expertise program the main subjects apply to, written exactly as on the "
+"grade class. Leave empty to set the main subjects of the whole grade, used "
+"by the classes whose program has no record of its own."
 msgstr ""
 
 #. module: ssi_school_academic
@@ -924,6 +950,7 @@ msgstr ""
 
 #. module: ssi_school_academic
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__message_follower_ids
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_main_subject__message_follower_ids
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type__message_follower_ids
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_component__message_follower_ids
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__message_follower_ids
@@ -934,6 +961,7 @@ msgstr ""
 
 #. module: ssi_school_academic
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__message_channel_ids
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_main_subject__message_channel_ids
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type__message_channel_ids
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_component__message_channel_ids
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__message_channel_ids
@@ -944,6 +972,7 @@ msgstr ""
 
 #. module: ssi_school_academic
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__message_partner_ids
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_main_subject__message_partner_ids
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type__message_partner_ids
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_component__message_partner_ids
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__message_partner_ids
@@ -954,6 +983,7 @@ msgstr ""
 
 #. module: ssi_school_academic
 #: model:ir.model.fields,help:ssi_school_academic.field_school_report_card__activity_type_icon
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card_main_subject__activity_type_icon
 #: model:ir.model.fields,help:ssi_school_academic.field_school_report_card_type__activity_type_icon
 #: model:ir.model.fields,help:ssi_school_academic.field_school_score_component__activity_type_icon
 #: model:ir.model.fields,help:ssi_school_academic.field_school_score_predicate__activity_type_icon
@@ -989,8 +1019,10 @@ msgstr ""
 
 #. module: ssi_school_academic
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__grade_id
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_main_subject__grade_id
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__grade_id
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject_minimum_score__grade_id
+#: model_terms:ir.ui.view,arch_db:ssi_school_academic.school_report_card_main_subject_view_search
 msgid "Grade"
 msgstr ""
 
@@ -1027,6 +1059,11 @@ msgid ""
 msgstr ""
 
 #. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card_main_subject__grade_id
+msgid "Grade the main subjects apply to."
+msgstr ""
+
+#. module: ssi_school_academic
 #: model:ir.model.fields,help:ssi_school_academic.field_school_subject_minimum_score__grade_id
 msgid "Grade this minimum score applies to."
 msgstr ""
@@ -1046,6 +1083,7 @@ msgid ""
 msgstr ""
 
 #. module: ssi_school_academic
+#: model_terms:ir.ui.view,arch_db:ssi_school_academic.school_report_card_main_subject_view_search
 #: model_terms:ir.ui.view,arch_db:ssi_school_academic.school_report_card_type_view_search
 #: model_terms:ir.ui.view,arch_db:ssi_school_academic.school_report_card_view_search
 #: model_terms:ir.ui.view,arch_db:ssi_school_academic.school_score_component_view_search
@@ -1095,6 +1133,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_co_curricular__id
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_extracurricular__id
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_line__id
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_main_subject__id
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type__id
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type_weight__id
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_component__id
@@ -1109,6 +1148,7 @@ msgstr ""
 
 #. module: ssi_school_academic
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__activity_exception_icon
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_main_subject__activity_exception_icon
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type__activity_exception_icon
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_component__activity_exception_icon
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__activity_exception_icon
@@ -1119,6 +1159,7 @@ msgstr ""
 
 #. module: ssi_school_academic
 #: model:ir.model.fields,help:ssi_school_academic.field_school_report_card__activity_exception_icon
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card_main_subject__activity_exception_icon
 #: model:ir.model.fields,help:ssi_school_academic.field_school_report_card_type__activity_exception_icon
 #: model:ir.model.fields,help:ssi_school_academic.field_school_score_component__activity_exception_icon
 #: model:ir.model.fields,help:ssi_school_academic.field_school_score_predicate__activity_exception_icon
@@ -1130,6 +1171,8 @@ msgstr ""
 #. module: ssi_school_academic
 #: model:ir.model.fields,help:ssi_school_academic.field_school_report_card__message_needaction
 #: model:ir.model.fields,help:ssi_school_academic.field_school_report_card__message_unread
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card_main_subject__message_needaction
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card_main_subject__message_unread
 #: model:ir.model.fields,help:ssi_school_academic.field_school_report_card_type__message_needaction
 #: model:ir.model.fields,help:ssi_school_academic.field_school_report_card_type__message_unread
 #: model:ir.model.fields,help:ssi_school_academic.field_school_score_component__message_needaction
@@ -1145,6 +1188,7 @@ msgstr ""
 
 #. module: ssi_school_academic
 #: model:ir.model.fields,help:ssi_school_academic.field_school_report_card__message_has_error
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card_main_subject__message_has_error
 #: model:ir.model.fields,help:ssi_school_academic.field_school_report_card_type__message_has_error
 #: model:ir.model.fields,help:ssi_school_academic.field_school_score_component__message_has_error
 #: model:ir.model.fields,help:ssi_school_academic.field_school_score_predicate__message_has_error
@@ -1155,6 +1199,7 @@ msgstr ""
 
 #. module: ssi_school_academic
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__message_is_follower
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_main_subject__message_is_follower
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type__message_is_follower
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_component__message_is_follower
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__message_is_follower
@@ -1191,6 +1236,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_co_curricular____last_update
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_extracurricular____last_update
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_line____last_update
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_main_subject____last_update
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type____last_update
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type_weight____last_update
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_component____last_update
@@ -1208,6 +1254,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_co_curricular__write_uid
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_extracurricular__write_uid
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_line__write_uid
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_main_subject__write_uid
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type__write_uid
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type_weight__write_uid
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_component__write_uid
@@ -1225,6 +1272,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_co_curricular__write_date
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_extracurricular__write_date
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_line__write_date
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_main_subject__write_date
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type__write_date
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type_weight__write_date
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_component__write_date
@@ -1260,12 +1308,20 @@ msgstr ""
 
 #. module: ssi_school_academic
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__message_main_attachment_id
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_main_subject__message_main_attachment_id
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type__message_main_attachment_id
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_component__message_main_attachment_id
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__message_main_attachment_id
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__message_main_attachment_id
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject__message_main_attachment_id
 msgid "Main Attachment"
+msgstr ""
+
+#. module: ssi_school_academic
+#: model:ir.actions.act_window,name:ssi_school_academic.school_report_card_main_subject_action
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_main_subject__subject_ids
+#: model:ir.ui.menu,name:ssi_school_academic.school_report_card_main_subject_menu
+msgid "Main Subjects"
 msgstr ""
 
 #. module: ssi_school_academic
@@ -1278,6 +1334,7 @@ msgid ""
 msgstr ""
 
 #. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card_main_subject__active
 #: model:ir.model.fields,help:ssi_school_academic.field_school_report_card_type__active
 #: model:ir.model.fields,help:ssi_school_academic.field_school_score_component__active
 #: model:ir.model.fields,help:ssi_school_academic.field_school_score_predicate__active
@@ -1292,6 +1349,7 @@ msgid ""
 msgstr ""
 
 #. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card_main_subject__code
 #: model:ir.model.fields,help:ssi_school_academic.field_school_report_card_type__code
 #: model:ir.model.fields,help:ssi_school_academic.field_school_score_component__code
 #: model:ir.model.fields,help:ssi_school_academic.field_school_score_predicate__code
@@ -1312,6 +1370,7 @@ msgstr ""
 
 #. module: ssi_school_academic
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__message_has_error
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_main_subject__message_has_error
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type__message_has_error
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_component__message_has_error
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__message_has_error
@@ -1322,6 +1381,7 @@ msgstr ""
 
 #. module: ssi_school_academic
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__message_ids
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_main_subject__message_ids
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type__message_ids
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_component__message_ids
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__message_ids
@@ -1380,6 +1440,7 @@ msgstr ""
 
 #. module: ssi_school_academic
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__my_activity_date_deadline
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_main_subject__my_activity_date_deadline
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type__my_activity_date_deadline
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_component__my_activity_date_deadline
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__my_activity_date_deadline
@@ -1396,6 +1457,7 @@ msgstr ""
 
 #. module: ssi_school_academic
 #: code:addons/ssi_school_academic/models/school_report_card.py:0
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_main_subject__name
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type__name
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_component__name
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__name
@@ -1423,6 +1485,7 @@ msgstr ""
 
 #. module: ssi_school_academic
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__activity_date_deadline
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_main_subject__activity_date_deadline
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type__activity_date_deadline
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_component__activity_date_deadline
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__activity_date_deadline
@@ -1433,6 +1496,7 @@ msgstr ""
 
 #. module: ssi_school_academic
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__activity_summary
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_main_subject__activity_summary
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type__activity_summary
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_component__activity_summary
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__activity_summary
@@ -1443,6 +1507,7 @@ msgstr ""
 
 #. module: ssi_school_academic
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__activity_type_id
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_main_subject__activity_type_id
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type__activity_type_id
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_component__activity_type_id
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__activity_type_id
@@ -1465,6 +1530,7 @@ msgstr ""
 
 #. module: ssi_school_academic
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__note
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_main_subject__note
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type__note
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_component__note
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__note
@@ -1485,6 +1551,7 @@ msgstr ""
 
 #. module: ssi_school_academic
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__message_needaction_counter
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_main_subject__message_needaction_counter
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type__message_needaction_counter
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_component__message_needaction_counter
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__message_needaction_counter
@@ -1510,6 +1577,7 @@ msgstr ""
 
 #. module: ssi_school_academic
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__message_has_error_counter
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_main_subject__message_has_error_counter
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type__message_has_error_counter
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_component__message_has_error_counter
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__message_has_error_counter
@@ -1520,6 +1588,7 @@ msgstr ""
 
 #. module: ssi_school_academic
 #: model:ir.model.fields,help:ssi_school_academic.field_school_report_card__message_needaction_counter
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card_main_subject__message_needaction_counter
 #: model:ir.model.fields,help:ssi_school_academic.field_school_report_card_type__message_needaction_counter
 #: model:ir.model.fields,help:ssi_school_academic.field_school_score_component__message_needaction_counter
 #: model:ir.model.fields,help:ssi_school_academic.field_school_score_predicate__message_needaction_counter
@@ -1530,6 +1599,7 @@ msgstr ""
 
 #. module: ssi_school_academic
 #: model:ir.model.fields,help:ssi_school_academic.field_school_report_card__message_has_error_counter
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card_main_subject__message_has_error_counter
 #: model:ir.model.fields,help:ssi_school_academic.field_school_report_card_type__message_has_error_counter
 #: model:ir.model.fields,help:ssi_school_academic.field_school_score_component__message_has_error_counter
 #: model:ir.model.fields,help:ssi_school_academic.field_school_score_predicate__message_has_error_counter
@@ -1540,12 +1610,21 @@ msgstr ""
 
 #. module: ssi_school_academic
 #: model:ir.model.fields,help:ssi_school_academic.field_school_report_card__message_unread_counter
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card_main_subject__message_unread_counter
 #: model:ir.model.fields,help:ssi_school_academic.field_school_report_card_type__message_unread_counter
 #: model:ir.model.fields,help:ssi_school_academic.field_school_score_component__message_unread_counter
 #: model:ir.model.fields,help:ssi_school_academic.field_school_score_predicate__message_unread_counter
 #: model:ir.model.fields,help:ssi_school_academic.field_school_score_sheet__message_unread_counter
 #: model:ir.model.fields,help:ssi_school_academic.field_school_subject__message_unread_counter
 msgid "Number of unread messages"
+msgstr ""
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_report_card_main_subject.py:0
+#, python-format
+msgid ""
+"Only one active main subject record is allowed for the same grade and "
+"expertise program."
 msgstr ""
 
 #. module: ssi_school_academic
@@ -1693,6 +1772,12 @@ msgid "Report Card"
 msgstr ""
 
 #. module: ssi_school_academic
+#: model:ir.model,name:ssi_school_academic.model_school_report_card_main_subject
+#: model:res.groups,name:ssi_school_academic.school_report_card_main_subject_group
+msgid "Report Card Main Subject"
+msgstr ""
+
+#. module: ssi_school_academic
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__type_id
 #: model:res.groups,name:ssi_school_academic.school_report_card_type_group
 #: model_terms:ir.ui.view,arch_db:ssi_school_academic.school_report_card_view_search
@@ -1743,6 +1828,7 @@ msgstr ""
 
 #. module: ssi_school_academic
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__activity_user_id
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_main_subject__activity_user_id
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type__activity_user_id
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_component__activity_user_id
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__activity_user_id
@@ -2023,6 +2109,7 @@ msgstr ""
 
 #. module: ssi_school_academic
 #: model:ir.model.fields,help:ssi_school_academic.field_school_report_card__activity_state
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card_main_subject__activity_state
 #: model:ir.model.fields,help:ssi_school_academic.field_school_report_card_type__activity_state
 #: model:ir.model.fields,help:ssi_school_academic.field_school_score_component__activity_state
 #: model:ir.model.fields,help:ssi_school_academic.field_school_score_predicate__activity_state
@@ -2100,6 +2187,13 @@ msgid "Subjects"
 msgstr ""
 
 #. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card_main_subject__subject_ids
+msgid ""
+"Subjects that break a tie in the rank of the students. At least one subject "
+"is required."
+msgstr ""
+
+#. module: ssi_school_academic
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__teacher_id
 #: model_terms:ir.ui.view,arch_db:ssi_school_academic.school_score_sheet_view_search
 msgid "Teacher"
@@ -2168,6 +2262,7 @@ msgstr ""
 
 #. module: ssi_school_academic
 #: model:ir.model.fields,help:ssi_school_academic.field_school_report_card__activity_exception_decoration
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card_main_subject__activity_exception_decoration
 #: model:ir.model.fields,help:ssi_school_academic.field_school_report_card_type__activity_exception_decoration
 #: model:ir.model.fields,help:ssi_school_academic.field_school_score_component__activity_exception_decoration
 #: model:ir.model.fields,help:ssi_school_academic.field_school_score_predicate__activity_exception_decoration
@@ -2178,6 +2273,7 @@ msgstr ""
 
 #. module: ssi_school_academic
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__message_unread
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_main_subject__message_unread
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type__message_unread
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_component__message_unread
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__message_unread
@@ -2188,6 +2284,7 @@ msgstr ""
 
 #. module: ssi_school_academic
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__message_unread_counter
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_main_subject__message_unread_counter
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type__message_unread_counter
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_component__message_unread_counter
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__message_unread_counter
@@ -2259,6 +2356,7 @@ msgstr ""
 
 #. module: ssi_school_academic
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__website_message_ids
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_main_subject__website_message_ids
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type__website_message_ids
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_component__website_message_ids
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__website_message_ids
@@ -2269,6 +2367,7 @@ msgstr ""
 
 #. module: ssi_school_academic
 #: model:ir.model.fields,help:ssi_school_academic.field_school_report_card__website_message_ids
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card_main_subject__website_message_ids
 #: model:ir.model.fields,help:ssi_school_academic.field_school_report_card_type__website_message_ids
 #: model:ir.model.fields,help:ssi_school_academic.field_school_score_component__website_message_ids
 #: model:ir.model.fields,help:ssi_school_academic.field_school_score_predicate__website_message_ids
