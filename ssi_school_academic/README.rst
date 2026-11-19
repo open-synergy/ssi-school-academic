@@ -32,6 +32,9 @@ Work Instruction
 * `Create Score Component <docs/school_score_component/01-create.html>`_
 * `Edit Score Component <docs/school_score_component/02-edit.html>`_
 * `Archive Score Component <docs/school_score_component/03-archive.html>`_
+* `Create Report Card Main Subject <docs/school_report_card_main_subject/01-create.html>`_
+* `Edit Report Card Main Subject <docs/school_report_card_main_subject/02-edit.html>`_
+* `Archive Report Card Main Subject <docs/school_report_card_main_subject/03-archive.html>`_
 * `Create Report Card Type <docs/school_report_card_type/01-create.html>`_
 * `Edit Report Card Type <docs/school_report_card_type/02-edit.html>`_
 * `Archive Report Card Type <docs/school_report_card_type/03-archive.html>`_
@@ -78,6 +81,10 @@ Usage
   are not printed.
 * The **Phase** of the grade is filled on the grade form and printed in the page
   header of the report card.
+* The **Main Subjects** menu lists the subjects that break a tie in the rank of the
+  students, per **Grade** and optionally per **Expertise Program**. A record with an
+  empty program is the fallback of the grade. Only one active record is allowed for
+  the same grade and program.
 * To show the Print wizard of the SSI document form, configure the
   **Print Document Type** in the user interface; it is not part of this module.
 
