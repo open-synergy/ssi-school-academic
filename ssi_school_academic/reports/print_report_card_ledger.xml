@@ -95,7 +95,7 @@
                             <span t-field="line.student_code" />
                         </td>
                         <td>
-                            <span t-field="line.student_id.name" />
+                            <span t-field="line.student_name" />
                         </td>
                         <t t-foreach="line.cell_ids" t-as="cell">
                             <td

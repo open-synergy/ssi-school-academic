@@ -95,7 +95,9 @@ class PrintReportCardLedger(models.TransientModel):
         report = self.env.ref(
             "ssi_school_academic.action_report_print_report_card_ledger_html"
         )
-        return report.report_action(self)
+        # The company layout wizard must not replace the ledger when
+        # the company has no document layout yet.
+        return report.with_context(discard_logo_check=True).report_action(self)
 
     def _print_ledger(self):
         """Rebuild the ledger and build the action of its PDF report.
@@ -107,7 +109,9 @@ class PrintReportCardLedger(models.TransientModel):
         report = self.env.ref(
             "ssi_school_academic.action_report_print_report_card_ledger_pdf"
         )
-        return report.report_action(self)
+        # The company layout wizard must not replace the ledger when
+        # the company has no document layout yet.
+        return report.with_context(discard_logo_check=True).report_action(self)
 
     def _compute_ledger(self):
         """Rebuild the rows, the columns and the cells of the ledger.

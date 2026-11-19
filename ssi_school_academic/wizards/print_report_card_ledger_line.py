@@ -43,6 +43,13 @@ class PrintReportCardLedgerLine(models.TransientModel):
         readonly=True,
         help="Student of the enrollment.",
     )
+    student_name = fields.Char(
+        string="Student Name",
+        related="enrollment_id.student_id.name",
+        readonly=True,
+        help="Name of the student, read with full rights so the printed "
+        "ledger does not depend on the access rules of the student.",
+    )
     student_code = fields.Char(
         string="Student ID",
         related="enrollment_id.student_id.code",
