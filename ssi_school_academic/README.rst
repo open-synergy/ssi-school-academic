@@ -85,6 +85,14 @@ Usage
   students, per **Grade** and optionally per **Expertise Program**. A record with an
   empty program is the fallback of the grade. Only one active record is allowed for
   the same grade and program.
+* The **Report Card Ledger** menu (Classroom) opens a wizard where you pick a
+  **Grade Class**, an **Academic Term** and a **Report Card Type**. **Show** displays the
+  ledger of the class on screen and **Print** prints it as a PDF file. A row is listed
+  for every enrollment of the class and term that is on progress or done, and only the
+  report cards that are done give a score. A student without a done report card is
+  listed with dashes and without a rank, below the other students. The rank follows the
+  total; a tie is broken by the main subjects of the class and then by all the subjects.
+  A score below the minimum score (KKM) of its subject is shown on a red background.
 * To show the Print wizard of the SSI document form, configure the
   **Print Document Type** in the user interface; it is not part of this module.
 
