@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 OpenSynergy Indonesia
+     Copyright 2026 PT. Simetri Sinergi Indonesia
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+<record id="paperformat_print_report_card_ledger" model="report.paperformat">
+    <field name="name">Report Card Ledger</field>
+    <field name="default" eval="False" />
+    <field name="format">A4</field>
+    <field name="orientation">Landscape</field>
+    <field name="margin_top">10</field>
+    <field name="margin_bottom">10</field>
+    <field name="margin_left">7</field>
+    <field name="margin_right">7</field>
+    <field name="header_line" eval="False" />
+    <field name="header_spacing">5</field>
+    <field name="dpi">90</field>
+</record>
+
+<record id="report_print_report_card_ledger_html" model="ir.actions.report">
+    <field name="name">Report Card Ledger</field>
+    <field name="model">print_report_card_ledger</field>
+    <field name="report_type">qweb-html</field>
+    <field
+            name="report_name"
+        >ssi_school_academic.report_print_report_card_ledger_html</field>
+    <field
+            name="report_file"
+        >ssi_school_academic.report_print_report_card_ledger_html</field>
+    <field name="paperformat_id" ref="paperformat_print_report_card_ledger" />
+</record>
+
+<record id="report_print_report_card_ledger_pdf" model="ir.actions.report">
+    <field name="name">Report Card Ledger</field>
+    <field name="model">print_report_card_ledger</field>
+    <field name="report_type">qweb-pdf</field>
+    <field
+            name="report_name"
+        >ssi_school_academic.report_print_report_card_ledger_pdf</field>
+    <field
+            name="report_file"
+        >ssi_school_academic.report_print_report_card_ledger_pdf</field>
+    <field name="paperformat_id" ref="paperformat_print_report_card_ledger" />
+    <field
+            name="print_report_name"
+        >'Report Card Ledger - %s' % (object.grade_class_id.name or '')</field>
+</record>
+
+<template id="report_print_report_card_ledger_document">
+    <div class="page">
+        <h4 class="text-center">Report Card Ledger</h4>
+        <table class="table table-sm table-borderless">
+            <tr>
+                <td style="width: 15%;">Class</td>
+                <td>
+                    <span t-field="doc.grade_class_id.name" />
+                </td>
+            </tr>
+            <tr>
+                <td>Academic Term</td>
+                <td>
+                    <span t-field="doc.academic_term_id.name" />
+                </td>
+            </tr>
+            <tr>
+                <td>Report Card Type</td>
+                <td>
+                    <span t-field="doc.type_id.name" />
+                </td>
+            </tr>
+        </table>
+        <table class="table table-sm table-bordered" style="font-size: 11px;">
+            <thead>
+                <tr>
+                    <th class="text-center">No</th>
+                    <th class="text-center">Student ID</th>
+                    <th>Name</th>
+                    <t t-foreach="doc.subject_ids" t-as="column">
+                        <th class="text-center">
+                            <span t-field="column.subject_id.name" />
+                        </th>
+                    </t>
+                    <th class="text-center">Total</th>
+                    <th class="text-center">Average</th>
+                    <th class="text-center">Rank</th>
+                </tr>
+            </thead>
+            <tbody>
+                <t t-foreach="doc.line_ids" t-as="line">
+                    <tr>
+                        <td class="text-center">
+                            <span t-field="line.sequence" />
+                        </td>
+                        <td class="text-center">
+                            <span t-field="line.student_code" />
+                        </td>
+                        <td>
+                            <span t-field="line.student_id.name" />
+                        </td>
+                        <t t-foreach="line.cell_ids" t-as="cell">
+                            <td
+                                    class="text-center"
+                                    t-attf-style="#{'background-color: #f8b4b4;' if cell.is_below_minimum else ''}"
+                                >
+                                <t t-if="cell.has_score">
+                                    <span
+                                            t-esc="cell.score"
+                                            t-options='{"widget": "float", "precision": 2}'
+                                        />
+                                </t>
+                                <t t-else="">-</t>
+                            </td>
+                        </t>
+                        <td class="text-center">
+                            <t t-if="line.has_score">
+                                <span
+                                        t-esc="line.total"
+                                        t-options='{"widget": "float", "precision": 2}'
+                                    />
+                            </t>
+                            <t t-else="">-</t>
+                        </td>
+                        <td class="text-center">
+                            <t t-if="line.has_score">
+                                <span
+                                        t-esc="line.average"
+                                        t-options='{"widget": "float", "precision": 2}'
+                                    />
+                            </t>
+                            <t t-else="">-</t>
+                        </td>
+                        <td class="text-center">
+                            <t t-if="line.has_score">
+                                <span t-esc="line.rank" />
+                            </t>
+                            <t t-else="">-</t>
+                        </td>
+                    </tr>
+                </t>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="3" class="text-right">
+                        <strong>Average</strong>
+                    </td>
+                    <t t-foreach="doc.subject_ids" t-as="column">
+                        <td class="text-center">
+                            <t t-if="column.has_average">
+                                <span
+                                        t-esc="column.average"
+                                        t-options='{"widget": "float", "precision": 2}'
+                                    />
+                            </t>
+                            <t t-else="">-</t>
+                        </td>
+                    </t>
+                    <td colspan="3" />
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</template>
+
+<template id="report_print_report_card_ledger_html">
+    <t t-foreach="docs" t-as="doc">
+        <t t-call="web.basic_layout">
+            <t t-call="ssi_school_academic.report_print_report_card_ledger_document" />
+        </t>
+    </t>
+</template>
+
+<template id="report_print_report_card_ledger_pdf">
+    <t t-foreach="docs" t-as="doc">
+        <t t-call="web.basic_layout">
+            <t t-call="ssi_school_academic.report_print_report_card_ledger_document" />
+        </t>
+    </t>
+</template>
+</odoo>

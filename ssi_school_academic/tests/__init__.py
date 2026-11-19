@@ -3,6 +3,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from . import (  # noqa: F401
+    test_print_report_card_ledger,
     test_school_grade,
     test_school_report_card,
     test_school_report_card_main_subject,
@@ -12,6 +13,7 @@ from . import (  # noqa: F401
     test_school_score_predicate,
     test_school_score_sheet,
     test_school_subject,
+    test_ui_print_report_card_ledger,
     test_ui_school_report_card,
     test_ui_school_report_card_main_subject,
     test_ui_school_report_card_type,

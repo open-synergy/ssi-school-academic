@@ -1,0 +1,2023 @@
+# T-01 (odoo-development-unit-test/test-traps.md): the `setup:` block replays
+# before every scenario inside one un-rolled-back transaction, so every
+# unique-constrained code it creates is generated per replay from a count of
+# the existing records. Every replay builds its own grade, class and students,
+# so a scenario only reads the rows of its own wizard record, which are found
+# by the wizard and the enrollment, never by a count of the whole table.
+options:
+  auto_refresh: true
+
+setup:
+  steps:
+    - step: "Create the grade type"
+      action: "create"
+      model: "school_grade_type"
+      save_as: "grade_type"
+      values:
+        name: "LDG Grade Type"
+        code: "EVAL: 'LDGGT%d' % env['school_grade_type'].search_count([])"
+
+    - step: "Create the school"
+      action: "create"
+      model: "school"
+      save_as: "school"
+      values:
+        name: "LDG School"
+        code: "EVAL: 'LDGSC%d' % env['school'].search_count([])"
+        grade_type_id: "REC: grade_type.id"
+
+    - step: "Create the academic year"
+      action: "create"
+      model: "school_academic_year"
+      save_as: "academic_year"
+      values:
+        name: "LDG Academic Year"
+        code: "EVAL: 'LDGAY%d' % env['school_academic_year'].search_count([])"
+        date_start: 2026-07-01
+        date_end: 2027-06-30
+
+    - step: "Create the academic term open for enrollment"
+      action: "create"
+      model: "school_academic_term"
+      save_as: "academic_term"
+      values:
+        name: "LDG Term"
+        code: "EVAL: 'LDGTM%d' % env['school_academic_term'].search_count([])"
+        date_start: 2026-07-01
+        date_end: 2026-12-31
+        year_id: "REC: academic_year.id"
+        enrollment_state: "open"
+
+    - step: "Create the grade"
+      action: "create"
+      model: "school_grade"
+      save_as: "grade"
+      values:
+        name: "LDG Grade"
+        code: "EVAL: 'LDGGR%d' % env['school_grade'].search_count([])"
+        type_id: "REC: grade_type.id"
+
+    - step: "Create the grade class of the expertise program"
+      action: "create"
+      model: "school_grade_class"
+      save_as: "grade_class"
+      values:
+        name: "LDG Class"
+        code: "EVAL: 'LDGCL%d' % env['school_grade_class'].search_count([])"
+        school_id: "REC: school.id"
+        grade_id: "REC: grade.id"
+        expertise_program: "LDG Program"
+
+    - step: "Create the subject M"
+      action: "create"
+      model: "school_subject"
+      save_as: "subject_m"
+      values:
+        name: "LDG Subject M"
+        code: "EVAL: 'LDGSM%d' % env['school_subject'].search_count([])"
+        grade_ids:
+          - - 6
+            - 0
+            - - "REC: grade.id"
+        minimum_score_ids:
+          - - 0
+            - 0
+            - grade_id: "REC: grade.id"
+              minimum_score: 75.0
+
+    - step: "Create the subject X"
+      action: "create"
+      model: "school_subject"
+      save_as: "subject_x"
+      values:
+        name: "LDG Subject X"
+        code: "EVAL: 'LDGSX%d' % env['school_subject'].search_count([])"
+        grade_ids:
+          - - 6
+            - 0
+            - - "REC: grade.id"
+
+    - step: "Create the subject Y"
+      action: "create"
+      model: "school_subject"
+      save_as: "subject_y"
+      values:
+        name: "LDG Subject Y"
+        code: "EVAL: 'LDGSY%d' % env['school_subject'].search_count([])"
+        grade_ids:
+          - - 6
+            - 0
+            - - "REC: grade.id"
+
+    - step: "Create the subject Z"
+      action: "create"
+      model: "school_subject"
+      save_as: "subject_z"
+      values:
+        name: "LDG Subject Z"
+        code: "EVAL: 'LDGSZ%d' % env['school_subject'].search_count([])"
+        grade_ids:
+          - - 6
+            - 0
+            - - "REC: grade.id"
+
+    - step: "Create the subject W"
+      action: "create"
+      model: "school_subject"
+      save_as: "subject_w"
+      values:
+        name: "LDG Subject W"
+        code: "EVAL: 'LDGSW%d' % env['school_subject'].search_count([])"
+        grade_ids:
+          - - 6
+            - 0
+            - - "REC: grade.id"
+
+    - step: "Create the score component"
+      action: "create"
+      model: "school_score_component"
+      save_as: "component"
+      values:
+        name: "LDG UH"
+        code: "EVAL: 'LDGC%d' % env['school_score_component'].search_count([])"
+        category: "daily_test"
+        sequence: 10
+
+    - step: "Create the report card type"
+      action: "create"
+      model: "school_report_card_type"
+      save_as: "card_type"
+      values:
+        name: "LDG Final"
+        code: "EVAL: 'LDGRT%d' % env['school_report_card_type'].search_count([])"
+        term_type: "final"
+        average_weight: 100.0
+        average_component_ids:
+          - - 6
+            - 0
+            - - "REC: component.id"
+
+    - step: "Create the contact of student 1"
+      action: "create"
+      model: "res.partner"
+      save_as: "contact_1"
+      values:
+        name: "LDG Student Contact 1"
+
+    - step: "Create student 1"
+      action: "create"
+      model: "school_student"
+      save_as: "student_1"
+      values:
+        name: "LDG Student 1"
+        code: "EVAL: 'LDGST%d' % env['school_student'].search_count([])"
+        contact_id: "REC: contact_1.id"
+        school_id: "REC: school.id"
+
+    - step: "Create the enrollment of student 1"
+      action: "create"
+      model: "school_enrollment"
+      save_as: "enrollment_1"
+      values:
+        academic_year_id: "REC: academic_year.id"
+        academic_term_id: "REC: academic_term.id"
+        school_id: "REC: school.id"
+        grade_id: "REC: grade.id"
+        grade_class_id: "REC: grade_class.id"
+        student_id: "REC: student_1.id"
+        currency_id: "EVAL: env.company.currency_id.id"
+
+    - step: "Confirm the enrollment of student 1"
+      action: "call"
+      target: "enrollment_1"
+      method: "action_confirm"
+      as_user: "base.user_admin"
+      asserts:
+        state:
+          type: "value"
+          expected: "confirm"
+
+    - step: "Approve the enrollment of student 1, which opens it"
+      action: "call"
+      target: "enrollment_1"
+      method: "action_approve_approval"
+      as_user: "base.user_admin"
+      asserts:
+        state:
+          type: "value"
+          expected: "open"
+
+    - step: "Create the contact of student 2"
+      action: "create"
+      model: "res.partner"
+      save_as: "contact_2"
+      values:
+        name: "LDG Student Contact 2"
+
+    - step: "Create student 2"
+      action: "create"
+      model: "school_student"
+      save_as: "student_2"
+      values:
+        name: "LDG Student 2"
+        code: "EVAL: 'LDGST%d' % env['school_student'].search_count([])"
+        contact_id: "REC: contact_2.id"
+        school_id: "REC: school.id"
+
+    - step: "Create the enrollment of student 2"
+      action: "create"
+      model: "school_enrollment"
+      save_as: "enrollment_2"
+      values:
+        academic_year_id: "REC: academic_year.id"
+        academic_term_id: "REC: academic_term.id"
+        school_id: "REC: school.id"
+        grade_id: "REC: grade.id"
+        grade_class_id: "REC: grade_class.id"
+        student_id: "REC: student_2.id"
+        currency_id: "EVAL: env.company.currency_id.id"
+
+    - step: "Confirm the enrollment of student 2"
+      action: "call"
+      target: "enrollment_2"
+      method: "action_confirm"
+      as_user: "base.user_admin"
+      asserts:
+        state:
+          type: "value"
+          expected: "confirm"
+
+    - step: "Approve the enrollment of student 2, which opens it"
+      action: "call"
+      target: "enrollment_2"
+      method: "action_approve_approval"
+      as_user: "base.user_admin"
+      asserts:
+        state:
+          type: "value"
+          expected: "open"
+
+    - step: "Create the contact of student 3"
+      action: "create"
+      model: "res.partner"
+      save_as: "contact_3"
+      values:
+        name: "LDG Student Contact 3"
+
+    - step: "Create student 3"
+      action: "create"
+      model: "school_student"
+      save_as: "student_3"
+      values:
+        name: "LDG Student 3"
+        code: "EVAL: 'LDGST%d' % env['school_student'].search_count([])"
+        contact_id: "REC: contact_3.id"
+        school_id: "REC: school.id"
+
+    - step: "Create the enrollment of student 3"
+      action: "create"
+      model: "school_enrollment"
+      save_as: "enrollment_3"
+      values:
+        academic_year_id: "REC: academic_year.id"
+        academic_term_id: "REC: academic_term.id"
+        school_id: "REC: school.id"
+        grade_id: "REC: grade.id"
+        grade_class_id: "REC: grade_class.id"
+        student_id: "REC: student_3.id"
+        currency_id: "EVAL: env.company.currency_id.id"
+
+    - step: "Confirm the enrollment of student 3"
+      action: "call"
+      target: "enrollment_3"
+      method: "action_confirm"
+      as_user: "base.user_admin"
+      asserts:
+        state:
+          type: "value"
+          expected: "confirm"
+
+    - step: "Approve the enrollment of student 3, which opens it"
+      action: "call"
+      target: "enrollment_3"
+      method: "action_approve_approval"
+      as_user: "base.user_admin"
+      asserts:
+        state:
+          type: "value"
+          expected: "open"
+
+    - step: "Create the contact of student 4"
+      action: "create"
+      model: "res.partner"
+      save_as: "contact_4"
+      values:
+        name: "LDG Student Contact 4"
+
+    - step: "Create student 4"
+      action: "create"
+      model: "school_student"
+      save_as: "student_4"
+      values:
+        name: "LDG Student 4"
+        code: "EVAL: 'LDGST%d' % env['school_student'].search_count([])"
+        contact_id: "REC: contact_4.id"
+        school_id: "REC: school.id"
+
+    - step: "Create the enrollment of student 4"
+      action: "create"
+      model: "school_enrollment"
+      save_as: "enrollment_4"
+      values:
+        academic_year_id: "REC: academic_year.id"
+        academic_term_id: "REC: academic_term.id"
+        school_id: "REC: school.id"
+        grade_id: "REC: grade.id"
+        grade_class_id: "REC: grade_class.id"
+        student_id: "REC: student_4.id"
+        currency_id: "EVAL: env.company.currency_id.id"
+
+    - step: "Confirm the enrollment of student 4"
+      action: "call"
+      target: "enrollment_4"
+      method: "action_confirm"
+      as_user: "base.user_admin"
+      asserts:
+        state:
+          type: "value"
+          expected: "confirm"
+
+    - step: "Approve the enrollment of student 4, which opens it"
+      action: "call"
+      target: "enrollment_4"
+      method: "action_approve_approval"
+      as_user: "base.user_admin"
+      asserts:
+        state:
+          type: "value"
+          expected: "open"
+
+    - step: "Create the contact of student 5"
+      action: "create"
+      model: "res.partner"
+      save_as: "contact_5"
+      values:
+        name: "LDG Student Contact 5"
+
+    - step: "Create student 5"
+      action: "create"
+      model: "school_student"
+      save_as: "student_5"
+      values:
+        name: "LDG Student 5"
+        code: "EVAL: 'LDGST%d' % env['school_student'].search_count([])"
+        contact_id: "REC: contact_5.id"
+        school_id: "REC: school.id"
+
+    - step: "Create the enrollment of student 5"
+      action: "create"
+      model: "school_enrollment"
+      save_as: "enrollment_5"
+      values:
+        academic_year_id: "REC: academic_year.id"
+        academic_term_id: "REC: academic_term.id"
+        school_id: "REC: school.id"
+        grade_id: "REC: grade.id"
+        grade_class_id: "REC: grade_class.id"
+        student_id: "REC: student_5.id"
+        currency_id: "EVAL: env.company.currency_id.id"
+
+    - step: "Confirm the enrollment of student 5"
+      action: "call"
+      target: "enrollment_5"
+      method: "action_confirm"
+      as_user: "base.user_admin"
+      asserts:
+        state:
+          type: "value"
+          expected: "confirm"
+
+    - step: "Approve the enrollment of student 5, which opens it"
+      action: "call"
+      target: "enrollment_5"
+      method: "action_approve_approval"
+      as_user: "base.user_admin"
+      asserts:
+        state:
+          type: "value"
+          expected: "open"
+
+    - step: "Create the contact of the student whose enrollment is cancelled"
+      action: "create"
+      model: "res.partner"
+      save_as: "contact_cancel"
+      values:
+        name: "LDG Student Contact Cancel"
+
+    - step: "Create the student whose enrollment is cancelled"
+      action: "create"
+      model: "school_student"
+      save_as: "student_cancel"
+      values:
+        name: "LDG Student Cancel"
+        code: "EVAL: 'LDGST%d' % env['school_student'].search_count([])"
+        contact_id: "REC: contact_cancel.id"
+        school_id: "REC: school.id"
+
+    - step: "Create the enrollment that is cancelled"
+      action: "create"
+      model: "school_enrollment"
+      save_as: "enrollment_cancel"
+      values:
+        academic_year_id: "REC: academic_year.id"
+        academic_term_id: "REC: academic_term.id"
+        school_id: "REC: school.id"
+        grade_id: "REC: grade.id"
+        grade_class_id: "REC: grade_class.id"
+        student_id: "REC: student_cancel.id"
+        currency_id: "EVAL: env.company.currency_id.id"
+
+    - step: "Create the cancel reason"
+      action: "create"
+      model: "base.cancel_reason"
+      save_as: "cancel_reason"
+      values:
+        name: "LDG Cancel Reason"
+        code: "EVAL: 'LDGCR%d' % env['base.cancel_reason'].search_count([])"
+
+    - step: "Cancel the enrollment via the wizard"
+      action: "wizard"
+      model: "base.select_cancel_reason"
+      target: "enrollment_cancel"
+      as_user: "base.user_admin"
+      values:
+        cancel_reason_id: "REC: cancel_reason.id"
+      method: "action_confirm"
+      asserts:
+        state:
+          type: "value"
+          expected: "cancel"
+
+scenarios:
+  - name: "Ledger - Rows, cells, totals and rank by total"
+    steps:
+      - step: "Create the report card of student 1"
+        action: "create"
+        model: "school_report_card"
+        save_as: "card_1"
+        values:
+          enrollment_id: "REC: enrollment_1.id"
+          type_id: "REC: card_type.id"
+          print_date: 2026-12-20
+          print_city: "Jakarta"
+          user_id: "REF: base.user_admin"
+          line_ids:
+            - - 0
+              - 0
+              - subject_id: "REC: subject_m.id"
+                final_score: 80.0
+                is_scored: true
+            - - 0
+              - 0
+              - subject_id: "REC: subject_x.id"
+                final_score: 90.0
+                is_scored: true
+            - - 0
+              - 0
+              - subject_id: "REC: subject_y.id"
+                final_score: 70.0
+                is_scored: true
+            - - 0
+              - 0
+              - subject_id: "REC: subject_z.id"
+                final_score: 60.0
+                is_scored: true
+
+      - step: "Confirm the report card of student 1"
+        action: "call"
+        target: "card_1"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve the report card of student 1, which finishes it"
+        action: "call"
+        target: "card_1"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "done"
+
+      - step: "Create the report card of student 2"
+        action: "create"
+        model: "school_report_card"
+        save_as: "card_2"
+        values:
+          enrollment_id: "REC: enrollment_2.id"
+          type_id: "REC: card_type.id"
+          print_date: 2026-12-20
+          print_city: "Jakarta"
+          user_id: "REF: base.user_admin"
+          line_ids:
+            - - 0
+              - 0
+              - subject_id: "REC: subject_m.id"
+                final_score: 70.0
+                is_scored: true
+            - - 0
+              - 0
+              - subject_id: "REC: subject_x.id"
+                final_score: 85.0
+                is_scored: true
+            - - 0
+              - 0
+              - subject_id: "REC: subject_y.id"
+                final_score: 80.0
+                is_scored: true
+            - - 0
+              - 0
+              - subject_id: "REC: subject_z.id"
+                final_score: 0.0
+                is_scored: true
+
+      - step: "Confirm the report card of student 2"
+        action: "call"
+        target: "card_2"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve the report card of student 2, which finishes it"
+        action: "call"
+        target: "card_2"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "done"
+
+      - step: "Create the report card of student 3"
+        action: "create"
+        model: "school_report_card"
+        save_as: "card_3"
+        values:
+          enrollment_id: "REC: enrollment_3.id"
+          type_id: "REC: card_type.id"
+          print_date: 2026-12-20
+          print_city: "Jakarta"
+          user_id: "REF: base.user_admin"
+          line_ids:
+            - - 0
+              - 0
+              - subject_id: "REC: subject_m.id"
+                final_score: 90.0
+                is_scored: true
+            - - 0
+              - 0
+              - subject_id: "REC: subject_x.id"
+                final_score: 0.0
+                is_scored: false
+            - - 0
+              - 0
+              - subject_id: "REC: subject_y.id"
+                final_score: 90.0
+                is_scored: true
+
+      - step: "Confirm the report card of student 3"
+        action: "call"
+        target: "card_3"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve the report card of student 3, which finishes it"
+        action: "call"
+        target: "card_3"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "done"
+
+      - step: "Create the report card of student 4"
+        action: "create"
+        model: "school_report_card"
+        save_as: "card_4"
+        values:
+          enrollment_id: "REC: enrollment_4.id"
+          type_id: "REC: card_type.id"
+          print_date: 2026-12-20
+          print_city: "Jakarta"
+          user_id: "REF: base.user_admin"
+          line_ids:
+            - - 0
+              - 0
+              - subject_id: "REC: subject_w.id"
+                final_score: 77.0
+                is_scored: true
+
+      - step: "Confirm the report card of student 4"
+        action: "call"
+        target: "card_4"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Build the ledger ledger"
+        action: "wizard"
+        model: "print_report_card_ledger"
+        target: "grade_class"
+        save_as: "ledger"
+        values:
+          grade_class_id: "REC: grade_class.id"
+          academic_term_id: "REC: academic_term.id"
+          type_id: "REC: card_type.id"
+        method: "action_compute"
+
+      - step: "Find the row of the cancelled enrollment"
+        action: "search"
+        model: "print_report_card_ledger_line"
+        domain:
+          - ["wizard_id", "=", "REC: ledger.id"]
+          - ["enrollment_id", "=", "REC: enrollment_cancel.id"]
+        save_as: "cancelled_rows"
+        expect_count: 0
+
+      - step: "Find the five rows of the open enrollments"
+        action: "search"
+        model: "print_report_card_ledger_line"
+        domain:
+          - ["wizard_id", "=", "REC: ledger.id"]
+        save_as: "all_rows"
+        expect_count: 5
+
+      - step: "Find the row of student 1 on ledger ledger"
+        action: "search"
+        model: "print_report_card_ledger_line"
+        domain:
+          - ["wizard_id", "=", "REC: ledger.id"]
+          - ["enrollment_id", "=", "REC: enrollment_1.id"]
+        save_as: "ledger_row_1"
+        expect_count: 1
+
+      - step: "Find the row of student 2 on ledger ledger"
+        action: "search"
+        model: "print_report_card_ledger_line"
+        domain:
+          - ["wizard_id", "=", "REC: ledger.id"]
+          - ["enrollment_id", "=", "REC: enrollment_2.id"]
+        save_as: "ledger_row_2"
+        expect_count: 1
+
+      - step: "Find the row of student 3 on ledger ledger"
+        action: "search"
+        model: "print_report_card_ledger_line"
+        domain:
+          - ["wizard_id", "=", "REC: ledger.id"]
+          - ["enrollment_id", "=", "REC: enrollment_3.id"]
+        save_as: "ledger_row_3"
+        expect_count: 1
+
+      - step: "Find the row of student 4 on ledger ledger"
+        action: "search"
+        model: "print_report_card_ledger_line"
+        domain:
+          - ["wizard_id", "=", "REC: ledger.id"]
+          - ["enrollment_id", "=", "REC: enrollment_4.id"]
+        save_as: "ledger_row_4"
+        expect_count: 1
+
+      - step: "Find the row of student 5 on ledger ledger"
+        action: "search"
+        model: "print_report_card_ledger_line"
+        domain:
+          - ["wizard_id", "=", "REC: ledger.id"]
+          - ["enrollment_id", "=", "REC: enrollment_5.id"]
+        save_as: "ledger_row_5"
+        expect_count: 1
+
+      - step: "Assert the row of student 1 on ledger ledger"
+        action: "assert"
+        target: "ledger_row_1"
+        asserts:
+          has_score:
+            type: "value"
+            expected: true
+          total:
+            type: "value"
+            expected: 300.0
+          average:
+            type: "value"
+            expected: 75.0
+          rank:
+            type: "value"
+            expected: 1
+          sequence:
+            type: "value"
+            expected: 1
+
+      - step: "Assert the row of student 2 on ledger ledger"
+        action: "assert"
+        target: "ledger_row_2"
+        asserts:
+          has_score:
+            type: "value"
+            expected: true
+          total:
+            type: "value"
+            expected: 235.0
+          average:
+            type: "value"
+            expected: 58.75
+          rank:
+            type: "value"
+            expected: 2
+          sequence:
+            type: "value"
+            expected: 2
+
+      - step: "Assert the row of student 3 on ledger ledger"
+        action: "assert"
+        target: "ledger_row_3"
+        asserts:
+          has_score:
+            type: "value"
+            expected: true
+          total:
+            type: "value"
+            expected: 180.0
+          average:
+            type: "value"
+            expected: 90.0
+          rank:
+            type: "value"
+            expected: 3
+          sequence:
+            type: "value"
+            expected: 3
+
+      - step: "Assert the row of student 4 on ledger ledger"
+        action: "assert"
+        target: "ledger_row_4"
+        asserts:
+          has_score:
+            type: "value"
+            expected: false
+          total:
+            type: "value"
+            expected: 0.0
+          average:
+            type: "value"
+            expected: 0.0
+          rank:
+            type: "value"
+            expected: 0
+          sequence:
+            type: "value"
+            expected: 4
+
+      - step: "Assert the row of student 5 on ledger ledger"
+        action: "assert"
+        target: "ledger_row_5"
+        asserts:
+          has_score:
+            type: "value"
+            expected: false
+          total:
+            type: "value"
+            expected: 0.0
+          average:
+            type: "value"
+            expected: 0.0
+          rank:
+            type: "value"
+            expected: 0
+          sequence:
+            type: "value"
+            expected: 5
+
+      - step: "Find the cell of student 2 and subject Z on ledger ledger"
+        action: "search"
+        model: "print_report_card_ledger_cell"
+        domain:
+          - ["line_id", "=", "REC: ledger_row_2.id"]
+          - ["subject_id", "=", "REC: subject_z.id"]
+        save_as: "ledger_cell_2_z"
+        expect_count: 1
+
+      - step: "Assert the cell of student 2 and subject Z"
+        action: "assert"
+        target: "ledger_cell_2_z"
+        asserts:
+          has_score:
+            type: "value"
+            expected: true
+          score:
+            type: "value"
+            expected: 0.0
+          is_below_minimum:
+            type: "value"
+            expected: false
+
+      - step: "Find the cell of student 2 and subject M on ledger ledger"
+        action: "search"
+        model: "print_report_card_ledger_cell"
+        domain:
+          - ["line_id", "=", "REC: ledger_row_2.id"]
+          - ["subject_id", "=", "REC: subject_m.id"]
+        save_as: "ledger_cell_2_m"
+        expect_count: 1
+
+      - step: "Assert the cell of student 2 and subject M"
+        action: "assert"
+        target: "ledger_cell_2_m"
+        asserts:
+          has_score:
+            type: "value"
+            expected: true
+          score:
+            type: "value"
+            expected: 70.0
+          is_below_minimum:
+            type: "value"
+            expected: true
+
+      - step: "Find the cell of student 1 and subject M on ledger ledger"
+        action: "search"
+        model: "print_report_card_ledger_cell"
+        domain:
+          - ["line_id", "=", "REC: ledger_row_1.id"]
+          - ["subject_id", "=", "REC: subject_m.id"]
+        save_as: "ledger_cell_1_m"
+        expect_count: 1
+
+      - step: "Assert the cell of student 1 and subject M"
+        action: "assert"
+        target: "ledger_cell_1_m"
+        asserts:
+          has_score:
+            type: "value"
+            expected: true
+          score:
+            type: "value"
+            expected: 80.0
+          is_below_minimum:
+            type: "value"
+            expected: false
+
+      - step: "Find the cell of student 3 and subject X on ledger ledger"
+        action: "search"
+        model: "print_report_card_ledger_cell"
+        domain:
+          - ["line_id", "=", "REC: ledger_row_3.id"]
+          - ["subject_id", "=", "REC: subject_x.id"]
+        save_as: "ledger_cell_3_x"
+        expect_count: 1
+
+      - step: "Assert the cell of student 3 and subject X"
+        action: "assert"
+        target: "ledger_cell_3_x"
+        asserts:
+          has_score:
+            type: "value"
+            expected: false
+          score:
+            type: "value"
+            expected: 0.0
+          is_below_minimum:
+            type: "value"
+            expected: false
+
+      - step: "Find the cell of student 3 and subject Z on ledger ledger"
+        action: "search"
+        model: "print_report_card_ledger_cell"
+        domain:
+          - ["line_id", "=", "REC: ledger_row_3.id"]
+          - ["subject_id", "=", "REC: subject_z.id"]
+        save_as: "ledger_cell_3_z"
+        expect_count: 1
+
+      - step: "Assert the cell of student 3 and subject Z"
+        action: "assert"
+        target: "ledger_cell_3_z"
+        asserts:
+          has_score:
+            type: "value"
+            expected: false
+          score:
+            type: "value"
+            expected: 0.0
+
+      - step: "Find the cell of student 4 and subject W on ledger ledger"
+        action: "search"
+        model: "print_report_card_ledger_cell"
+        domain:
+          - ["line_id", "=", "REC: ledger_row_4.id"]
+          - ["subject_id", "=", "REC: subject_w.id"]
+        save_as: "ledger_cell_4_w"
+        expect_count: 1
+
+      - step: "Assert the cell of student 4 and subject W"
+        action: "assert"
+        target: "ledger_cell_4_w"
+        asserts:
+          has_score:
+            type: "value"
+            expected: false
+          score:
+            type: "value"
+            expected: 0.0
+
+      - step: "Find the column of subject M on ledger ledger"
+        action: "search"
+        model: "print_report_card_ledger_subject"
+        domain:
+          - ["wizard_id", "=", "REC: ledger.id"]
+          - ["subject_id", "=", "REC: subject_m.id"]
+        save_as: "ledger_col_m"
+        expect_count: 1
+
+      - step: "Assert the column of subject M"
+        action: "assert"
+        target: "ledger_col_m"
+        asserts:
+          has_average:
+            type: "value"
+            expected: true
+          average:
+            type: "value"
+            expected: 80.0
+
+      - step: "Find the column of subject X on ledger ledger"
+        action: "search"
+        model: "print_report_card_ledger_subject"
+        domain:
+          - ["wizard_id", "=", "REC: ledger.id"]
+          - ["subject_id", "=", "REC: subject_x.id"]
+        save_as: "ledger_col_x"
+        expect_count: 1
+
+      - step: "Assert the column of subject X"
+        action: "assert"
+        target: "ledger_col_x"
+        asserts:
+          has_average:
+            type: "value"
+            expected: true
+          average:
+            type: "value"
+            expected: 87.5
+
+      - step: "Find the column of subject Y on ledger ledger"
+        action: "search"
+        model: "print_report_card_ledger_subject"
+        domain:
+          - ["wizard_id", "=", "REC: ledger.id"]
+          - ["subject_id", "=", "REC: subject_y.id"]
+        save_as: "ledger_col_y"
+        expect_count: 1
+
+      - step: "Assert the column of subject Y"
+        action: "assert"
+        target: "ledger_col_y"
+        asserts:
+          has_average:
+            type: "value"
+            expected: true
+          average:
+            type: "value"
+            expected: 80.0
+
+      - step: "Find the column of subject Z on ledger ledger"
+        action: "search"
+        model: "print_report_card_ledger_subject"
+        domain:
+          - ["wizard_id", "=", "REC: ledger.id"]
+          - ["subject_id", "=", "REC: subject_z.id"]
+        save_as: "ledger_col_z"
+        expect_count: 1
+
+      - step: "Assert the column of subject Z"
+        action: "assert"
+        target: "ledger_col_z"
+        asserts:
+          has_average:
+            type: "value"
+            expected: true
+          average:
+            type: "value"
+            expected: 30.0
+
+      - step: "Find the column of subject W on ledger ledger"
+        action: "search"
+        model: "print_report_card_ledger_subject"
+        domain:
+          - ["wizard_id", "=", "REC: ledger.id"]
+          - ["subject_id", "=", "REC: subject_w.id"]
+        save_as: "ledger_col_w"
+        expect_count: 1
+
+      - step: "Assert the column of subject W"
+        action: "assert"
+        target: "ledger_col_w"
+        asserts:
+          has_average:
+            type: "value"
+            expected: false
+          average:
+            type: "value"
+            expected: 0.0
+
+  - name: "Ledger - The main subject breaks a tie, and no record skips that step"
+    steps:
+      - step: "Create the report card of student 1"
+        action: "create"
+        model: "school_report_card"
+        save_as: "card_1"
+        values:
+          enrollment_id: "REC: enrollment_1.id"
+          type_id: "REC: card_type.id"
+          print_date: 2026-12-20
+          print_city: "Jakarta"
+          user_id: "REF: base.user_admin"
+          line_ids:
+            - - 0
+              - 0
+              - subject_id: "REC: subject_m.id"
+                final_score: 100.0
+                is_scored: true
+            - - 0
+              - 0
+              - subject_id: "REC: subject_x.id"
+                final_score: 60.0
+                is_scored: true
+            - - 0
+              - 0
+              - subject_id: "REC: subject_y.id"
+                final_score: 70.0
+                is_scored: true
+            - - 0
+              - 0
+              - subject_id: "REC: subject_z.id"
+                final_score: 70.0
+                is_scored: true
+
+      - step: "Confirm the report card of student 1"
+        action: "call"
+        target: "card_1"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve the report card of student 1, which finishes it"
+        action: "call"
+        target: "card_1"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "done"
+
+      - step: "Create the report card of student 2"
+        action: "create"
+        model: "school_report_card"
+        save_as: "card_2"
+        values:
+          enrollment_id: "REC: enrollment_2.id"
+          type_id: "REC: card_type.id"
+          print_date: 2026-12-20
+          print_city: "Jakarta"
+          user_id: "REF: base.user_admin"
+          line_ids:
+            - - 0
+              - 0
+              - subject_id: "REC: subject_m.id"
+                final_score: 60.0
+                is_scored: true
+            - - 0
+              - 0
+              - subject_id: "REC: subject_x.id"
+                final_score: 80.0
+                is_scored: true
+            - - 0
+              - 0
+              - subject_id: "REC: subject_y.id"
+                final_score: 80.0
+                is_scored: true
+            - - 0
+              - 0
+              - subject_id: "REC: subject_z.id"
+                final_score: 80.0
+                is_scored: true
+
+      - step: "Confirm the report card of student 2"
+        action: "call"
+        target: "card_2"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve the report card of student 2, which finishes it"
+        action: "call"
+        target: "card_2"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "done"
+
+      - step: "Build the ledger ledger_none"
+        action: "wizard"
+        model: "print_report_card_ledger"
+        target: "grade_class"
+        save_as: "ledger_none"
+        values:
+          grade_class_id: "REC: grade_class.id"
+          academic_term_id: "REC: academic_term.id"
+          type_id: "REC: card_type.id"
+        method: "action_compute"
+
+      - step: "Find the row of student 1 on ledger ledger_none"
+        action: "search"
+        model: "print_report_card_ledger_line"
+        domain:
+          - ["wizard_id", "=", "REC: ledger_none.id"]
+          - ["enrollment_id", "=", "REC: enrollment_1.id"]
+        save_as: "ledger_none_row_1"
+        expect_count: 1
+
+      - step: "Assert the row of student 1 on ledger ledger_none"
+        action: "assert"
+        target: "ledger_none_row_1"
+        asserts:
+          rank:
+            type: "value"
+            expected: 2
+
+      - step: "Find the row of student 2 on ledger ledger_none"
+        action: "search"
+        model: "print_report_card_ledger_line"
+        domain:
+          - ["wizard_id", "=", "REC: ledger_none.id"]
+          - ["enrollment_id", "=", "REC: enrollment_2.id"]
+        save_as: "ledger_none_row_2"
+        expect_count: 1
+
+      - step: "Assert the row of student 2 on ledger ledger_none"
+        action: "assert"
+        target: "ledger_none_row_2"
+        asserts:
+          rank:
+            type: "value"
+            expected: 1
+
+      - step: "Create the main subject record of the grade and program"
+        action: "create"
+        model: "school_report_card_main_subject"
+        save_as: "main_subject"
+        values:
+          name: "LDG Main Subject"
+          code: "/"
+          grade_id: "REC: grade.id"
+          expertise_program: "LDG Program"
+          subject_ids:
+            - - 6
+              - 0
+              - - "REC: subject_m.id"
+
+      - step: "Build the ledger ledger_main"
+        action: "wizard"
+        model: "print_report_card_ledger"
+        target: "grade_class"
+        save_as: "ledger_main"
+        values:
+          grade_class_id: "REC: grade_class.id"
+          academic_term_id: "REC: academic_term.id"
+          type_id: "REC: card_type.id"
+        method: "action_compute"
+
+      - step: "Find the row of student 1 on ledger ledger_main"
+        action: "search"
+        model: "print_report_card_ledger_line"
+        domain:
+          - ["wizard_id", "=", "REC: ledger_main.id"]
+          - ["enrollment_id", "=", "REC: enrollment_1.id"]
+        save_as: "ledger_main_row_1"
+        expect_count: 1
+
+      - step: "Assert the row of student 1 on ledger ledger_main"
+        action: "assert"
+        target: "ledger_main_row_1"
+        asserts:
+          rank:
+            type: "value"
+            expected: 1
+
+      - step: "Find the row of student 2 on ledger ledger_main"
+        action: "search"
+        model: "print_report_card_ledger_line"
+        domain:
+          - ["wizard_id", "=", "REC: ledger_main.id"]
+          - ["enrollment_id", "=", "REC: enrollment_2.id"]
+        save_as: "ledger_main_row_2"
+        expect_count: 1
+
+      - step: "Assert the row of student 2 on ledger ledger_main"
+        action: "assert"
+        target: "ledger_main_row_2"
+        asserts:
+          rank:
+            type: "value"
+            expected: 2
+
+  - name:
+      "Ledger - All subjects break the tie left by the main subjects, a full tie shares
+      the rank"
+    steps:
+      - step: "Create the main subject record of the grade and program"
+        action: "create"
+        model: "school_report_card_main_subject"
+        save_as: "main_subject"
+        values:
+          name: "LDG Main Subject"
+          code: "/"
+          grade_id: "REC: grade.id"
+          expertise_program: "LDG Program"
+          subject_ids:
+            - - 6
+              - 0
+              - - "REC: subject_m.id"
+
+      - step: "Create the report card of student 1"
+        action: "create"
+        model: "school_report_card"
+        save_as: "card_1"
+        values:
+          enrollment_id: "REC: enrollment_1.id"
+          type_id: "REC: card_type.id"
+          print_date: 2026-12-20
+          print_city: "Jakarta"
+          user_id: "REF: base.user_admin"
+          line_ids:
+            - - 0
+              - 0
+              - subject_id: "REC: subject_m.id"
+                final_score: 80.0
+                is_scored: true
+            - - 0
+              - 0
+              - subject_id: "REC: subject_x.id"
+                final_score: 90.0
+                is_scored: true
+            - - 0
+              - 0
+              - subject_id: "REC: subject_y.id"
+                final_score: 85.0
+                is_scored: true
+            - - 0
+              - 0
+              - subject_id: "REC: subject_z.id"
+                final_score: 65.0
+                is_scored: true
+
+      - step: "Confirm the report card of student 1"
+        action: "call"
+        target: "card_1"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve the report card of student 1, which finishes it"
+        action: "call"
+        target: "card_1"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "done"
+
+      - step: "Create the report card of student 2"
+        action: "create"
+        model: "school_report_card"
+        save_as: "card_2"
+        values:
+          enrollment_id: "REC: enrollment_2.id"
+          type_id: "REC: card_type.id"
+          print_date: 2026-12-20
+          print_city: "Jakarta"
+          user_id: "REF: base.user_admin"
+          line_ids:
+            - - 0
+              - 0
+              - subject_id: "REC: subject_m.id"
+                final_score: 80.0
+                is_scored: true
+            - - 0
+              - 0
+              - subject_id: "REC: subject_x.id"
+                final_score: 70.0
+                is_scored: true
+            - - 0
+              - 0
+              - subject_id: "REC: subject_y.id"
+                final_score: 80.0
+                is_scored: true
+            - - 0
+              - 0
+              - subject_id: "REC: subject_z.id"
+                final_score: 90.0
+                is_scored: true
+
+      - step: "Confirm the report card of student 2"
+        action: "call"
+        target: "card_2"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve the report card of student 2, which finishes it"
+        action: "call"
+        target: "card_2"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "done"
+
+      - step: "Create the report card of student 3"
+        action: "create"
+        model: "school_report_card"
+        save_as: "card_3"
+        values:
+          enrollment_id: "REC: enrollment_3.id"
+          type_id: "REC: card_type.id"
+          print_date: 2026-12-20
+          print_city: "Jakarta"
+          user_id: "REF: base.user_admin"
+          line_ids:
+            - - 0
+              - 0
+              - subject_id: "REC: subject_m.id"
+                final_score: 60.0
+                is_scored: true
+            - - 0
+              - 0
+              - subject_id: "REC: subject_x.id"
+                final_score: 60.0
+                is_scored: true
+            - - 0
+              - 0
+              - subject_id: "REC: subject_y.id"
+                final_score: 60.0
+                is_scored: true
+            - - 0
+              - 0
+              - subject_id: "REC: subject_z.id"
+                final_score: 60.0
+                is_scored: true
+
+      - step: "Confirm the report card of student 3"
+        action: "call"
+        target: "card_3"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve the report card of student 3, which finishes it"
+        action: "call"
+        target: "card_3"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "done"
+
+      - step: "Create the report card of student 4"
+        action: "create"
+        model: "school_report_card"
+        save_as: "card_4"
+        values:
+          enrollment_id: "REC: enrollment_4.id"
+          type_id: "REC: card_type.id"
+          print_date: 2026-12-20
+          print_city: "Jakarta"
+          user_id: "REF: base.user_admin"
+          line_ids:
+            - - 0
+              - 0
+              - subject_id: "REC: subject_m.id"
+                final_score: 60.0
+                is_scored: true
+            - - 0
+              - 0
+              - subject_id: "REC: subject_x.id"
+                final_score: 60.0
+                is_scored: true
+            - - 0
+              - 0
+              - subject_id: "REC: subject_y.id"
+                final_score: 60.0
+                is_scored: true
+            - - 0
+              - 0
+              - subject_id: "REC: subject_z.id"
+                final_score: 60.0
+                is_scored: true
+
+      - step: "Confirm the report card of student 4"
+        action: "call"
+        target: "card_4"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve the report card of student 4, which finishes it"
+        action: "call"
+        target: "card_4"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "done"
+
+      - step: "Create the report card of student 5"
+        action: "create"
+        model: "school_report_card"
+        save_as: "card_5"
+        values:
+          enrollment_id: "REC: enrollment_5.id"
+          type_id: "REC: card_type.id"
+          print_date: 2026-12-20
+          print_city: "Jakarta"
+          user_id: "REF: base.user_admin"
+          line_ids:
+            - - 0
+              - 0
+              - subject_id: "REC: subject_m.id"
+                final_score: 50.0
+                is_scored: true
+            - - 0
+              - 0
+              - subject_id: "REC: subject_x.id"
+                final_score: 50.0
+                is_scored: true
+            - - 0
+              - 0
+              - subject_id: "REC: subject_y.id"
+                final_score: 50.0
+                is_scored: true
+            - - 0
+              - 0
+              - subject_id: "REC: subject_z.id"
+                final_score: 50.0
+                is_scored: true
+
+      - step: "Confirm the report card of student 5"
+        action: "call"
+        target: "card_5"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve the report card of student 5, which finishes it"
+        action: "call"
+        target: "card_5"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "done"
+
+      - step: "Build the ledger ledger"
+        action: "wizard"
+        model: "print_report_card_ledger"
+        target: "grade_class"
+        save_as: "ledger"
+        values:
+          grade_class_id: "REC: grade_class.id"
+          academic_term_id: "REC: academic_term.id"
+          type_id: "REC: card_type.id"
+        method: "action_compute"
+
+      - step: "Find the row of student 1 on ledger ledger"
+        action: "search"
+        model: "print_report_card_ledger_line"
+        domain:
+          - ["wizard_id", "=", "REC: ledger.id"]
+          - ["enrollment_id", "=", "REC: enrollment_1.id"]
+        save_as: "ledger_row_1"
+        expect_count: 1
+
+      - step: "Assert the row of student 1 on ledger ledger"
+        action: "assert"
+        target: "ledger_row_1"
+        asserts:
+          rank:
+            type: "value"
+            expected: 1
+
+      - step: "Find the row of student 2 on ledger ledger"
+        action: "search"
+        model: "print_report_card_ledger_line"
+        domain:
+          - ["wizard_id", "=", "REC: ledger.id"]
+          - ["enrollment_id", "=", "REC: enrollment_2.id"]
+        save_as: "ledger_row_2"
+        expect_count: 1
+
+      - step: "Assert the row of student 2 on ledger ledger"
+        action: "assert"
+        target: "ledger_row_2"
+        asserts:
+          rank:
+            type: "value"
+            expected: 2
+
+      - step: "Find the row of student 3 on ledger ledger"
+        action: "search"
+        model: "print_report_card_ledger_line"
+        domain:
+          - ["wizard_id", "=", "REC: ledger.id"]
+          - ["enrollment_id", "=", "REC: enrollment_3.id"]
+        save_as: "ledger_row_3"
+        expect_count: 1
+
+      - step: "Assert the row of student 3 on ledger ledger"
+        action: "assert"
+        target: "ledger_row_3"
+        asserts:
+          rank:
+            type: "value"
+            expected: 3
+
+      - step: "Find the row of student 4 on ledger ledger"
+        action: "search"
+        model: "print_report_card_ledger_line"
+        domain:
+          - ["wizard_id", "=", "REC: ledger.id"]
+          - ["enrollment_id", "=", "REC: enrollment_4.id"]
+        save_as: "ledger_row_4"
+        expect_count: 1
+
+      - step: "Assert the row of student 4 on ledger ledger"
+        action: "assert"
+        target: "ledger_row_4"
+        asserts:
+          rank:
+            type: "value"
+            expected: 3
+
+      - step: "Find the row of student 5 on ledger ledger"
+        action: "search"
+        model: "print_report_card_ledger_line"
+        domain:
+          - ["wizard_id", "=", "REC: ledger.id"]
+          - ["enrollment_id", "=", "REC: enrollment_5.id"]
+        save_as: "ledger_row_5"
+        expect_count: 1
+
+      - step: "Assert the row of student 5 on ledger ledger"
+        action: "assert"
+        target: "ledger_row_5"
+        asserts:
+          rank:
+            type: "value"
+            expected: 5
+
+  - name: "Ledger - The second tie break compares only the students still tied"
+    steps:
+      - step: "Create the main subject record of the grade and program"
+        action: "create"
+        model: "school_report_card_main_subject"
+        save_as: "main_subject"
+        values:
+          name: "LDG Main Subject"
+          code: "/"
+          grade_id: "REC: grade.id"
+          expertise_program: "LDG Program"
+          subject_ids:
+            - - 6
+              - 0
+              - - "REC: subject_m.id"
+
+      - step: "Create the report card of student 1"
+        action: "create"
+        model: "school_report_card"
+        save_as: "card_1"
+        values:
+          enrollment_id: "REC: enrollment_1.id"
+          type_id: "REC: card_type.id"
+          print_date: 2026-12-20
+          print_city: "Jakarta"
+          user_id: "REF: base.user_admin"
+          line_ids:
+            - - 0
+              - 0
+              - subject_id: "REC: subject_m.id"
+                final_score: 100.0
+                is_scored: true
+            - - 0
+              - 0
+              - subject_id: "REC: subject_x.id"
+                final_score: 90.0
+                is_scored: true
+            - - 0
+              - 0
+              - subject_id: "REC: subject_y.id"
+                final_score: 60.0
+                is_scored: true
+            - - 0
+              - 0
+              - subject_id: "REC: subject_z.id"
+                final_score: 50.0
+                is_scored: true
+
+      - step: "Confirm the report card of student 1"
+        action: "call"
+        target: "card_1"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve the report card of student 1, which finishes it"
+        action: "call"
+        target: "card_1"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "done"
+
+      - step: "Create the report card of student 2"
+        action: "create"
+        model: "school_report_card"
+        save_as: "card_2"
+        values:
+          enrollment_id: "REC: enrollment_2.id"
+          type_id: "REC: card_type.id"
+          print_date: 2026-12-20
+          print_city: "Jakarta"
+          user_id: "REF: base.user_admin"
+          line_ids:
+            - - 0
+              - 0
+              - subject_id: "REC: subject_m.id"
+                final_score: 70.0
+                is_scored: true
+            - - 0
+              - 0
+              - subject_id: "REC: subject_x.id"
+                final_score: 80.0
+                is_scored: true
+            - - 0
+              - 0
+              - subject_id: "REC: subject_y.id"
+                final_score: 80.0
+                is_scored: true
+            - - 0
+              - 0
+              - subject_id: "REC: subject_z.id"
+                final_score: 70.0
+                is_scored: true
+
+      - step: "Confirm the report card of student 2"
+        action: "call"
+        target: "card_2"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve the report card of student 2, which finishes it"
+        action: "call"
+        target: "card_2"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "done"
+
+      - step: "Create the report card of student 3"
+        action: "create"
+        model: "school_report_card"
+        save_as: "card_3"
+        values:
+          enrollment_id: "REC: enrollment_3.id"
+          type_id: "REC: card_type.id"
+          print_date: 2026-12-20
+          print_city: "Jakarta"
+          user_id: "REF: base.user_admin"
+          line_ids:
+            - - 0
+              - 0
+              - subject_id: "REC: subject_m.id"
+                final_score: 70.0
+                is_scored: true
+            - - 0
+              - 0
+              - subject_id: "REC: subject_x.id"
+                final_score: 60.0
+                is_scored: true
+            - - 0
+              - 0
+              - subject_id: "REC: subject_y.id"
+                final_score: 70.0
+                is_scored: true
+            - - 0
+              - 0
+              - subject_id: "REC: subject_z.id"
+                final_score: 100.0
+                is_scored: true
+
+      - step: "Confirm the report card of student 3"
+        action: "call"
+        target: "card_3"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve the report card of student 3, which finishes it"
+        action: "call"
+        target: "card_3"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "done"
+
+      - step: "Build the ledger ledger"
+        action: "wizard"
+        model: "print_report_card_ledger"
+        target: "grade_class"
+        save_as: "ledger"
+        values:
+          grade_class_id: "REC: grade_class.id"
+          academic_term_id: "REC: academic_term.id"
+          type_id: "REC: card_type.id"
+        method: "action_compute"
+
+      - step: "Find the row of student 1 on ledger ledger"
+        action: "search"
+        model: "print_report_card_ledger_line"
+        domain:
+          - ["wizard_id", "=", "REC: ledger.id"]
+          - ["enrollment_id", "=", "REC: enrollment_1.id"]
+        save_as: "ledger_row_1"
+        expect_count: 1
+
+      - step: "Assert the row of student 1 on ledger ledger"
+        action: "assert"
+        target: "ledger_row_1"
+        asserts:
+          rank:
+            type: "value"
+            expected: 1
+
+      - step: "Find the row of student 2 on ledger ledger"
+        action: "search"
+        model: "print_report_card_ledger_line"
+        domain:
+          - ["wizard_id", "=", "REC: ledger.id"]
+          - ["enrollment_id", "=", "REC: enrollment_2.id"]
+        save_as: "ledger_row_2"
+        expect_count: 1
+
+      - step: "Assert the row of student 2 on ledger ledger"
+        action: "assert"
+        target: "ledger_row_2"
+        asserts:
+          rank:
+            type: "value"
+            expected: 2
+
+      - step: "Find the row of student 3 on ledger ledger"
+        action: "search"
+        model: "print_report_card_ledger_line"
+        domain:
+          - ["wizard_id", "=", "REC: ledger.id"]
+          - ["enrollment_id", "=", "REC: enrollment_3.id"]
+        save_as: "ledger_row_3"
+        expect_count: 1
+
+      - step: "Assert the row of student 3 on ledger ledger"
+        action: "assert"
+        target: "ledger_row_3"
+        asserts:
+          rank:
+            type: "value"
+            expected: 3
+
+  - name:
+      "Ledger - A report card viewer builds the ledger, a user without the group cannot"
+    steps:
+      - step: "Create the report card viewer"
+        action: "create"
+        model: "res.users"
+        save_as: "viewer"
+        values:
+          name: "LDG Viewer"
+          login: "EVAL: 'ldg_viewer_%d@example.com' % env['res.users'].search_count([])"
+          groups_id:
+            - - 6
+              - 0
+              - - "REF: base.group_user"
+                - "REF: ssi_school_academic.school_report_card_viewer_group"
+                - "REF: ssi_school_academic.school_report_card_all_group"
+
+      - step: "Create a user without any report card group"
+        action: "create"
+        model: "res.users"
+        save_as: "outsider"
+        values:
+          name: "LDG Outsider"
+          login:
+            "EVAL: 'ldg_outsider_%d@example.com' % env['res.users'].search_count([])"
+          groups_id:
+            - - 6
+              - 0
+              - - "REF: base.group_user"
+
+      - step: "Create the report card of student 1"
+        action: "create"
+        model: "school_report_card"
+        save_as: "card_1"
+        values:
+          enrollment_id: "REC: enrollment_1.id"
+          type_id: "REC: card_type.id"
+          print_date: 2026-12-20
+          print_city: "Jakarta"
+          user_id: "REF: base.user_admin"
+          line_ids:
+            - - 0
+              - 0
+              - subject_id: "REC: subject_m.id"
+                final_score: 80.0
+                is_scored: true
+            - - 0
+              - 0
+              - subject_id: "REC: subject_x.id"
+                final_score: 90.0
+                is_scored: true
+
+      - step: "Confirm the report card of student 1"
+        action: "call"
+        target: "card_1"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve the report card of student 1, which finishes it"
+        action: "call"
+        target: "card_1"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "done"
+
+      - step: "Build the ledger ledger"
+        action: "wizard"
+        model: "print_report_card_ledger"
+        target: "grade_class"
+        as_user: "viewer"
+        save_as: "ledger"
+        values:
+          grade_class_id: "REC: grade_class.id"
+          academic_term_id: "REC: academic_term.id"
+          type_id: "REC: card_type.id"
+        method: "action_compute"
+
+      - step: "Find the row of student 1 on ledger ledger"
+        action: "search"
+        model: "print_report_card_ledger_line"
+        domain:
+          - ["wizard_id", "=", "REC: ledger.id"]
+          - ["enrollment_id", "=", "REC: enrollment_1.id"]
+        save_as: "ledger_row_1"
+        expect_count: 1
+
+      - step: "Assert the row of student 1 on ledger ledger"
+        action: "assert"
+        target: "ledger_row_1"
+        asserts:
+          has_score:
+            type: "value"
+            expected: true
+          total:
+            type: "value"
+            expected: 170.0
+          rank:
+            type: "value"
+            expected: 1
+
+      - step: "Build the ledger ledger_show"
+        action: "wizard"
+        model: "print_report_card_ledger"
+        target: "grade_class"
+        as_user: "viewer"
+        save_as: "ledger_show"
+        values:
+          grade_class_id: "REC: grade_class.id"
+          academic_term_id: "REC: academic_term.id"
+          type_id: "REC: card_type.id"
+        method: "action_show"
+
+      - step: "A user without the report card group cannot open the ledger"
+        action: "create"
+        model: "print_report_card_ledger"
+        as_user: "outsider"
+        values:
+          grade_class_id: "REC: grade_class.id"
+          academic_term_id: "REC: academic_term.id"
+          type_id: "REC: card_type.id"
+        expect_error:
+          type: "AccessError"
+          message_contains: "print_report_card_ledger"

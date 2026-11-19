@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 OpenSynergy Indonesia
+     Copyright 2026 PT. Simetri Sinergi Indonesia
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+<record id="print_report_card_ledger_action" model="ir.actions.act_window">
+    <field name="name">Report Card Ledger</field>
+    <field name="res_model">print_report_card_ledger</field>
+    <field name="view_mode">form</field>
+    <field name="target">new</field>
+</record>
+
+<menuitem
+        id="print_report_card_ledger_menu"
+        name="Report Card Ledger"
+        parent="ssi_school.menu_school_classroom"
+        action="print_report_card_ledger_action"
+        groups="school_report_card_viewer_group"
+        sequence="50"
+    />
+</odoo>
