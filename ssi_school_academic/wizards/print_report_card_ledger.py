@@ -93,7 +93,7 @@ class PrintReportCardLedger(models.TransientModel):
         self.ensure_one()
         self._compute_ledger()
         report = self.env.ref(
-            "ssi_school_academic.report_print_report_card_ledger_html"
+            "ssi_school_academic.action_report_print_report_card_ledger_html"
         )
         return report.report_action(self)
 
@@ -104,7 +104,9 @@ class PrintReportCardLedger(models.TransientModel):
         """
         self.ensure_one()
         self._compute_ledger()
-        report = self.env.ref("ssi_school_academic.report_print_report_card_ledger_pdf")
+        report = self.env.ref(
+            "ssi_school_academic.action_report_print_report_card_ledger_pdf"
+        )
         return report.report_action(self)
 
     def _compute_ledger(self):

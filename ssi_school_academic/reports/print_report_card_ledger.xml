@@ -17,7 +17,7 @@
     <field name="dpi">90</field>
 </record>
 
-<record id="report_print_report_card_ledger_html" model="ir.actions.report">
+<record id="action_report_print_report_card_ledger_html" model="ir.actions.report">
     <field name="name">Report Card Ledger</field>
     <field name="model">print_report_card_ledger</field>
     <field name="report_type">qweb-html</field>
@@ -30,7 +30,7 @@
     <field name="paperformat_id" ref="paperformat_print_report_card_ledger" />
 </record>
 
-<record id="report_print_report_card_ledger_pdf" model="ir.actions.report">
+<record id="action_report_print_report_card_ledger_pdf" model="ir.actions.report">
     <field name="name">Report Card Ledger</field>
     <field name="model">print_report_card_ledger</field>
     <field name="report_type">qweb-pdf</field>
