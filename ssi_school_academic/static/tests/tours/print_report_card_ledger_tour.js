@@ -96,7 +96,7 @@ odoo.define("ssi_school_academic.print_report_card_ledger_tour", function (requi
             // Post-Condition -- the ledger is shown on screen.
             {
                 content: "The ledger is shown on screen",
-                trigger: ".o_report_iframe",
+                trigger: ".o_content iframe .page h4:contains(Report Card Ledger)",
                 in_modal: false,
                 run: function () {
                     // Assertion only; do not trigger the default click action.
