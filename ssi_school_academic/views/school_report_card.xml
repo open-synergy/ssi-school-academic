@@ -163,10 +163,19 @@
                         <field name="permission_days" />
                         <field name="absent_days" />
                     </group>
-                    <group name="notes" string="Notes" col="1">
-                        <field name="homeroom_note" />
-                        <field name="parent_response" />
-                    </group>
+                    <separator name="notes" string="Notes" />
+                    <label for="homeroom_note" />
+                    <field
+                            name="homeroom_note"
+                            nolabel="1"
+                            class="o_school_report_card_note"
+                        />
+                    <label for="parent_response" />
+                    <field
+                            name="parent_response"
+                            nolabel="1"
+                            class="o_school_report_card_note"
+                        />
                 </page>
             </xpath>
             <xpath expr="//group[@name='policy_2']" position="inside">

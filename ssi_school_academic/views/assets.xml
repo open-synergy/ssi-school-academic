@@ -9,6 +9,11 @@
         inherit_id="web.assets_backend"
     >
         <xpath expr="." position="inside">
+            <link
+                rel="stylesheet"
+                type="text/scss"
+                href="/ssi_school_academic/static/src/scss/school_report_card.scss"
+            />
             <script
                 type="text/javascript"
                 src="/ssi_school_academic/static/src/js/score_entry_widget.js"
