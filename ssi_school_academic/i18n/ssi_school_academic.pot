@@ -540,10 +540,12 @@ msgid "Attendance and Notes"
 msgstr ""
 
 #. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_score_sheet.py:0
 #: model:ir.model.fields,field_description:ssi_school_academic.field_print_report_card_ledger_line__average
 #: model:ir.model.fields,field_description:ssi_school_academic.field_print_report_card_ledger_subject__average
 #: model_terms:ir.ui.view,arch_db:ssi_school_academic.report_print_report_card_ledger_document
 #: model_terms:ir.ui.view,arch_db:ssi_school_academic.school_report_card_type_view_form
+#, python-format
 msgid "Average"
 msgstr ""
 
@@ -995,6 +997,14 @@ msgid "Enrollment of the student the score is given to. It must be open."
 msgstr ""
 
 #. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_score_sheet.py:0
+#, python-format
+msgid ""
+"Exactly one active report card type of the term type is needed for this "
+"column, but %s found."
+msgstr ""
+
+#. module: ssi_school_academic
 #: code:addons/ssi_school_academic/models/school_report_card.py:0
 #, python-format
 msgid "Expertise Concentration"
@@ -1044,6 +1054,7 @@ msgstr ""
 
 #. module: ssi_school_academic
 #: code:addons/ssi_school_academic/models/school_report_card.py:0
+#: code:addons/ssi_school_academic/models/school_score_sheet.py:0
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_line__final_score
 #, python-format
 msgid "Final Score"
@@ -1547,6 +1558,12 @@ msgid "Messages"
 msgstr ""
 
 #. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_score_sheet.py:0
+#, python-format
+msgid "Mid Score"
+msgstr ""
+
+#. module: ssi_school_academic
 #: model:ir.model.fields.selection,name:ssi_school_academic.selection__school_report_card_type__term_type__mid_term
 msgid "Mid-Term"
 msgstr ""
@@ -1565,6 +1582,7 @@ msgstr ""
 #. module: ssi_school_academic
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_line__minimum_score
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate_line__min_score
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__minimum_score
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject_minimum_score__minimum_score
 #: model_terms:ir.ui.view,arch_db:ssi_school_academic.school_subject_view_form
 msgid "Minimum Score"
@@ -1580,6 +1598,14 @@ msgstr ""
 msgid ""
 "Minimum score (KKM) a student must reach to pass the subject on this grade, "
 "from 0 to 100."
+msgstr ""
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_score_sheet__minimum_score
+msgid ""
+"Minimum score (KKM) of the subject on the grade of the class. It is 0 when "
+"the subject has no minimum score for that grade. The score grid shows a "
+"score below it in red."
 msgstr ""
 
 #. module: ssi_school_academic
@@ -2231,6 +2257,13 @@ msgid "Score Entry"
 msgstr ""
 
 #. module: ssi_school_academic
+#. openerp-web
+#: code:addons/ssi_school_academic/static/src/js/score_grid_widget.js:0
+#, python-format
+msgid "Score Grid"
+msgstr ""
+
+#. module: ssi_school_academic
 #: model:res.groups,name:ssi_school_academic.school_score_predicate_group
 msgid "Score Predicate"
 msgstr ""
@@ -2380,9 +2413,12 @@ msgid ""
 msgstr ""
 
 #. module: ssi_school_academic
+#. openerp-web
+#: code:addons/ssi_school_academic/static/src/js/score_grid_renderer.js:0
 #: model:ir.model.fields,field_description:ssi_school_academic.field_print_report_card_ledger_line__student_id
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__student_id
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet_line__student_id
+#, python-format
 msgid "Student"
 msgstr ""
 
