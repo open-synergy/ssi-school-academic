@@ -49,10 +49,16 @@ scenarios:
               - 0
               - component_id: "REC: component_pts.id"
                 weight: 30.0
-          display_component_ids:
-            - - 6
+          print_column_ids:
+            - - 0
               - 0
-              - - "REC: component_uh.id"
+              - component_id: "REC: component_uh.id"
+                sequence: 20
+                print_title: "SUM1"
+            - - 0
+              - 0
+              - component_id: "REC: component_task.id"
+                sequence: 10
       - step: "Assert the report card type"
         action: "assert"
         target: "report_type"
@@ -71,10 +77,140 @@ scenarios:
             type: "o2m"
             check: "count"
             expected_count: 1
+          print_column_ids:
+            type: "o2m"
+            check: "count"
+            expected_count: 2
           display_component_ids:
             type: "m2m"
-            check: "count"
-            expected_count: 1
+            check: "exact"
+            expected_records:
+              - "REC: component_task"
+              - "REC: component_uh"
+
+  - name: "Reject Fifth Printed Column"
+    steps:
+      - step: "Create component 1"
+        action: "create"
+        model: "school_score_component"
+        save_as: "component_1"
+        values:
+          name: "UH 1"
+          code: "RCT13A"
+          category: "daily_test"
+          sequence: 10
+      - step: "Create component 2"
+        action: "create"
+        model: "school_score_component"
+        save_as: "component_2"
+        values:
+          name: "UH 2"
+          code: "RCT13B"
+          category: "daily_test"
+          sequence: 20
+      - step: "Create component 3"
+        action: "create"
+        model: "school_score_component"
+        save_as: "component_3"
+        values:
+          name: "UH 3"
+          code: "RCT13C"
+          category: "daily_test"
+          sequence: 30
+      - step: "Create component 4"
+        action: "create"
+        model: "school_score_component"
+        save_as: "component_4"
+        values:
+          name: "UH 4"
+          code: "RCT13D"
+          category: "daily_test"
+          sequence: 40
+      - step: "Create component 5"
+        action: "create"
+        model: "school_score_component"
+        save_as: "component_5"
+        values:
+          name: "PTS"
+          code: "RCT13E"
+          category: "mid_term_exam"
+          sequence: 50
+      - step: "Reject a type with five printed columns"
+        action: "create"
+        model: "school_report_card_type"
+        expect_error:
+          type: "ValidationError"
+          message_contains: "at most 4 columns"
+        values:
+          name: "Mid-Term 13"
+          code: "RCTYPE13"
+          term_type: "mid_term"
+          weight_ids:
+            - - 0
+              - 0
+              - component_id: "REC: component_5.id"
+                weight: 100.0
+          print_column_ids:
+            - - 0
+              - 0
+              - component_id: "REC: component_1.id"
+            - - 0
+              - 0
+              - component_id: "REC: component_2.id"
+            - - 0
+              - 0
+              - component_id: "REC: component_3.id"
+            - - 0
+              - 0
+              - component_id: "REC: component_4.id"
+            - - 0
+              - 0
+              - component_id: "REC: component_5.id"
+
+  - name: "Reject Component Printed Twice"
+    steps:
+      - step: "Create component UH 1"
+        action: "create"
+        model: "school_score_component"
+        save_as: "component_uh"
+        values:
+          name: "UH 1"
+          code: "RCT14A"
+          category: "daily_test"
+          sequence: 10
+      - step: "Create component PTS"
+        action: "create"
+        model: "school_score_component"
+        save_as: "component_pts"
+        values:
+          name: "PTS"
+          code: "RCT14C"
+          category: "mid_term_exam"
+          sequence: 30
+      - step: "Reject the same component on two printed columns"
+        action: "create"
+        model: "school_report_card_type"
+        expect_error:
+          type: "ValidationError"
+          message_contains: "printed more than once"
+        values:
+          name: "Mid-Term 14"
+          code: "RCTYPE14"
+          term_type: "mid_term"
+          weight_ids:
+            - - 0
+              - 0
+              - component_id: "REC: component_pts.id"
+                weight: 100.0
+          print_column_ids:
+            - - 0
+              - 0
+              - component_id: "REC: component_uh.id"
+                print_title: "SUM1"
+            - - 0
+              - 0
+              - component_id: "REC: component_uh.id"
+                print_title: "SUM2"
 
   - name: "Edit Report Card Type"
     steps:

@@ -75,10 +75,13 @@ Usage
 * In the **Scores** tab of a score sheet, a **Score** cell that was never filled shows
   empty. Type ``0`` to enter a zero score: it counts in the average and the final score.
   Empty the cell to take the score back: an empty cell does not count.
-* The print shows at most four score component columns on a Mid-Term report
-  card. Set the **Displayed Columns** of the Report Card Type in the order of
-  the **Sequence** of the components; a fifth component and the ones after it
-  are not printed.
+* The print of a Mid-Term report card shows the score component columns you set in
+  the **Display** tab of the Report Card Type, under **Printed Columns**. Each line is
+  one column with a **Component**, an optional **Print Title** and a **Sequence** that
+  gives its position. An empty **Print Title** prints the name of the component. A type
+  has zero to four columns and the table has exactly those columns plus the final
+  score, without empty columns. A component can be printed once per type. The final
+  score is not changed: components that are not printed still count in it.
 * The **Phase** of the grade is filled on the grade form and printed in the page
   header of the report card.
 * The **Main Subjects** menu lists the subjects that break a tie in the rank of the

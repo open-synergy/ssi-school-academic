@@ -513,7 +513,9 @@ Solution: Restart the document before running this action
         the model is granted to every user and the report route does
         not check the groups of the report. The returned dict holds the
         translated static ``labels``, the ``header`` values, the
-        subject ``groups`` with their rows, and the blocks that are
+        ``component_count`` and ``component_headers`` of the printed
+        score columns (none for a final report card), the subject
+        ``groups`` with their rows, and the blocks that are
         ``False`` when empty (``co_curricular``, ``extracurricular``,
         ``homeroom_note`` and ``parent_response``).
 
@@ -541,7 +543,10 @@ Solution: Ask the administrator to add you to the report card Viewer group
         record = self.sudo()
         card_type = record.type_id
         show_components = card_type.term_type == "mid_term"
-        components = card_type.display_component_ids.sorted("sequence")[:4]
+        columns = card_type.print_column_ids
+        if not show_components:
+            columns = columns.browse()
+        components = columns.mapped("component_id")
         enrollment = record.enrollment_id
         student = record.student_id
         teacher = record.homeroom_id.teacher_id
@@ -555,8 +560,10 @@ Solution: Ask the administrator to add you to the report card Viewer group
             "labels": labels,
             "period": period,
             "show_components": show_components,
+            "component_count": len(columns),
             "component_headers": [
-                components[i].name if i < len(components) else "" for i in range(4)
+                column.print_title or column.component_id.name or ""
+                for column in columns
             ],
             "header": {
                 "student_name": student.name or "",
@@ -632,11 +639,11 @@ Solution: Ask the administrator to add you to the report card Viewer group
         Rows are grouped by subject group, General first and then
         Vocational, and ordered by the subject name. A group without a
         row is left out. A component the subject has no score for is
-        printed as ``-``, and a column without a component stays empty. A
-        row that is not scored prints ``-`` as its final score and as its
-        learning objective when that is empty.
+        printed as ``-``. A row that is not scored prints ``-`` as its
+        final score and as its learning objective when that is empty.
 
-        :param components: displayed score components, at most four
+        :param components: score components of the printed columns, in
+            column order; empty when no component column is printed
         :param bool show_components: whether the component columns
             are printed
         :return: list of ``{"title": str, "rows": [dict]}``
@@ -655,7 +662,7 @@ Solution: Ask the administrator to add you to the report card Viewer group
             ).sorted(lambda line: line.subject_id.name or "")
             rows = []
             for index, line in enumerate(lines, start=1):
-                scores = [""] * 4
+                scores = [""] * len(components)
                 if show_components:
                     component_scores = line._get_component_scores()
                     for position, component in enumerate(components):
