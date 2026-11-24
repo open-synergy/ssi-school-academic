@@ -41,7 +41,9 @@ odoo.define("ssi_school_academic.ScoreGridRenderer", function (require) {
 
         /**
          * Update the grid after a score changed. Only the widgets of the
-         * changed line are reset, so the focus and the typed text stay.
+         * changed line are reset, so the focus and the typed text stay. This
+         * holds because ``_getRecord`` finds the changed line; without it
+         * the core renders the whole grid again.
          *
          * @param {Object} state
          * @param {String} id datapoint id of the changed line
@@ -97,6 +99,27 @@ odoo.define("ssi_school_academic.ScoreGridRenderer", function (require) {
         // --------------------------------------------------------------------
         // Private
         // --------------------------------------------------------------------
+
+        /**
+         * Find a line of the grid from its datapoint id. The core
+         * ``confirmChange`` takes it to reset only the widgets of that line
+         * and leave the other cells, and the table, untouched; the abstract
+         * version returns ``null``, which makes it render the whole grid
+         * again and drop the focus and the text typed in another cell. It is
+         * the same lookup as the one of the editable list renderer.
+         *
+         * @override
+         * @private
+         * @param {String} recordId datapoint id of the line
+         * @returns {Object|null} the line, null when it is not in the grid
+         */
+        _getRecord: function (recordId) {
+            return (
+                _.find(this.state.data, function (record) {
+                    return record.id === recordId;
+                }) || null
+            );
+        },
 
         /**
          * Render the whole grid. The score cells are field widgets, which are
