@@ -14,7 +14,8 @@ class SchoolReportCardType(models.Model):
     Represents a kind of report card, e.g. Mid-Term or Final.
     It stores how the final score is calculated: which components are
     averaged, the weight of the average and of every other component,
-    the columns printed on the report card, and the decimal threshold
+    the columns printed on the report card (component, title and order),
+    and the decimal threshold
     used to round the final score.
     """
 
@@ -63,15 +64,24 @@ class SchoolReportCardType(models.Model):
             "The average weight plus these weights must total 100%."
         ),
     )
+    print_column_ids = fields.One2many(
+        string="Printed Columns",
+        comodel_name="school_report_card_type_print_column",
+        inverse_name="type_id",
+        help=(
+            "Score component columns printed on the mid-term report card, "
+            "at most four, in the order of their sequence. Leave empty to "
+            "print only the final score."
+        ),
+    )
     display_component_ids = fields.Many2many(
         string="Displayed Columns",
         comodel_name="school_score_component",
-        relation="school_report_card_type_display_component_rel",
-        column1="type_id",
-        column2="component_id",
+        compute="_compute_display_component_ids",
+        readonly=True,
         help=(
             "Score components printed as score columns on the report "
-            "card. Leave empty to print only the final score."
+            "card, taken from the printed columns in order."
         ),
     )
     rounding_threshold = fields.Float(
@@ -96,6 +106,17 @@ class SchoolReportCardType(models.Model):
             "It must total 100%."
         ),
     )
+
+    @api.depends("print_column_ids.component_id", "print_column_ids.sequence")
+    def _compute_display_component_ids(self):
+        """Compute the printed score components in column order.
+
+        The result follows the sequence of the printed columns, so it is
+        the single source of truth for the columns of the report card.
+        """
+        for record in self:
+            result = record.print_column_ids.sorted("sequence").mapped("component_id")
+            record.display_component_ids = result
 
     @api.depends("average_weight", "weight_ids.weight")
     def _compute_total_weight(self):

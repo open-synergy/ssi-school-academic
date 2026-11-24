@@ -177,7 +177,34 @@ odoo.define("ssi_school_academic.school_report_card_type_tour", function (requir
                     run: "text 30",
                 },
 
-                // Flow 6 -- Optional Display tab: not exercised.
+                // Flow 6 -- Display tab: add a printed column.
+                {
+                    content: "Open the Display tab",
+                    trigger: ".o_notebook .nav-link:contains(Display)",
+                },
+                {
+                    content: "Click Add a line of the Printed Columns",
+                    trigger:
+                        ".o_field_x2many[name='print_column_ids'] .o_field_x2many_list_row_add a",
+                },
+                {
+                    content: "Select the Component of the printed column",
+                    trigger:
+                        ".o_field_x2many[name='print_column_ids'] .o_selected_row .o_field_many2one[name='component_id'] input",
+                    run: "text TOUR RCT PTS",
+                },
+                {
+                    content:
+                        "Pick the Component of the printed column from the dropdown",
+                    trigger: ".ui-autocomplete .ui-menu-item a:contains(TOUR RCT PTS)",
+                    in_modal: false,
+                },
+                {
+                    content: "Fill in the Print Title of the printed column",
+                    trigger:
+                        ".o_field_x2many[name='print_column_ids'] .o_selected_row .o_field_widget[name='print_title']",
+                    run: "text SUM1",
+                },
 
                 // Flow 7 -- Click Save.
                 {

@@ -167,3 +167,23 @@ class TestSchoolReportCardType(YamlTransactionCase):
         """
         scores = {self.uh1.id: 87.0, self.task1.id: 87.98}
         self.assertEqual(self.mid_type.compute_final_score(scores), 87.0)
+
+    def test_display_components_follow_sequence(self):
+        """Assert the displayed components follow the column sequence.
+
+        Pure Python -- trigger P3 (L-06: the order of a many2many
+        cannot be asserted in YAML, only its members). The computed
+        ``display_component_ids`` is in the order of the sequence of the
+        printed columns, and moves when a sequence changes.
+        """
+        line_model = self.env["school_report_card_type_print_column"]
+        first = line_model.create(
+            {"type_id": self.mid_type.id, "component_id": self.pts.id, "sequence": 20}
+        )
+        line_model.create(
+            {"type_id": self.mid_type.id, "component_id": self.uh1.id, "sequence": 10}
+        )
+        self.assertEqual(self.mid_type.display_component_ids, self.uh1 + self.pts)
+        first.sequence = 5
+        self.assertEqual(self.mid_type.display_component_ids, self.pts + self.uh1)
+        self.assertEqual(self.final_type.display_component_ids.ids, [])

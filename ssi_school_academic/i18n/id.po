@@ -2499,11 +2499,11 @@ msgstr "Komponen nilai yang menjadi sasaran bobot ini."
 #. module: ssi_school_academic
 #: model:ir.model.fields,help:ssi_school_academic.field_school_report_card_type__display_component_ids
 msgid ""
-"Score components printed as score columns on the report card. Leave empty to "
-"print only the final score."
+"Score components printed as score columns on the report card, taken from the "
+"printed columns in order."
 msgstr ""
-"Komponen nilai yang dicetak sebagai kolom nilai pada raport. Biarkan kosong "
-"untuk mencetak nilai akhir saja."
+"Komponen nilai yang dicetak sebagai kolom nilai pada raport, diambil dari "
+"kolom cetak secara berurutan."
 
 #. module: ssi_school_academic
 #: model:ir.model.fields,help:ssi_school_academic.field_school_report_card_type__average_component_ids
@@ -3038,3 +3038,79 @@ msgid ""
 msgstr ""
 "Kolom ini membutuhkan tepat satu tipe raport aktif dari jenis semester, "
 "tetapi ditemukan %s."
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_report_card_type_print_column.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Validate report card type\n"
+"Database ID: %s\n"
+"Problem: A report card type can print at most %s columns.\n"
+"Solution: Remove the extra printed columns\n"
+msgstr ""
+"\n"
+"Konteks: Validasi jenis raport\n"
+"ID Basis Data: %s\n"
+"Masalah: Satu jenis raport dapat mencetak paling banyak %s kolom.\n"
+"Solusi: Hapus kolom cetak yang berlebih\n"
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_report_card_type_print_column.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Validate report card type\n"
+"Database ID: %s\n"
+"Problem: The component %s is printed more than once.\n"
+"Solution: Keep only one printed column for each component\n"
+msgstr ""
+"\n"
+"Konteks: Validasi jenis raport\n"
+"ID Basis Data: %s\n"
+"Masalah: Komponen %s dicetak lebih dari satu kali.\n"
+"Solusi: Pertahankan satu kolom cetak untuk setiap komponen\n"
+
+#. module: ssi_school_academic
+#: model:ir.model,name:ssi_school_academic.model_school_report_card_type_print_column
+msgid "School Report Card Type Print Column"
+msgstr "Kolom Cetak Jenis Raport Sekolah"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type_print_column__print_title
+msgid "Print Title"
+msgstr "Judul Cetak"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card_type_print_column__print_title
+msgid ""
+"Title of the column on the printed report card. Leave empty to print the "
+"name of the component."
+msgstr ""
+"Judul kolom pada raport yang dicetak. Biarkan kosong untuk mencetak nama "
+"komponen."
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card_type_print_column__type_id
+msgid "Report card type this printed column belongs to."
+msgstr "Jenis raport pemilik kolom cetak ini."
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card_type_print_column__sequence
+msgid "Position of the column on the printed report card."
+msgstr "Posisi kolom pada raport yang dicetak."
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card_type_print_column__component_id
+msgid "Score component whose score is printed in this column."
+msgstr "Komponen nilai yang nilainya dicetak pada kolom ini."
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card_type__print_column_ids
+msgid ""
+"Score component columns printed on the mid-term report card, at most four, "
+"in the order of their sequence. Leave empty to print only the final score."
+msgstr ""
+"Kolom komponen nilai yang dicetak pada raport tengah semester, paling banyak "
+"empat, berurutan menurut sequence-nya. Biarkan kosong untuk mencetak nilai "
+"akhir saja."

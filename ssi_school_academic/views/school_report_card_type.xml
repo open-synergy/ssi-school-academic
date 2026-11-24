@@ -76,9 +76,21 @@
                     </field>
                 </page>
                 <page name="display" string="Display">
-                    <group name="display_group_1" string="Printed Columns">
-                        <field name="display_component_ids" widget="many2many_tags" />
-                    </group>
+                    <separator string="Printed Columns" />
+                    <field name="print_column_ids" nolabel="1">
+                        <tree editable="bottom">
+                            <field name="sequence" widget="handle" />
+                            <field name="component_id" />
+                            <field name="print_title" />
+                        </tree>
+                        <form>
+                            <group name="print_column_group_1">
+                                <field name="sequence" />
+                                <field name="component_id" />
+                                <field name="print_title" />
+                            </group>
+                        </form>
+                    </field>
                 </page>
             </xpath>
         </data>

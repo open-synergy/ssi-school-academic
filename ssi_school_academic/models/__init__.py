@@ -10,6 +10,7 @@ from . import (  # noqa: F401
     school_report_card_line,
     school_report_card_main_subject,
     school_report_card_type,
+    school_report_card_type_print_column,
     school_report_card_type_weight,
     school_score_component,
     school_score_predicate,

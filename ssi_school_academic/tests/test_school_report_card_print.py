@@ -96,6 +96,10 @@ class TestSchoolReportCardPrint(
         self.comp_1 = self._create_component("PRT UH 1", 10, count)
         self.comp_2 = self._create_component("PRT UH 2", 20, count)
         pts = self._create_component("PRT PTS", 30, count)
+        self.comp_3 = self._create_component("PRT UH 3", 40, count)
+        self.comp_4 = self._create_component("PRT UH 4", 50, count)
+        self.count = count
+        self.pts = pts
         self.mid_type = env["school_report_card_type"].create(
             {
                 "name": "PRT Mid-Term",
@@ -104,7 +108,10 @@ class TestSchoolReportCardPrint(
                 "average_weight": 70.0,
                 "average_component_ids": [(6, 0, [self.comp_1.id, self.comp_2.id])],
                 "weight_ids": [(0, 0, {"component_id": pts.id, "weight": 30.0})],
-                "display_component_ids": [(6, 0, [self.comp_1.id, self.comp_2.id])],
+                "print_column_ids": [
+                    (0, 0, {"component_id": self.comp_1.id, "sequence": 10}),
+                    (0, 0, {"component_id": self.comp_2.id, "sequence": 20}),
+                ],
             }
         )
         self.final_type = env["school_report_card_type"].create(
@@ -206,12 +213,12 @@ class TestSchoolReportCardPrint(
         second.write({"is_scored": True, "final_score": 90.0})
         return card
 
-    def _render(self, card):
+    def _render_package(self, card):
         """Render the report of a report card to ODT without conversion.
 
         :param card: report card to print
-        :return: the text of ``content.xml`` and ``styles.xml``
-        :rtype: str
+        :return: the ODT package of the rendered report
+        :rtype: bytes
         """
         report = self.env.ref("ssi_school_academic.report_school_report_card")
         engine = (
@@ -222,15 +229,69 @@ class TestSchoolReportCardPrint(
         path = engine._create_single_report(card, {})
         try:
             with open(path, "rb") as odt_file:
-                data = odt_file.read()
+                return odt_file.read()
         finally:
             os.unlink(path)
+
+    def _render(self, card):
+        """Render the report of a report card to ODT without conversion.
+
+        :param card: report card to print
+        :return: the text of ``content.xml`` and ``styles.xml``
+        :rtype: str
+        """
+        data = self._render_package(card)
         texts = []
         with ZipFile(BytesIO(data)) as package:
             for name in ("content.xml", "styles.xml"):
                 root = etree.fromstring(package.read(name))
                 texts.append(" ".join(root.itertext()))
         return "\n".join(texts)
+
+    def _render_tables(self, card):
+        """Return the score tables of the rendered report card.
+
+        :param card: report card to print
+        :return: ``{table name: number of columns}`` of the score tables
+        :rtype: dict
+        """
+        data = self._render_package(card)
+        with ZipFile(BytesIO(data)) as package:
+            root = etree.fromstring(package.read("content.xml"))
+        namespaces = {"table": "urn:oasis:names:tc:opendocument:xmlns:table:1.0"}
+        result = {}
+        for table in root.iterfind(".//table:table", namespaces):
+            name = table.get("{%s}name" % namespaces["table"])
+            if name in ("FinalTable",) or name.startswith("MidTable"):
+                result[name] = len(table.findall("table:table-column", namespaces))
+        return result
+
+    def _create_mid_type(self, columns):
+        """Create a mid-term report card type with printed columns.
+
+        :param list columns: ``(component, print title)`` per column, in
+            the order they are printed
+        :return: the new report card type
+        """
+        self.count += 1
+        lines = [
+            (
+                0,
+                0,
+                {"component_id": comp.id, "sequence": 10 * pos, "print_title": title},
+            )
+            for pos, (comp, title) in enumerate(columns, start=1)
+        ]
+        return self.env["school_report_card_type"].create(
+            {
+                "name": "PRT Mid-Term %d" % self.count,
+                "code": "PRTMX%d" % self.count,
+                "term_type": "mid_term",
+                "average_weight": 0.0,
+                "weight_ids": [(0, 0, {"component_id": self.pts.id, "weight": 100.0})],
+                "print_column_ids": lines,
+            }
+        )
 
     def test_report_record(self):
         """Check the report record (P1, L-01).
@@ -399,3 +460,85 @@ class TestSchoolReportCardPrint(
         )
         with self.assertRaises(AccessError):
             card.with_user(user).get_report_card_print_data()
+
+    def test_print_titles(self):
+        """Check the print titles replace the component names (P1, L-01).
+
+        Three columns titled SUM1 to SUM3 give three headers, three
+        scores per row and a seven column table. The component names
+        are not printed, and an empty title falls back to the name.
+        """
+        card_type = self._create_mid_type(
+            [
+                (self.comp_1, "SUM1"),
+                (self.comp_2, "SUM2"),
+                (self.comp_3, "SUM3"),
+            ]
+        )
+        card = self._create_card(card_type)
+        scores = {self.comp_1.id: 90.0, self.comp_2.id: 0.0}
+        with mock.patch(LINE_MODEL, new=lambda line: scores):
+            data = card.get_report_card_print_data()
+            text = self._render(card)
+        self.assertEqual(data["component_count"], 3)
+        self.assertEqual(data["component_headers"], ["SUM1", "SUM2", "SUM3"])
+        row = data["groups"][0]["rows"][0]
+        self.assertEqual(len(row["scores"]), 3)
+        self.assertEqual(row["scores"], ["90", "0", "-"])
+        self.assertEqual(row["final"], "87")
+        for expected in ("SUM1", "SUM2", "SUM3"):
+            self.assertIn(expected, text)
+        self.assertNotIn("PRT UH 1", text)
+        self.assertEqual(self._render_tables(card), {"MidTable3": 7})
+
+    def test_print_title_empty_uses_component_name(self):
+        """Check an empty print title prints the component name (P1, L-01).
+
+        The column order follows the sequence of the printed columns,
+        not the sequence of the components.
+        """
+        card_type = self._create_mid_type([(self.comp_2, False), (self.comp_1, "SUM1")])
+        card = self._create_card(card_type)
+        with mock.patch(LINE_MODEL, new=lambda line: {}):
+            data = card.get_report_card_print_data()
+        self.assertEqual(data["component_headers"], ["PRT UH 2", "SUM1"])
+
+    def test_print_column_count_tables(self):
+        """Check one table variant per column count (P1, L-01).
+
+        One to four columns print a table of four fixed columns plus
+        one per component, zero columns print the final score table,
+        and a final report card never prints component columns.
+        """
+        comps = [self.comp_1, self.comp_2, self.comp_3, self.comp_4]
+        for count in range(0, 5):
+            card_type = self._create_mid_type([(comp, False) for comp in comps[:count]])
+            card = self._create_card(card_type)
+            with mock.patch(LINE_MODEL, new=lambda line: {}):
+                data = card.get_report_card_print_data()
+                tables = self._render_tables(card)
+            self.assertEqual(data["component_count"], count)
+            self.assertEqual(len(data["component_headers"]), count)
+            if count:
+                self.assertEqual(
+                    tables, {"MidTable%s" % ("" if count == 4 else count): 4 + count}
+                )
+            else:
+                self.assertEqual(tables, {"FinalTable": 4})
+        final_card = self._create_card(self.final_type)
+        self.assertEqual(self._render_tables(final_card), {"FinalTable": 4})
+        self.assertEqual(final_card.get_report_card_print_data()["component_count"], 0)
+
+    def test_print_zero_score_and_unscored_component(self):
+        """Check a zero score prints ``0`` and a missing one ``-`` (P1, L-01).
+
+        The final score is the one of the report card line, also when a
+        weighted component is not printed.
+        """
+        card = self._create_card(self.mid_type)
+        scores = {self.comp_1.id: 0.0}
+        with mock.patch(LINE_MODEL, new=lambda line: scores):
+            data = card.get_report_card_print_data()
+        row = data["groups"][0]["rows"][0]
+        self.assertEqual(row["scores"], ["0", "-"])
+        self.assertEqual(row["final"], "87")
