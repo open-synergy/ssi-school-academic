@@ -113,6 +113,15 @@ class TestUiSchoolScoreSheet(HttpSavepointCase):
         # ── Enter Scores tour: a Draft sheet with unscored lines ──
         cls.enter_sheet = cls._create_sheet("ENTER")
         cls._add_lines(cls.enter_sheet)
+        # A minimum score of 75 for the grade lets the grid mark in red the
+        # zero typed by the tour, and not the 90.
+        cls.env["school_subject_minimum_score"].create(
+            {
+                "subject_id": cls.enter_sheet.subject_id.id,
+                "grade_id": cls.grade.id,
+                "minimum_score": 75.0,
+            }
+        )
 
         # ── Confirm tour: a Draft sheet with lines ──
         confirm = cls._create_sheet("CONFIRM")
@@ -256,10 +265,10 @@ class TestUiSchoolScoreSheet(HttpSavepointCase):
     def test_enter_scores(self):
         """Run the enter scores tour for ``school_score_sheet``.
 
-        The tour types a zero and a filled score on the first two lines.
-        The values are read here, in Python, not in the tour: the zero
-        must be saved as a scored line and the untouched lines must stay
-        unscored.
+        The tour types a zero, moves to the next cell with Tab and types
+        a filled score in the grid. The values are read here, in Python,
+        not in the tour: the zero must be saved as a scored line and the
+        untouched lines must stay unscored.
 
         IK: docs/school_score_sheet/08-enter-scores.md
         """

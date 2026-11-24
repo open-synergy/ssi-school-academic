@@ -18,6 +18,19 @@
                 type="text/javascript"
                 src="/ssi_school_academic/static/src/js/score_entry_widget.js"
             />
+            <link
+                rel="stylesheet"
+                type="text/scss"
+                href="/ssi_school_academic/static/src/scss/school_score_grid.scss"
+            />
+            <script
+                type="text/javascript"
+                src="/ssi_school_academic/static/src/js/score_grid_renderer.js"
+            />
+            <script
+                type="text/javascript"
+                src="/ssi_school_academic/static/src/js/score_grid_widget.js"
+            />
         </xpath>
     </template>
 

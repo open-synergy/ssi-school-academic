@@ -251,6 +251,31 @@ Solution: Enter a rounding threshold above 0 and below 1
         self.ensure_one()
         return 0.0 < self.rounding_threshold < 1.0
 
+    def compute_average_score(self, scores):
+        """Compute the rounded mean of the averaged components.
+
+        The mean of the scores of the averaged components is rounded
+        to a whole number half-up, before it is weighted. A component
+        without a score is not in the mean, and a score of 0 that is in
+        the dict counts as a score.
+
+        :param dict scores: score per component, ``{component_id:
+            float}``; a component without a score is not in the dict.
+        :return: the rounded mean, or None when no averaged component
+            has a score.
+        :rtype: float or None
+        """
+        self.ensure_one()
+        average_scores = [
+            scores[component.id]
+            for component in self.average_component_ids
+            if component.id in scores
+        ]
+        if not average_scores:
+            return None
+        mean = sum(average_scores) / len(average_scores)
+        return float_round(mean, precision_digits=0)
+
     def compute_final_score(self, scores):
         """Compute the rounded final score from the component scores.
 
@@ -269,14 +294,9 @@ Solution: Enter a rounding threshold above 0 and below 1
         """
         self.ensure_one()
         parts = []
-        average_scores = [
-            scores[component.id]
-            for component in self.average_component_ids
-            if component.id in scores
-        ]
-        if average_scores:
-            mean = sum(average_scores) / len(average_scores)
-            parts.append((self.average_weight, float_round(mean, precision_digits=0)))
+        average = self.compute_average_score(scores)
+        if average is not None:
+            parts.append((self.average_weight, average))
         for line in self.weight_ids:
             if line.component_id.id in scores:
                 parts.append((line.weight, scores[line.component_id.id]))

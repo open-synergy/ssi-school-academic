@@ -20,6 +20,8 @@ class SchoolScoreSheet(models.Model):
     the sheet becomes final once it is confirmed and approved. The
     scores of a finished sheet are the source of the final report card
     score. Scores may only be entered for enrollments that are open.
+    The scores are entered in a student by component grid, which asks
+    this model for its calculated columns and for the minimum score.
     """
 
     _name = "school_score_sheet"
@@ -199,6 +201,34 @@ class SchoolScoreSheet(models.Model):
         compute_sudo=True,
         help="Policy that determines whether the Generate Lines " "button is visible.",
     )
+    minimum_score = fields.Float(
+        string="Minimum Score",
+        compute="_compute_minimum_score",
+        store=False,
+        compute_sudo=True,
+        help="Minimum score (KKM) of the subject on the grade of the "
+        "class. It is 0 when the subject has no minimum score for that "
+        "grade. The score grid shows a score below it in red.",
+    )
+
+    @api.depends(
+        "subject_id",
+        "grade_id",
+        "subject_id.minimum_score_ids.grade_id",
+        "subject_id.minimum_score_ids.minimum_score",
+    )
+    def _compute_minimum_score(self):
+        """Compute the minimum score of the subject on the grade.
+
+        Looks for the minimum score line of the subject that belongs to
+        the grade of the sheet; 0 when there is none.
+        """
+        for record in self:
+            result = 0.0
+            for line in record.subject_id.minimum_score_ids:
+                if line.grade_id == record.grade_id:
+                    result = line.minimum_score
+            record.minimum_score = result
 
     @api.constrains(
         "academic_term_id",
@@ -326,6 +356,173 @@ Solution: Restart the document before generating the lines
             "enrollment_id": enrollment.id,
             "component_id": component.id,
         }
+
+    @api.model
+    def _get_score_grid_types(self):
+        """Return the active report card types per term type.
+
+        :return: ``{term_type: recordset}`` for ``mid_term`` and
+            ``final``; a recordset holds every active type of that term
+            type, so it is not exactly one record when the
+            configuration is wrong.
+        :rtype: dict
+        """
+        type_model = self.env["school_report_card_type"].sudo()
+        result = {}
+        for term_type in ("mid_term", "final"):
+            result[term_type] = type_model.search([("term_type", "=", term_type)])
+        return result
+
+    @api.model
+    def _get_score_grid_column_defs(self):
+        """Return the definition of the three calculated grid columns.
+
+        Extension point. The Average and the Final Score column use the
+        active Final report card type, the Mid Score column the active
+        Mid-Term one (the source of the Average is the Final type).
+
+        :return: list of dicts, in the order ``average``, ``mid``,
+            ``final``, with the keys ``key``, ``label``, ``types``
+            (the active types of the column) and ``with_weights``
+            (whether the weighted components are inputs too).
+        :rtype: list
+        """
+        types = self._get_score_grid_types()
+        return [
+            {
+                "key": "average",
+                "label": _("Average"),
+                "types": types["final"],
+                "with_weights": False,
+            },
+            {
+                "key": "mid",
+                "label": _("Mid Score"),
+                "types": types["mid_term"],
+                "with_weights": True,
+            },
+            {
+                "key": "final",
+                "label": _("Final Score"),
+                "types": types["final"],
+                "with_weights": True,
+            },
+        ]
+
+    @api.model
+    def _get_score_grid_input_components(self, report_type, with_weights):
+        """Return the components that feed a calculated grid column.
+
+        :param report_type: the one ``school_report_card_type`` of the
+            column
+        :param bool with_weights: also take the weighted components,
+            not only the averaged ones
+        :return: the input components
+        :rtype: recordset of ``school_score_component``
+        """
+        components = report_type.average_component_ids
+        if with_weights:
+            components |= report_type.weight_ids.mapped("component_id")
+        return components
+
+    @api.model
+    def get_score_grid_layout(self):
+        """Describe the calculated columns of the score grid.
+
+        Each column sits right after its input component with the
+        highest sequence. When the term type of the column has not
+        exactly one active report card type, the column carries a
+        warning, has no position (``after_component_id`` False, so the
+        grid puts it at the far right) and stays empty.
+
+        :return: list of dicts ``key``, ``label``,
+            ``after_component_id`` and ``warning``, in the order
+            ``average``, ``mid``, ``final``.
+        :rtype: list
+        """
+        result = []
+        for column in self._get_score_grid_column_defs():
+            report_types = column["types"]
+            warning = False
+            after_component_id = False
+            if len(report_types) != 1:
+                warning = _(
+                    "Exactly one active report card type of the term "
+                    "type is needed for this column, but %s found."
+                ) % (len(report_types),)
+            else:
+                components = self._get_score_grid_input_components(
+                    report_types, column["with_weights"]
+                )
+                if components:
+                    last = max(components, key=lambda c: (c.sequence, c.id))
+                    after_component_id = last.id
+            result.append(
+                {
+                    "key": column["key"],
+                    "label": column["label"],
+                    "after_component_id": after_component_id,
+                    "warning": warning,
+                }
+            )
+        return result
+
+    @api.model
+    def compute_score_grid(self, scores):
+        """Compute the calculated columns of the score grid.
+
+        The rules are the ones of the report card: the average is
+        ``compute_average_score`` and the mid and final scores are
+        ``compute_final_score`` of the active report card type. A
+        column is None when its term type has not exactly one active
+        report card type, or when the student has no score of an input
+        component of the column; it is never 0 in that case.
+
+        :param dict scores: ``{student_id: {component_id: score}}``
+            with only the cells that were scored. Keys may be strings,
+            as they come from JSON.
+        :return: ``{student_id: {"average", "mid", "final"}}``
+        :rtype: dict
+        """
+        columns = self._get_score_grid_column_defs()
+        result = {}
+        for student_key, component_scores in (scores or {}).items():
+            parsed = {
+                int(component_key): float(score)
+                for component_key, score in (component_scores or {}).items()
+            }
+            row = {}
+            for column in columns:
+                row[column["key"]] = self._compute_score_grid_cell(column, parsed)
+            result[int(student_key)] = row
+        return result
+
+    @api.model
+    def _compute_score_grid_cell(self, column, scores):
+        """Compute one calculated cell of the score grid.
+
+        :param dict column: the column definition, see
+            ``_get_score_grid_column_defs``
+        :param dict scores: ``{component_id: score}`` of one student
+        :return: the value, or None when the cell must stay empty.
+        :rtype: float or None
+        """
+        report_types = column["types"]
+        if len(report_types) != 1:
+            return None
+        components = self._get_score_grid_input_components(
+            report_types, column["with_weights"]
+        )
+        entered = {
+            component_id: score
+            for component_id, score in scores.items()
+            if component_id in components.ids
+        }
+        if not entered:
+            return None
+        if column["key"] == "average":
+            return report_types.compute_average_score(entered)
+        return report_types.compute_final_score(entered)
 
     @ssi_decorator.pre_confirm_check()
     def _01_check_open_enrollment(self):
