@@ -10,6 +10,7 @@ from . import (  # noqa: F401
     test_school_report_card_print,
     test_school_report_card_type,
     test_school_score_component,
+    test_school_score_grid,
     test_school_score_predicate,
     test_school_score_sheet,
     test_school_subject,

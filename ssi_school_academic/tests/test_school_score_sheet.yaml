@@ -969,3 +969,82 @@ scenarios:
           - ["name", "=", "selection__school_score_sheet__state__reject"]
         save_as: "selection_data"
         expect_count: 1
+
+  - name: "School Score Sheet - Minimum score of the subject on the grade"
+    steps:
+      - step: "Create a second grade the subject has no minimum score on"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade_without_minimum"
+        values:
+          name: "SSS Grade Without Minimum"
+          code: "EVAL: 'SSSGM%d' % env['school_grade'].search_count([])"
+          type_id: "REC: grade_type.id"
+
+      - step: "Create a grade class of the second grade"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "class_without_minimum"
+        values:
+          name: "SSS Class Without Minimum"
+          code: "EVAL: 'SSSCM%d' % env['school_grade_class'].search_count([])"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade_without_minimum.id"
+
+      - step: "Create a subject with a minimum score of 75 on the first grade"
+        action: "create"
+        model: "school_subject"
+        save_as: "minimum_subject"
+        values:
+          name: "SSS Minimum Subject"
+          code: "EVAL: 'SSSSM%d' % env['school_subject'].search_count([])"
+          grade_ids:
+            - - 6
+              - 0
+              - - "REC: grade.id"
+                - "REC: grade_without_minimum.id"
+          minimum_score_ids:
+            - - 0
+              - 0
+              - grade_id: "REC: grade.id"
+                minimum_score: 75.0
+
+      - step: "Create the sheet of the grade that has a minimum score"
+        action: "create"
+        model: "school_score_sheet"
+        save_as: "sheet_with_minimum"
+        values:
+          academic_term_id: "REC: academic_term.id"
+          grade_class_id: "REC: grade_class.id"
+          subject_id: "REC: minimum_subject.id"
+          teacher_id: "REC: teacher.id"
+          date: 2026-08-10
+          user_id: "REF: base.user_admin"
+
+      - step: "The minimum score of the sheet is the one of its grade"
+        action: "assert"
+        target: "sheet_with_minimum"
+        asserts:
+          minimum_score:
+            type: "value"
+            expected: 75.0
+
+      - step: "Create the sheet of the grade without a minimum score"
+        action: "create"
+        model: "school_score_sheet"
+        save_as: "sheet_without_minimum"
+        values:
+          academic_term_id: "REC: academic_term.id"
+          grade_class_id: "REC: class_without_minimum.id"
+          subject_id: "REC: minimum_subject.id"
+          teacher_id: "REC: teacher.id"
+          date: 2026-08-10
+          user_id: "REF: base.user_admin"
+
+      - step: "A grade without a minimum score line gives 0"
+        action: "assert"
+        target: "sheet_without_minimum"
+        asserts:
+          minimum_score:
+            type: "value"
+            expected: 0.0
