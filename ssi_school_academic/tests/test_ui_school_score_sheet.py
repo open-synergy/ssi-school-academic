@@ -12,6 +12,29 @@ from odoo.tests import HttpSavepointCase, tagged
 class TestUiSchoolScoreSheet(HttpSavepointCase):
     """Tour tests for the ``school_score_sheet`` work instructions."""
 
+    # Score typed by the Enter Scores tour, as
+    # ``(student number, component number): score``. The other lines of the
+    # sheet are left empty.
+    ENTER_SCORES = {
+        (1, 1): 50.0,
+        (1, 2): 60.0,
+        (1, 3): 80.0,
+        (1, 5): 0.0,
+        (1, 6): 90.0,
+        (2, 1): 85.0,
+        (2, 2): 65.0,
+        (2, 3): 40.0,
+        (2, 4): 0.0,
+        (2, 7): 95.0,
+        (3, 2): 70.0,
+        (3, 3): 72.0,
+        (3, 4): 30.0,
+        (3, 5): 88.0,
+        (4, 1): 0.0,
+        (4, 2): 77.0,
+        (4, 5): 66.0,
+    }
+
     @classmethod
     def setUpClass(cls):
         """Create the master data and score sheets required by the tours.
@@ -71,26 +94,21 @@ class TestUiSchoolScoreSheet(HttpSavepointCase):
         cls.teacher = cls.env["school_teacher"].create(
             {"name": "TOUR SSS Teacher", "code": "/", "employee_id": employee.id}
         )
-        cls.component = cls.env["school_score_component"].create(
-            {
-                "name": "TOUR SSS Daily Test 1",
-                "code": "/",
-                "category": "daily_test",
-                "sequence": 10,
-            }
-        )
-        # A second component gives every student two lines, so the
-        # Enter Scores scenario has lines it never touches.
-        cls.component_2 = cls.env["school_score_component"].create(
-            {
-                "name": "TOUR SSS Daily Test 2",
-                "code": "/",
-                "category": "daily_test",
-                "sequence": 20,
-            }
-        )
+        # Seven components and four students give the Enter Scores
+        # scenario a grid of 28 cells, enough to fill it with the Tab key
+        # only and to leave cells that it never touches.
+        cls.components = cls.env["school_score_component"]
+        for index in range(1, 8):
+            cls.components |= cls.env["school_score_component"].create(
+                {
+                    "name": "TOUR SSS Daily Test %s" % index,
+                    "code": "/",
+                    "category": "daily_test",
+                    "sequence": index * 10,
+                }
+            )
         cls.enrollments = cls.env["school_enrollment"]
-        for index in (1, 2):
+        for index in (1, 2, 3, 4):
             cls.enrollments |= cls._create_open_enrollment(
                 school, year, index, "TOUR SSS Student %s" % index
             )
@@ -265,10 +283,12 @@ class TestUiSchoolScoreSheet(HttpSavepointCase):
     def test_enter_scores(self):
         """Run the enter scores tour for ``school_score_sheet``.
 
-        The tour types a zero, moves to the next cell with Tab and types
-        a filled score in the grid. The values are read here, in Python,
-        not in the tour: the zero must be saved as a scored line and the
-        untouched lines must stay unscored.
+        The tour fills the grid of 4 students by 7 components with the
+        keyboard only, as ``ENTER_SCORES`` lists it: it types the scores,
+        a zero included, and leaves the other cells untouched. The values
+        are read here, in Python, not in the tour: every typed score must
+        be saved as a scored line, the zero too, and every other line must
+        stay unscored.
 
         IK: docs/school_score_sheet/08-enter-scores.md
         """
@@ -279,17 +299,26 @@ class TestUiSchoolScoreSheet(HttpSavepointCase):
         )
         self.enter_sheet.invalidate_cache()
         lines = self.enter_sheet.line_ids
+        self.assertEqual(len(lines), 28)
+        for line in lines:
+            key = (
+                int(line.student_id.name.split()[-1]),
+                int(line.component_id.name.split()[-1]),
+            )
+            if key in self.ENTER_SCORES:
+                self.assertTrue(line.is_scored, "Line %s must be scored" % (key,))
+                self.assertEqual(
+                    line.score,
+                    self.ENTER_SCORES[key],
+                    "Wrong score on line %s" % (key,),
+                )
+            else:
+                self.assertFalse(line.is_scored, "Line %s must be empty" % (key,))
         scored = lines.filtered("is_scored")
-        unscored = lines - scored
-        self.assertEqual(len(lines), 4)
-        self.assertEqual(sorted(scored.mapped("score")), [0.0, 90.0])
-        self.assertEqual(len(unscored), 2)
-        self.assertEqual(lines[0].score, 0.0)
-        self.assertTrue(lines[0].is_scored)
-        self.assertEqual(lines[1].score, 90.0)
-        self.assertTrue(lines[1].is_scored)
-        self.assertFalse(lines[2].is_scored)
-        self.assertFalse(lines[3].is_scored)
+        self.assertEqual(len(scored), len(self.ENTER_SCORES))
+        self.assertEqual(len(lines - scored), 28 - len(self.ENTER_SCORES))
+        zero = scored.filtered(lambda line: line.score == 0.0)
+        self.assertEqual(len(zero), 3)
 
     def test_confirm(self):
         """Run the confirm tour for ``school_score_sheet``.
