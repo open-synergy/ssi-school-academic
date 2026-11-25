@@ -419,6 +419,33 @@ scenarios:
                     - 0
                     - - "REC: tp_1.id"
 
+      - step: "Find the component record of the sheet"
+        action: "search"
+        model: "school_score_sheet_component"
+        domain:
+          - ["sheet_id", "=", "REC: sheet.id"]
+          - ["component_id", "=", "REC: component_1.id"]
+        save_as: "sheet_component_1"
+        limit: 1
+
+      - step: "The component shows its name and the draft sheet number"
+        action: "assert"
+        target: "sheet_component_1"
+        asserts:
+          display_name:
+            type: "value"
+            expected: "SSO UH 1 (/)"
+
+      - step: "The objective lists the component that measures it"
+        action: "assert"
+        target: "tp_1"
+        asserts:
+          score_sheet_component_ids:
+            type: "m2m"
+            check: "exact"
+            expected_records:
+              - "REC: sheet_component_1"
+
       - step: "Choosing an objective of another subject is rejected"
         action: "create"
         model: "school_score_sheet_component"
@@ -431,7 +458,8 @@ scenarios:
               - - "REC: other_tp.id"
         expect_error:
           type: "ValidationError"
-          message_contains: "is outside the subject"
+          message_contains:
+            "is outside the subject, grade, and term of sheet component SSO UH 2 (/)"
 
       - step: "A component twice on the same sheet is rejected"
         action: "create"
@@ -441,7 +469,7 @@ scenarios:
           component_id: "REC: component_1.id"
         expect_error:
           type: "ValidationError"
-          message_contains: "only appear once"
+          message_contains: "Component SSO UH 1 (/) may only appear once"
 
       - step:
           "Changing the subject of the sheet is rejected while it keeps the objectives"
