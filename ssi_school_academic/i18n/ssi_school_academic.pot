@@ -36,6 +36,17 @@ msgid ""
 msgstr ""
 
 #. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_subject_outcome.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Save learning outcome\n"
+"Database ID: %s\n"
+"Problem: An active learning outcome already exists for this subject, grade, and term.\n"
+"Solution: Archive the existing learning outcome, or edit it instead\n"
+msgstr ""
+
+#. module: ssi_school_academic
 #: code:addons/ssi_school_academic/models/school_report_card.py:0
 #, python-format
 msgid ""
@@ -99,6 +110,28 @@ msgid ""
 "Database ID: %s\n"
 "Problem: A score sheet already exists for this subject, class, and term.\n"
 "Solution: Open the existing score sheet, or cancel it before creating a new one\n"
+msgstr ""
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_score_sheet_component.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Save score sheet component\n"
+"Database ID: %s\n"
+"Problem: Each score component may only appear once per score sheet.\n"
+"Solution: Remove the duplicate component\n"
+msgstr ""
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_score_sheet_component.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Save score sheet component\n"
+"Database ID: %s\n"
+"Problem: Objective %s is outside the subject, grade, and term of the sheet.\n"
+"Solution: Choose only objectives of the same subject, grade, and term as the sheet\n"
 msgstr ""
 
 #. module: ssi_school_academic
@@ -340,9 +373,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_academic.field_print_report_card_ledger__academic_term_id
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__academic_term_id
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__academic_term_id
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject_outcome__academic_term_id
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject_outcome_objective__academic_term_id
 #: model_terms:ir.ui.view,arch_db:ssi_school_academic.report_print_report_card_ledger_document
 #: model_terms:ir.ui.view,arch_db:ssi_school_academic.school_report_card_view_search
 #: model_terms:ir.ui.view,arch_db:ssi_school_academic.school_score_sheet_view_search
+#: model_terms:ir.ui.view,arch_db:ssi_school_academic.school_subject_outcome_view_search
 msgid "Academic Term"
 msgstr ""
 
@@ -364,6 +400,18 @@ msgstr ""
 msgid ""
 "Academic term of the selected Enrollment. The scores come from the score "
 "sheets of this term."
+msgstr ""
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_subject_outcome_objective__academic_term_id
+msgid "Academic term of the selected Learning Outcome."
+msgstr ""
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_subject_outcome__academic_term_id
+msgid ""
+"Academic term the learning outcome is valid for. One academic term is one "
+"semester."
 msgstr ""
 
 #. module: ssi_school_academic
@@ -391,6 +439,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__message_needaction
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__message_needaction
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject__message_needaction
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject_outcome__message_needaction
 msgid "Action Needed"
 msgstr ""
 
@@ -400,6 +449,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_component__active
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__active
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject__active
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject_outcome__active
 msgid "Active"
 msgstr ""
 
@@ -429,6 +479,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__activity_ids
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__activity_ids
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject__activity_ids
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject_outcome__activity_ids
 msgid "Activities"
 msgstr ""
 
@@ -447,6 +498,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__activity_exception_decoration
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__activity_exception_decoration
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject__activity_exception_decoration
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject_outcome__activity_exception_decoration
 msgid "Activity Exception Decoration"
 msgstr ""
 
@@ -458,6 +510,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__activity_state
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__activity_state
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject__activity_state
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject_outcome__activity_state
 msgid "Activity State"
 msgstr ""
 
@@ -469,6 +522,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__activity_type_icon
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__activity_type_icon
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject__activity_type_icon
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject_outcome__activity_type_icon
 msgid "Activity Type Icon"
 msgstr ""
 
@@ -554,6 +608,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__message_attachment_count
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__message_attachment_count
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject__message_attachment_count
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject_outcome__message_attachment_count
 msgid "Attachment Count"
 msgstr ""
 
@@ -649,6 +704,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__manual_number_ok
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__manual_number_ok
 msgid "Can Input Manual Document Number"
+msgstr ""
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__refill_learning_objective_ok
+msgid "Can Refill Learning Objective"
 msgstr ""
 
 #. module: ssi_school_academic
@@ -777,6 +837,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_component__code
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__code
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject__code
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject_outcome__code
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject_outcome_objective__code
 msgid "Code"
 msgstr ""
 
@@ -833,6 +895,11 @@ msgid "Component Weights"
 msgstr ""
 
 #. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__component_ids
+msgid "Components"
+msgstr ""
+
+#. module: ssi_school_academic
 #: model_terms:ir.ui.view,arch_db:ssi_school_academic.school_report_card_view_form
 msgid "Compute Scores"
 msgstr ""
@@ -863,9 +930,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__create_uid
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate_line__create_uid
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__create_uid
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet_component__create_uid
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet_line__create_uid
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject__create_uid
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject_minimum_score__create_uid
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject_outcome__create_uid
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject_outcome_objective__create_uid
 msgid "Created by"
 msgstr ""
 
@@ -886,9 +956,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__create_date
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate_line__create_date
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__create_date
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet_component__create_date
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet_line__create_date
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject__create_date
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject_minimum_score__create_date
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject_outcome__create_date
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject_outcome_objective__create_date
 msgid "Created on"
 msgstr ""
 
@@ -902,6 +975,25 @@ msgstr ""
 #. module: ssi_school_academic
 #: model:ir.model.fields.selection,name:ssi_school_academic.selection__school_score_component__category__daily_test
 msgid "Daily Test"
+msgstr ""
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_score_sheet_component__component_id
+msgid "Daily test or assignment component of the sheet."
+msgstr ""
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_subject_outcome_objective__score_sheet_component_ids
+msgid ""
+"Daily tests and assignments of the score sheets that measure this objective."
+" They are chosen on the score sheet."
+msgstr ""
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_score_sheet__component_ids
+msgid ""
+"Daily tests and assignments of this sheet, each with the learning objectives"
+" (TP) it measures."
 msgstr ""
 
 #. module: ssi_school_academic
@@ -935,15 +1027,25 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_co_curricular__description
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_extracurricular__description
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate_line__description
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject_outcome_objective__description
 #, python-format
 msgid "Description"
 msgstr ""
 
 #. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_subject_outcome_objective__description
+msgid ""
+"Description of the learning objective. It is printed as the learning "
+"objective achievement of the report card."
+msgstr ""
+
+#. module: ssi_school_academic
 #: model:ir.model.fields,help:ssi_school_academic.field_school_report_card_line__learning_objective
 msgid ""
-"Description of the learning objectives the student achieved, written by "
-"hand."
+"Description of the learning objectives the student achieved. It is filled "
+"from the learning objectives of the daily tests and assignments that were "
+"scored, and it can still be edited by hand. Computing the scores only fills "
+"an empty text; the Refill Learning Objective button overwrites it."
 msgstr ""
 
 #. module: ssi_school_academic
@@ -974,9 +1076,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__display_name
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate_line__display_name
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__display_name
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet_component__display_name
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet_line__display_name
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject__display_name
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject_minimum_score__display_name
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject_outcome__display_name
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject_outcome_objective__display_name
 msgid "Display Name"
 msgstr ""
 
@@ -1112,6 +1217,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__message_follower_ids
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__message_follower_ids
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject__message_follower_ids
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject_outcome__message_follower_ids
 msgid "Followers"
 msgstr ""
 
@@ -1123,6 +1229,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__message_channel_ids
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__message_channel_ids
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject__message_channel_ids
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject_outcome__message_channel_ids
 msgid "Followers (Channels)"
 msgstr ""
 
@@ -1134,6 +1241,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__message_partner_ids
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__message_partner_ids
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject__message_partner_ids
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject_outcome__message_partner_ids
 msgid "Followers (Partners)"
 msgstr ""
 
@@ -1145,6 +1253,7 @@ msgstr ""
 #: model:ir.model.fields,help:ssi_school_academic.field_school_score_predicate__activity_type_icon
 #: model:ir.model.fields,help:ssi_school_academic.field_school_score_sheet__activity_type_icon
 #: model:ir.model.fields,help:ssi_school_academic.field_school_subject__activity_type_icon
+#: model:ir.model.fields,help:ssi_school_academic.field_school_subject_outcome__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
 msgstr ""
 
@@ -1178,7 +1287,10 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_main_subject__grade_id
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__grade_id
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject_minimum_score__grade_id
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject_outcome__grade_id
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject_outcome_objective__grade_id
 #: model_terms:ir.ui.view,arch_db:ssi_school_academic.school_report_card_main_subject_view_search
+#: model_terms:ir.ui.view,arch_db:ssi_school_academic.school_subject_outcome_view_search
 msgid "Grade"
 msgstr ""
 
@@ -1216,6 +1328,16 @@ msgid ""
 msgstr ""
 
 #. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_subject_outcome_objective__grade_id
+msgid "Grade of the selected Learning Outcome."
+msgstr ""
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_subject_outcome__grade_id
+msgid "Grade the learning outcome belongs to."
+msgstr ""
+
+#. module: ssi_school_academic
 #: model:ir.model.fields,help:ssi_school_academic.field_school_report_card_main_subject__grade_id
 msgid "Grade the main subjects apply to."
 msgstr ""
@@ -1245,6 +1367,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:ssi_school_academic.school_report_card_view_search
 #: model_terms:ir.ui.view,arch_db:ssi_school_academic.school_score_component_view_search
 #: model_terms:ir.ui.view,arch_db:ssi_school_academic.school_score_sheet_view_search
+#: model_terms:ir.ui.view,arch_db:ssi_school_academic.school_subject_outcome_view_search
 #: model_terms:ir.ui.view,arch_db:ssi_school_academic.school_subject_view_search
 msgid "Group By"
 msgstr ""
@@ -1313,9 +1436,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__id
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate_line__id
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__id
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet_component__id
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet_line__id
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject__id
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject_minimum_score__id
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject_outcome__id
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject_outcome_objective__id
 msgid "ID"
 msgstr ""
 
@@ -1327,6 +1453,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__activity_exception_icon
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__activity_exception_icon
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject__activity_exception_icon
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject_outcome__activity_exception_icon
 msgid "Icon"
 msgstr ""
 
@@ -1338,6 +1465,7 @@ msgstr ""
 #: model:ir.model.fields,help:ssi_school_academic.field_school_score_predicate__activity_exception_icon
 #: model:ir.model.fields,help:ssi_school_academic.field_school_score_sheet__activity_exception_icon
 #: model:ir.model.fields,help:ssi_school_academic.field_school_subject__activity_exception_icon
+#: model:ir.model.fields,help:ssi_school_academic.field_school_subject_outcome__activity_exception_icon
 msgid "Icon to indicate an exception activity."
 msgstr ""
 
@@ -1356,6 +1484,8 @@ msgstr ""
 #: model:ir.model.fields,help:ssi_school_academic.field_school_score_sheet__message_unread
 #: model:ir.model.fields,help:ssi_school_academic.field_school_subject__message_needaction
 #: model:ir.model.fields,help:ssi_school_academic.field_school_subject__message_unread
+#: model:ir.model.fields,help:ssi_school_academic.field_school_subject_outcome__message_needaction
+#: model:ir.model.fields,help:ssi_school_academic.field_school_subject_outcome__message_unread
 msgid "If checked, new messages require your attention."
 msgstr ""
 
@@ -1367,6 +1497,7 @@ msgstr ""
 #: model:ir.model.fields,help:ssi_school_academic.field_school_score_predicate__message_has_error
 #: model:ir.model.fields,help:ssi_school_academic.field_school_score_sheet__message_has_error
 #: model:ir.model.fields,help:ssi_school_academic.field_school_subject__message_has_error
+#: model:ir.model.fields,help:ssi_school_academic.field_school_subject_outcome__message_has_error
 msgid "If checked, some messages have a delivery error."
 msgstr ""
 
@@ -1378,6 +1509,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__message_is_follower
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__message_is_follower
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject__message_is_follower
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject_outcome__message_is_follower
 msgid "Is Follower"
 msgstr ""
 
@@ -1421,9 +1553,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate____last_update
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate_line____last_update
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet____last_update
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet_component____last_update
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet_line____last_update
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject____last_update
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject_minimum_score____last_update
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject_outcome____last_update
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject_outcome_objective____last_update
 msgid "Last Modified on"
 msgstr ""
 
@@ -1444,9 +1579,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__write_uid
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate_line__write_uid
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__write_uid
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet_component__write_uid
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet_line__write_uid
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject__write_uid
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject_minimum_score__write_uid
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject_outcome__write_uid
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject_outcome_objective__write_uid
 msgid "Last Updated by"
 msgstr ""
 
@@ -1467,9 +1605,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__write_date
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate_line__write_date
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__write_date
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet_component__write_date
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet_line__write_date
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject__write_date
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject_minimum_score__write_date
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject_outcome__write_date
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject_outcome_objective__write_date
 msgid "Last Updated on"
 msgstr ""
 
@@ -1479,9 +1620,41 @@ msgid "Learning Objective Achievement"
 msgstr ""
 
 #. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet_component__objective_ids
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject_outcome__objective_ids
+#: model_terms:ir.ui.view,arch_db:ssi_school_academic.school_score_sheet_view_form
+#: model_terms:ir.ui.view,arch_db:ssi_school_academic.school_subject_outcome_view_form
+msgid "Learning Objectives"
+msgstr ""
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject_outcome_objective__outcome_id
+msgid "Learning Outcome"
+msgstr ""
+
+#. module: ssi_school_academic
 #: code:addons/ssi_school_academic/models/school_report_card.py:0
 #, python-format
 msgid "Learning Result Report"
+msgstr ""
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_subject_outcome__objective_ids
+msgid ""
+"Learning objectives (TP) that belong to this learning outcome, in the order "
+"they are printed."
+msgstr ""
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_score_sheet_component__objective_ids
+msgid ""
+"Learning objectives (TP) this component measures. Only objectives of the "
+"subject, the grade and the academic term of the score sheet can be chosen."
+msgstr ""
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_subject_outcome_objective__outcome_id
+msgid "Learning outcome this objective belongs to."
 msgstr ""
 
 #. module: ssi_school_academic
@@ -1512,6 +1685,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__message_main_attachment_id
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__message_main_attachment_id
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject__message_main_attachment_id
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject_outcome__message_main_attachment_id
 msgid "Main Attachment"
 msgstr ""
 
@@ -1537,6 +1711,7 @@ msgstr ""
 #: model:ir.model.fields,help:ssi_school_academic.field_school_score_component__active
 #: model:ir.model.fields,help:ssi_school_academic.field_school_score_predicate__active
 #: model:ir.model.fields,help:ssi_school_academic.field_school_subject__active
+#: model:ir.model.fields,help:ssi_school_academic.field_school_subject_outcome__active
 msgid ""
 "Master data status\n"
 "\n"
@@ -1552,6 +1727,7 @@ msgstr ""
 #: model:ir.model.fields,help:ssi_school_academic.field_school_score_component__code
 #: model:ir.model.fields,help:ssi_school_academic.field_school_score_predicate__code
 #: model:ir.model.fields,help:ssi_school_academic.field_school_subject__code
+#: model:ir.model.fields,help:ssi_school_academic.field_school_subject_outcome__code
 msgid ""
 "Master data unique identifier.\n"
 "\n"
@@ -1574,6 +1750,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__message_has_error
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__message_has_error
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject__message_has_error
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject_outcome__message_has_error
 msgid "Message Delivery error"
 msgstr ""
 
@@ -1585,6 +1762,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__message_ids
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__message_ids
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject__message_ids
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject_outcome__message_ids
 msgid "Messages"
 msgstr ""
 
@@ -1659,6 +1837,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__my_activity_date_deadline
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__my_activity_date_deadline
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject__my_activity_date_deadline
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject_outcome__my_activity_date_deadline
 msgid "My Activity Deadline"
 msgstr ""
 
@@ -1675,6 +1854,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_component__name
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__name
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject__name
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject_outcome__name
 #: model_terms:ir.ui.view,arch_db:ssi_school_academic.report_print_report_card_ledger_document
 #, python-format
 msgid "Name"
@@ -1712,6 +1892,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__activity_date_deadline
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__activity_date_deadline
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject__activity_date_deadline
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject_outcome__activity_date_deadline
 msgid "Next Activity Deadline"
 msgstr ""
 
@@ -1723,6 +1904,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__activity_summary
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__activity_summary
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject__activity_summary
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject_outcome__activity_summary
 msgid "Next Activity Summary"
 msgstr ""
 
@@ -1734,6 +1916,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__activity_type_id
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__activity_type_id
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject__activity_type_id
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject_outcome__activity_type_id
 msgid "Next Activity Type"
 msgstr ""
 
@@ -1763,6 +1946,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__note
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__note
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject__note
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject_outcome__note
 msgid "Note"
 msgstr ""
 
@@ -1784,6 +1968,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__message_needaction_counter
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__message_needaction_counter
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject__message_needaction_counter
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject_outcome__message_needaction_counter
 msgid "Number of Actions"
 msgstr ""
 
@@ -1810,6 +1995,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__message_has_error_counter
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__message_has_error_counter
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject__message_has_error_counter
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject_outcome__message_has_error_counter
 msgid "Number of errors"
 msgstr ""
 
@@ -1821,6 +2007,7 @@ msgstr ""
 #: model:ir.model.fields,help:ssi_school_academic.field_school_score_predicate__message_needaction_counter
 #: model:ir.model.fields,help:ssi_school_academic.field_school_score_sheet__message_needaction_counter
 #: model:ir.model.fields,help:ssi_school_academic.field_school_subject__message_needaction_counter
+#: model:ir.model.fields,help:ssi_school_academic.field_school_subject_outcome__message_needaction_counter
 msgid "Number of messages which requires an action"
 msgstr ""
 
@@ -1832,6 +2019,7 @@ msgstr ""
 #: model:ir.model.fields,help:ssi_school_academic.field_school_score_predicate__message_has_error_counter
 #: model:ir.model.fields,help:ssi_school_academic.field_school_score_sheet__message_has_error_counter
 #: model:ir.model.fields,help:ssi_school_academic.field_school_subject__message_has_error_counter
+#: model:ir.model.fields,help:ssi_school_academic.field_school_subject_outcome__message_has_error_counter
 msgid "Number of messages with delivery error"
 msgstr ""
 
@@ -1848,6 +2036,7 @@ msgstr ""
 #: model:ir.model.fields,help:ssi_school_academic.field_school_score_predicate__message_unread_counter
 #: model:ir.model.fields,help:ssi_school_academic.field_school_score_sheet__message_unread_counter
 #: model:ir.model.fields,help:ssi_school_academic.field_school_subject__message_unread_counter
+#: model:ir.model.fields,help:ssi_school_academic.field_school_subject_outcome__message_unread_counter
 msgid "Number of unread messages"
 msgstr ""
 
@@ -1871,6 +2060,13 @@ msgstr ""
 msgid ""
 "Order of the component. It sets the column order on the score input and on "
 "the printed report card."
+msgstr ""
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_subject_outcome_objective__sequence
+msgid ""
+"Order of the objective. It sets the order of the descriptions on the report "
+"card."
 msgstr ""
 
 #. module: ssi_school_academic
@@ -1930,6 +2126,13 @@ msgstr ""
 #: model:ir.model.fields,help:ssi_school_academic.field_school_report_card__generate_lines_ok
 #: model:ir.model.fields,help:ssi_school_academic.field_school_score_sheet__generate_lines_ok
 msgid "Policy that determines whether the Generate Lines button is visible."
+msgstr ""
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card__refill_learning_objective_ok
+msgid ""
+"Policy that determines whether the Refill Learning Objective button is "
+"visible."
 msgstr ""
 
 #. module: ssi_school_academic
@@ -2041,6 +2244,11 @@ msgid ""
 msgstr ""
 
 #. module: ssi_school_academic
+#: model_terms:ir.ui.view,arch_db:ssi_school_academic.school_report_card_view_form
+msgid "Refill Learning Objective"
+msgstr ""
+
+#. module: ssi_school_academic
 #: model:ir.model.fields,help:ssi_school_academic.field_school_report_card__reject_ok
 #: model:ir.model.fields,help:ssi_school_academic.field_school_score_sheet__reject_ok
 msgid ""
@@ -2141,6 +2349,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__activity_user_id
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__activity_user_id
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject__activity_user_id
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject_outcome__activity_user_id
 msgid "Responsible User"
 msgstr ""
 
@@ -2264,6 +2473,11 @@ msgid "School Score Sheet"
 msgstr ""
 
 #. module: ssi_school_academic
+#: model:ir.model,name:ssi_school_academic.model_school_score_sheet_component
+msgid "School Score Sheet Component"
+msgstr ""
+
+#. module: ssi_school_academic
 #: model:ir.model,name:ssi_school_academic.model_school_score_sheet_line
 msgid "School Score Sheet Line"
 msgstr ""
@@ -2284,12 +2498,23 @@ msgid "School Subject Minimum Score"
 msgstr ""
 
 #. module: ssi_school_academic
+#: model:ir.model,name:ssi_school_academic.model_school_subject_outcome
+msgid "School Subject Outcome"
+msgstr ""
+
+#. module: ssi_school_academic
+#: model:ir.model,name:ssi_school_academic.model_school_subject_outcome_objective
+msgid "School Subject Outcome Objective"
+msgstr ""
+
+#. module: ssi_school_academic
 #: model:ir.model.fields,field_description:ssi_school_academic.field_print_report_card_ledger_cell__score
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet_line__score
 msgid "Score"
 msgstr ""
 
 #. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet_component__component_id
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet_line__component_id
 #: model:res.groups,name:ssi_school_academic.school_score_component_group
 msgid "Score Component"
@@ -2327,8 +2552,14 @@ msgid "Score Predicates"
 msgstr ""
 
 #. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet_component__sheet_id
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet_line__sheet_id
 msgid "Score Sheet"
+msgstr ""
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject_outcome_objective__score_sheet_component_ids
+msgid "Score Sheet Components"
 msgstr ""
 
 #. module: ssi_school_academic
@@ -2390,6 +2621,11 @@ msgid "Score lines, one per enrollment and per score component."
 msgstr ""
 
 #. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_score_sheet_component__sheet_id
+msgid "Score sheet this component belongs to."
+msgstr ""
+
+#. module: ssi_school_academic
 #: model:ir.model.fields,help:ssi_school_academic.field_school_score_sheet_line__sheet_id
 msgid "Score sheet this line belongs to."
 msgstr ""
@@ -2416,6 +2652,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_academic.field_print_report_card_ledger_subject__sequence
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type_print_column__sequence
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_component__sequence
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject_outcome_objective__sequence
 msgid "Sequence"
 msgstr ""
 
@@ -2433,6 +2670,11 @@ msgid ""
 "Set when a score was entered, zero included, and cleared when the score is "
 "emptied. A float field reads 0.0 for both an empty score and a zero score, "
 "so this flag tells them apart."
+msgstr ""
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_subject_outcome_objective__code
+msgid "Short code of the learning objective."
 msgstr ""
 
 #. module: ssi_school_academic
@@ -2470,6 +2712,7 @@ msgstr ""
 #: model:ir.model.fields,help:ssi_school_academic.field_school_score_predicate__activity_state
 #: model:ir.model.fields,help:ssi_school_academic.field_school_score_sheet__activity_state
 #: model:ir.model.fields,help:ssi_school_academic.field_school_subject__activity_state
+#: model:ir.model.fields,help:ssi_school_academic.field_school_subject_outcome__activity_state
 msgid ""
 "Status based on activities\n"
 "Overdue: Due date is already passed\n"
@@ -2531,8 +2774,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_academic.field_print_report_card_ledger_subject__subject_id
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_line__subject_id
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__subject_id
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject_outcome__subject_id
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject_outcome_objective__subject_id
 #: model:res.groups,name:ssi_school_academic.school_subject_group
 #: model_terms:ir.ui.view,arch_db:ssi_school_academic.school_score_sheet_view_search
+#: model_terms:ir.ui.view,arch_db:ssi_school_academic.school_subject_outcome_view_search
 #, python-format
 msgid "Subject"
 msgstr ""
@@ -2550,6 +2796,17 @@ msgid "Subject Lines"
 msgstr ""
 
 #. module: ssi_school_academic
+#: model:res.groups,name:ssi_school_academic.school_subject_outcome_group
+msgid "Subject Outcome"
+msgstr ""
+
+#. module: ssi_school_academic
+#: model:ir.actions.act_window,name:ssi_school_academic.school_subject_outcome_action
+#: model:ir.ui.menu,name:ssi_school_academic.school_subject_outcome_menu
+msgid "Subject Outcomes"
+msgstr ""
+
+#. module: ssi_school_academic
 #: model:ir.model.fields,help:ssi_school_academic.field_print_report_card_ledger__subject_ids
 msgid "Subject columns of the ledger."
 msgstr ""
@@ -2560,6 +2817,11 @@ msgid "Subject of the column this cell belongs to."
 msgstr ""
 
 #. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_subject_outcome_objective__subject_id
+msgid "Subject of the selected Learning Outcome."
+msgstr ""
+
+#. module: ssi_school_academic
 #: model:ir.model.fields,help:ssi_school_academic.field_print_report_card_ledger_subject__subject_id
 msgid "Subject shown in this column."
 msgstr ""
@@ -2567,6 +2829,11 @@ msgstr ""
 #. module: ssi_school_academic
 #: model:ir.model.fields,help:ssi_school_academic.field_school_report_card_line__subject_id
 msgid "Subject the final score is given for."
+msgstr ""
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_subject_outcome__subject_id
+msgid "Subject the learning outcome belongs to."
 msgstr ""
 
 #. module: ssi_school_academic
@@ -2635,6 +2902,13 @@ msgid ""
 msgstr ""
 
 #. module: ssi_school_academic
+#: model_terms:ir.ui.view,arch_db:ssi_school_academic.school_report_card_view_form
+msgid ""
+"This overwrites the learning objective of every line, including the text "
+"typed by hand. Continue?"
+msgstr ""
+
+#. module: ssi_school_academic
 #: model_terms:ir.ui.view,arch_db:ssi_school_academic.school_score_sheet_view_form
 msgid ""
 "This replaces every line with one line per open enrollment and per score "
@@ -2688,6 +2962,7 @@ msgstr ""
 #: model:ir.model.fields,help:ssi_school_academic.field_school_score_predicate__activity_exception_decoration
 #: model:ir.model.fields,help:ssi_school_academic.field_school_score_sheet__activity_exception_decoration
 #: model:ir.model.fields,help:ssi_school_academic.field_school_subject__activity_exception_decoration
+#: model:ir.model.fields,help:ssi_school_academic.field_school_subject_outcome__activity_exception_decoration
 msgid "Type of the exception activity on record."
 msgstr ""
 
@@ -2704,6 +2979,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__message_unread
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__message_unread
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject__message_unread
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject_outcome__message_unread
 msgid "Unread Messages"
 msgstr ""
 
@@ -2715,6 +2991,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__message_unread_counter
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__message_unread_counter
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject__message_unread_counter
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject_outcome__message_unread_counter
 msgid "Unread Messages Counter"
 msgstr ""
 
@@ -2787,6 +3064,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_predicate__website_message_ids
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__website_message_ids
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject__website_message_ids
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject_outcome__website_message_ids
 msgid "Website Messages"
 msgstr ""
 
@@ -2798,6 +3076,7 @@ msgstr ""
 #: model:ir.model.fields,help:ssi_school_academic.field_school_score_predicate__website_message_ids
 #: model:ir.model.fields,help:ssi_school_academic.field_school_score_sheet__website_message_ids
 #: model:ir.model.fields,help:ssi_school_academic.field_school_subject__website_message_ids
+#: model:ir.model.fields,help:ssi_school_academic.field_school_subject_outcome__website_message_ids
 msgid "Website communication history"
 msgstr ""
 
