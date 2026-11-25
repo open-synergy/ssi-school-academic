@@ -46,6 +46,25 @@ class SchoolScoreSheetComponent(models.Model):
         "the score sheet can be chosen.",
     )
 
+    def name_get(self):
+        """Return the display name of each record.
+
+        The name is the score component followed by the number of the
+        score sheet, for example ``UH 1 (SSS/2026/000018)``. A draft
+        sheet has no number yet and shows ``/``.
+
+        :return: list of ``(id, display name)`` pairs.
+        :rtype: list
+        """
+        result = []
+        for record in self:
+            name = "%s (%s)" % (
+                record.component_id.name or "",
+                record.sheet_id.name or "",
+            )
+            result.append((record.id, name))
+        return result
+
     @api.constrains("sheet_id", "component_id")
     def _check_unique_component(self):
         """Check that a sheet has one record per component.
@@ -65,11 +84,11 @@ class SchoolScoreSheetComponent(models.Model):
                         """
 Context: Save score sheet component
 Database ID: %s
-Problem: Each score component may only appear once per score sheet.
+Problem: Component %s may only appear once per score sheet.
 Solution: Remove the duplicate component
 """
                     )
-                    % (record.id,)
+                    % (record.id, record.display_name)
                 )
                 raise ValidationError(error_message)
 
@@ -105,10 +124,10 @@ Solution: Remove the duplicate component
                             """
 Context: Save score sheet component
 Database ID: %s
-Problem: Objective %s is outside the subject, grade, and term of the sheet.
+Problem: Objective %s is outside the subject, grade, and term of sheet component %s.
 Solution: Choose only objectives of the same subject, grade, and term as the sheet
 """
                         )
-                        % (record.id, objective.display_name)
+                        % (record.id, objective.display_name, record.display_name)
                     )
                     raise ValidationError(error_message)
