@@ -53,11 +53,17 @@ class SchoolScoreSheetComponent(models.Model):
         score sheet, for example ``UH 1 (SSS/2026/000018)``. A draft
         sheet has no number yet and shows ``/``.
 
+        The names are read with ``sudo()``: the display name is shown
+        wherever the component is a tag, for example on the learning
+        objective form, and the user may not read the score sheet
+        itself because of its record rule. Only the name string leaves
+        this method; no elevated recordset is returned.
+
         :return: list of ``(id, display name)`` pairs.
         :rtype: list
         """
         result = []
-        for record in self:
+        for record in self.sudo():
             name = "%s (%s)" % (
                 record.component_id.name or "",
                 record.sheet_id.name or "",
