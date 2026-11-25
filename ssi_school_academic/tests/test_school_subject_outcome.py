@@ -22,3 +22,12 @@ class TestSchoolSubjectOutcome(
     def test_subject_outcome(self):
         """Run the learning outcome and objective scenarios."""
         self.run_yaml_scenario("test_school_subject_outcome.yaml")
+
+    def test_subject_outcome_generate_lines(self):
+        """Run the scenario of generating the lines of a score sheet.
+
+        The scenario counts the components of the sheet, and the setup
+        of the other scenarios adds components with every replay, so
+        it runs in a test method of its own (T-01, remedy 5).
+        """
+        self.run_yaml_scenario("test_school_subject_outcome_generate_lines.yaml")
