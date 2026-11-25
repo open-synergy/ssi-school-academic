@@ -21,6 +21,11 @@ from the score sheets that are done, plus the co-curricular, extracurricular,
 absence and note parts written by hand, finished through approval. A report
 card is printed as a PDF from one py3o template, for the Mid-Term and the Final
 type.
+The learning outcomes (CP) of a subject, grade and academic term, with their
+learning objectives (TP), are kept as master data. Teachers choose the
+objectives each daily test and assignment of a score sheet measures, and the
+Learning Objective Achievement of the report card lines is filled from the
+objectives of the components the student was scored for.
 
 
 Work Instruction
@@ -32,6 +37,8 @@ Work Instruction
 * `Create Score Component <docs/school_score_component/01-create.html>`_
 * `Edit Score Component <docs/school_score_component/02-edit.html>`_
 * `Archive Score Component <docs/school_score_component/03-archive.html>`_
+* `Create Subject Outcome <docs/school_subject_outcome/01-create.html>`_
+* `Edit Subject Outcome <docs/school_subject_outcome/02-edit.html>`_
 * `Create Report Card Main Subject <docs/school_report_card_main_subject/01-create.html>`_
 * `Edit Report Card Main Subject <docs/school_report_card_main_subject/02-edit.html>`_
 * `Archive Report Card Main Subject <docs/school_report_card_main_subject/03-archive.html>`_
@@ -46,6 +53,7 @@ Work Instruction
 * `Cancel School Score Sheet <docs/school_score_sheet/06-cancel.html>`_
 * `Restart School Score Sheet Approval Process <docs/school_score_sheet/07-restart-approval.html>`_
 * `Enter Scores of School Score Sheet <docs/school_score_sheet/08-enter-scores.html>`_
+* `Choose Learning Objectives of School Score Sheet <docs/school_score_sheet/09-choose-objectives.html>`_
 * `Create School Report Card <docs/school_report_card/01-create.html>`_
 * `Generate Lines of School Report Card <docs/school_report_card/02-generate-lines.html>`_
 * `Compute Scores of School Report Card <docs/school_report_card/03-compute-scores.html>`_
@@ -54,6 +62,7 @@ Work Instruction
 * `Reject School Report Card <docs/school_report_card/06-reject.html>`_
 * `Cancel School Report Card <docs/school_report_card/07-cancel.html>`_
 * `Print School Report Card <docs/school_report_card/08-print.html>`_
+* `Refill Learning Objective of School Report Card <docs/school_report_card/09-refill-learning-objective.html>`_
 
 
 Installation
@@ -72,6 +81,10 @@ To install this module, you need to:
 Usage
 =====
 
+* The **Learning Objective Achievement** of a report card line is filled when the
+  lines are generated and when the scores are computed, but only when it is empty.
+  The text stays editable. The **Refill Learning Objective** button overwrites it.
+  Mid-term and final exams are not linked to learning objectives.
 * In the **Scores** tab of a score sheet, a **Score** cell that was never filled shows
   empty. Type ``0`` to enter a zero score: it counts in the average and the final score.
   Empty the cell to take the score back: an empty cell does not count.

@@ -79,7 +79,10 @@ class SchoolReportCardLine(models.Model):
     learning_objective = fields.Text(
         string="Learning Objective Achievement",
         help="Description of the learning objectives the student "
-        "achieved, written by hand.",
+        "achieved. It is filled from the learning objectives of the "
+        "daily tests and assignments that were scored, and it can still "
+        "be edited by hand. Computing the scores only fills an empty "
+        "text; the Refill Learning Objective button overwrites it.",
     )
 
     @api.depends(
@@ -147,6 +150,25 @@ Solution: Remove the duplicate line
                 )
                 raise ValidationError(error_message)
 
+    def _get_scored_line_domain(self):
+        """Return the domain of the score sheet lines of this line.
+
+        Only lines that were scored, on the score sheets that are done
+        for the same enrollment, subject and academic term as this line.
+
+        :return: domain for ``school_score_sheet_line``
+        :rtype: list
+        """
+        self.ensure_one()
+        card = self.report_card_id
+        return [
+            ("sheet_id.state", "=", "done"),
+            ("sheet_id.subject_id", "=", self.subject_id.id),
+            ("sheet_id.academic_term_id", "=", card.academic_term_id.id),
+            ("enrollment_id", "=", card.enrollment_id.id),
+            ("is_scored", "=", True),
+        ]
+
     def _get_component_scores(self):
         """Collect the scores of the student for the subject.
 
@@ -160,20 +182,60 @@ Solution: Remove the duplicate line
         :rtype: dict
         """
         self.ensure_one()
-        card = self.report_card_id
         # The score sheets are owned by their teachers; the report card
         # reads them for the homeroom teacher, so sudo is needed.
         lines = (
             self.env["school_score_sheet_line"]
             .sudo()
-            .search(
-                [
-                    ("sheet_id.state", "=", "done"),
-                    ("sheet_id.subject_id", "=", self.subject_id.id),
-                    ("sheet_id.academic_term_id", "=", card.academic_term_id.id),
-                    ("enrollment_id", "=", card.enrollment_id.id),
-                    ("is_scored", "=", True),
-                ]
-            )
+            .search(self._get_scored_line_domain())
         )
         return {line.component_id.id: line.score for line in lines}
+
+    def _get_learning_objective_text(self):
+        """Build the learning objective text from the scored cells.
+
+        Takes the learning objectives chosen on the daily test and
+        assignment components that the student was scored for, on the
+        score sheets that are done. Each objective appears once, in the
+        order of the objectives, one description per line. A subject
+        without such a cell gives an empty text.
+
+        :return: the descriptions separated by new lines, or an empty
+            string.
+        :rtype: str
+        """
+        self.ensure_one()
+        sheet_lines = (
+            self.env["school_score_sheet_line"]
+            .sudo()
+            .search(
+                self._get_scored_line_domain()
+                + [("component_id.category", "in", ["daily_test", "assignment"])]
+            )
+        )
+        cells = {(sl.sheet_id.id, sl.component_id.id) for sl in sheet_lines}
+        components = (
+            self.env["school_score_sheet_component"]
+            .sudo()
+            .search([("sheet_id", "in", sheet_lines.mapped("sheet_id").ids)])
+        )
+        objectives = components.filtered(
+            lambda c: (c.sheet_id.id, c.component_id.id) in cells
+        ).mapped("objective_ids")
+        objectives = objectives.sorted(key=lambda o: (o.sequence, o.id))
+        return "\n".join(objectives.mapped("description"))
+
+    def _refill_learning_objective(self, overwrite):
+        """Fill the learning objective text of the lines.
+
+        :param bool overwrite: when False a line that already has a text
+            is left as it is; when True every line gets the built text,
+            an empty one included.
+        :return: nothing
+        """
+        for record in self:
+            if record.learning_objective and not overwrite:
+                continue
+            text = record._get_learning_objective_text()
+            if text != (record.learning_objective or ""):
+                record.write({"learning_objective": text or False})

@@ -214,6 +214,16 @@ odoo.define("ssi_school_academic.school_report_card_tour", function (require) {
                         // Assertion only; do not trigger the default click.
                     },
                 },
+                {
+                    // Post-Condition: the empty Learning Objective
+                    // Achievement is filled from the scored component.
+                    content: "The line shows its learning objective",
+                    trigger:
+                        ".o_field_one2many[name='line_ids'] .o_data_row:contains(TOUR SRC objective description)",
+                    run: function () {
+                        // Assertion only; do not trigger the default click.
+                    },
+                },
             ]
         )
     );
@@ -345,6 +355,43 @@ odoo.define("ssi_school_academic.school_report_card_tour", function (require) {
                     trigger:
                         ".o_statusbar_status .o_arrow_button[data-value='cancel'].btn-primary",
                     extra_trigger: "body:not(:has(.modal))",
+                    run: function () {
+                        // Assertion only; do not trigger the default click.
+                    },
+                },
+            ]
+        )
+    );
+
+    // IK: docs/school_report_card/09-refill-learning-objective.md
+    tour.register(
+        "ssi_school_academic_school_report_card_refill_learning_objective",
+        {test: true, url: "/web"},
+        [].concat(
+            openCardsList(),
+            openRecord("TOUR SRC Type REFILL"),
+            [
+                {
+                    content: "Click the Refill Learning Objective button",
+                    trigger:
+                        ".o_statusbar_buttons button[name='action_refill_learning_objective']",
+                    extra_trigger: ".o_form_view",
+                },
+            ],
+            confirmDialog(),
+            [
+                {
+                    content: "Open the Subjects tab",
+                    trigger: ".o_notebook .nav-link:contains(Subjects)",
+                    extra_trigger: "body:not(:has(.modal))",
+                },
+                {
+                    // Post-Condition: the text typed by hand is overwritten.
+                    // The fixture line starts with a manual text, so the
+                    // objective description can only show after the refill.
+                    content: "The line shows the objective description",
+                    trigger:
+                        ".o_field_one2many[name='line_ids'] .o_data_row:contains(TOUR SRC objective description)",
                     run: function () {
                         // Assertion only; do not trigger the default click.
                     },

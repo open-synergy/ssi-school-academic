@@ -86,6 +86,13 @@
                         confirm="This overwrites the final score of every line from the score sheets that are done. Continue?"
                         attrs="{'invisible':[('compute_scores_ok','=',False)]}"
                     />
+                <button
+                        name="action_refill_learning_objective"
+                        type="object"
+                        string="Refill Learning Objective"
+                        confirm="This overwrites the learning objective of every line, including the text typed by hand. Continue?"
+                        attrs="{'invisible':[('refill_learning_objective_ok','=',False)]}"
+                    />
             </xpath>
             <xpath expr="//group[@name='header_right']" position="inside">
                 <field name="academic_year_id" />
@@ -181,6 +188,7 @@
             <xpath expr="//group[@name='policy_2']" position="inside">
                 <field name="generate_lines_ok" />
                 <field name="compute_scores_ok" />
+                <field name="refill_learning_objective_ok" />
             </xpath>
         </data>
     </field>

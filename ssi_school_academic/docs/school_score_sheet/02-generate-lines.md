@@ -30,4 +30,7 @@
   active score component, ordered by student and component sequence.
 - Enrollments that are not open, and score components that are archived, get no line.
 - The **Score** of every new line is empty, which means not yet scored.
+- The **Learning Objectives** tab lists one row for each active daily test and
+  assignment. A row that already exists is kept with its chosen objectives; only missing
+  rows are added.
 - Status stays **Draft**.

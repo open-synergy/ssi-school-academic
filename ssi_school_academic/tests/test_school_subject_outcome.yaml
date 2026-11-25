@@ -1,0 +1,862 @@
+# T-01 (odoo-development-unit-test/test-traps.md): the `setup:` block replays
+# before every scenario inside one un-rolled-back transaction, so every
+# unique-constrained code it creates is generated per replay from a count of
+# the existing records. The subject, grade and term are new per replay, so
+# every scenario builds its own learning outcome records, score sheet and
+# report card from the setup and none of them leans on an earlier scenario.
+options:
+  auto_refresh: true
+
+setup:
+  steps:
+    - step: "Create the grade type"
+      action: "create"
+      model: "school_grade_type"
+      save_as: "grade_type"
+      values:
+        name: "SSO Grade Type"
+        code: "EVAL: 'SSOGT%d' % env['school_grade_type'].search_count([])"
+
+    - step: "Create the school"
+      action: "create"
+      model: "school"
+      save_as: "school"
+      values:
+        name: "SSO School"
+        code: "EVAL: 'SSOSC%d' % env['school'].search_count([])"
+        grade_type_id: "REC: grade_type.id"
+
+    - step: "Create the academic year"
+      action: "create"
+      model: "school_academic_year"
+      save_as: "academic_year"
+      values:
+        name: "SSO Academic Year"
+        code: "EVAL: 'SSOAY%d' % env['school_academic_year'].search_count([])"
+        date_start: 2026-07-01
+        date_end: 2027-06-30
+
+    - step: "Create the academic term open for enrollment"
+      action: "create"
+      model: "school_academic_term"
+      save_as: "academic_term"
+      values:
+        name: "SSO Term"
+        code: "EVAL: 'SSOTM%d' % env['school_academic_term'].search_count([])"
+        date_start: 2026-07-01
+        date_end: 2026-12-31
+        year_id: "REC: academic_year.id"
+        enrollment_state: "open"
+
+    - step: "Create the grade"
+      action: "create"
+      model: "school_grade"
+      save_as: "grade"
+      values:
+        name: "SSO Grade"
+        code: "EVAL: 'SSOGR%d' % env['school_grade'].search_count([])"
+        type_id: "REC: grade_type.id"
+
+    - step: "Create the grade class"
+      action: "create"
+      model: "school_grade_class"
+      save_as: "grade_class"
+      values:
+        name: "SSO Class"
+        code: "EVAL: 'SSOCL%d' % env['school_grade_class'].search_count([])"
+        school_id: "REC: school.id"
+        grade_id: "REC: grade.id"
+
+    - step: "Create the subject taught in the grade, with a minimum score of 70"
+      action: "create"
+      model: "school_subject"
+      save_as: "subject"
+      values:
+        name: "SSO Subject"
+        code: "EVAL: 'SSOSJ%d' % env['school_subject'].search_count([])"
+        grade_ids:
+          - - 6
+            - 0
+            - - "REC: grade.id"
+        minimum_score_ids:
+          - - 0
+            - 0
+            - grade_id: "REC: grade.id"
+              minimum_score: 70.0
+
+    - step: "Create a subject that is not taught in the grade"
+      action: "create"
+      model: "school_subject"
+      save_as: "other_subject"
+      values:
+        name: "SSO Other Subject"
+        code: "EVAL: 'SSOOS%d' % env['school_subject'].search_count([])"
+
+    - step: "Create the predicate table of the grade"
+      action: "create"
+      model: "school_score_predicate"
+      save_as: "predicate"
+      values:
+        name: "SSO Predicate"
+        code: "EVAL: 'SSOPR%d' % env['school_score_predicate'].search_count([])"
+        grade_ids:
+          - - 6
+            - 0
+            - - "REC: grade.id"
+        line_ids:
+          - - 0
+            - 0
+            - name: "A"
+              min_score: 88.0
+          - - 0
+            - 0
+            - name: "B"
+              min_score: 80.0
+          - - 0
+            - 0
+            - name: "C"
+              min_score: 0.0
+
+    - step: "Create the home address partner of the teacher"
+      action: "create"
+      model: "res.partner"
+      save_as: "teacher_partner"
+      values:
+        name: "SSO Teacher Home Address"
+
+    - step: "Create the employee of the teacher"
+      action: "create"
+      model: "hr.employee"
+      save_as: "employee"
+      values:
+        name: "SSO Teacher Employee"
+        company_id: "base.main_company"
+        address_home_id: "REC: teacher_partner.id"
+
+    - step: "Create the teacher"
+      action: "create"
+      model: "school_teacher"
+      save_as: "teacher"
+      values:
+        name: "SSO Teacher"
+        code: "EVAL: 'SSOTC%d' % env['school_teacher'].search_count([])"
+        employee_id: "REC: employee.id"
+
+    - step: "Create the score component UH 1"
+      action: "create"
+      model: "school_score_component"
+      save_as: "component_1"
+      values:
+        name: "SSO UH 1"
+        code: "EVAL: 'SSOC%d' % env['school_score_component'].search_count([])"
+        category: "daily_test"
+        sequence: 10
+
+    - step: "Create the score component UH 2"
+      action: "create"
+      model: "school_score_component"
+      save_as: "component_2"
+      values:
+        name: "SSO UH 2"
+        code: "EVAL: 'SSOC%d' % env['school_score_component'].search_count([])"
+        category: "daily_test"
+        sequence: 20
+
+    - step: "Create the score component TG 1"
+      action: "create"
+      model: "school_score_component"
+      save_as: "component_3"
+      values:
+        name: "SSO TG 1"
+        code: "EVAL: 'SSOC%d' % env['school_score_component'].search_count([])"
+        category: "assignment"
+        sequence: 30
+
+    - step: "Create the score component PTS"
+      action: "create"
+      model: "school_score_component"
+      save_as: "component_pts"
+      values:
+        name: "SSO PTS"
+        code: "EVAL: 'SSOC%d' % env['school_score_component'].search_count([])"
+        category: "mid_term_exam"
+        sequence: 40
+
+    - step: "Create the mid-term type, 70% average of UH 1 and UH 2, 30% PTS"
+      action: "create"
+      model: "school_report_card_type"
+      save_as: "mid_type"
+      values:
+        name: "SSO Mid-Term"
+        code: "EVAL: 'SSORT%d' % env['school_report_card_type'].search_count([])"
+        term_type: "mid_term"
+        average_weight: 70.0
+        average_component_ids:
+          - - 6
+            - 0
+            - - "REC: component_1.id"
+              - "REC: component_2.id"
+        weight_ids:
+          - - 0
+            - 0
+            - component_id: "REC: component_pts.id"
+              weight: 30.0
+
+    - step: "Create the contact of the first student"
+      action: "create"
+      model: "res.partner"
+      save_as: "contact_1"
+      values:
+        name: "SSO Student Contact 1"
+
+    - step: "Create the first student"
+      action: "create"
+      model: "school_student"
+      save_as: "student_1"
+      values:
+        name: "SSO Student 1"
+        code: "EVAL: 'SSOST%d' % env['school_student'].search_count([])"
+        contact_id: "REC: contact_1.id"
+        school_id: "REC: school.id"
+
+    - step: "Create the enrollment of the first student"
+      action: "create"
+      model: "school_enrollment"
+      save_as: "enrollment_1"
+      values:
+        academic_year_id: "REC: academic_year.id"
+        academic_term_id: "REC: academic_term.id"
+        school_id: "REC: school.id"
+        grade_id: "REC: grade.id"
+        grade_class_id: "REC: grade_class.id"
+        student_id: "REC: student_1.id"
+        currency_id: "EVAL: env.company.currency_id.id"
+
+    - step: "Confirm the first enrollment"
+      action: "call"
+      target: "enrollment_1"
+      method: "action_confirm"
+      as_user: "base.user_admin"
+      asserts:
+        state:
+          type: "value"
+          expected: "confirm"
+
+    - step: "Approve the first enrollment, which opens it"
+      action: "call"
+      target: "enrollment_1"
+      method: "action_approve_approval"
+      as_user: "base.user_admin"
+      asserts:
+        state:
+          type: "value"
+          expected: "open"
+
+    - step: "Create the contact of the second student"
+      action: "create"
+      model: "res.partner"
+      save_as: "contact_2"
+      values:
+        name: "SSO Student Contact 2"
+
+    - step: "Create the second student"
+      action: "create"
+      model: "school_student"
+      save_as: "student_2"
+      values:
+        name: "SSO Student 2"
+        code: "EVAL: 'SSOST%d' % env['school_student'].search_count([])"
+        contact_id: "REC: contact_2.id"
+        school_id: "REC: school.id"
+
+    - step: "Create the enrollment of the second student, left in draft"
+      action: "create"
+      model: "school_enrollment"
+      save_as: "enrollment_2"
+      values:
+        academic_year_id: "REC: academic_year.id"
+        academic_term_id: "REC: academic_term.id"
+        school_id: "REC: school.id"
+        grade_id: "REC: grade.id"
+        grade_class_id: "REC: grade_class.id"
+        student_id: "REC: student_2.id"
+        currency_id: "EVAL: env.company.currency_id.id"
+
+    - step: "Assert the second enrollment is draft"
+      action: "assert"
+      target: "enrollment_2"
+      asserts:
+        state:
+          type: "value"
+          expected: "draft"
+
+    - step: "Create the learning outcome of the subject"
+      action: "create"
+      model: "school_subject_outcome"
+      save_as: "outcome"
+      values:
+        name: "SSO Outcome"
+        code: "EVAL: 'SSOCP%d' % env['school_subject_outcome'].search_count([])"
+        subject_id: "REC: subject.id"
+        grade_id: "REC: grade.id"
+        academic_term_id: "REC: academic_term.id"
+
+    - step: "Create the learning objective TP 1"
+      action: "create"
+      model: "school_subject_outcome_objective"
+      save_as: "tp_1"
+      values:
+        outcome_id: "REC: outcome.id"
+        sequence: 10
+        code: "TP1"
+        description: "Explains the basic concepts."
+
+    - step: "Create the learning objective TP 2"
+      action: "create"
+      model: "school_subject_outcome_objective"
+      save_as: "tp_2"
+      values:
+        outcome_id: "REC: outcome.id"
+        sequence: 20
+        code: "TP2"
+        description: "Solves routine problems."
+
+    - step: "Create the learning objective TP 3"
+      action: "create"
+      model: "school_subject_outcome_objective"
+      save_as: "tp_3"
+      values:
+        outcome_id: "REC: outcome.id"
+        sequence: 30
+        code: "TP3"
+        description: "Presents the result of a project."
+
+    - step: "Create the learning outcome of the other subject"
+      action: "create"
+      model: "school_subject_outcome"
+      save_as: "other_outcome"
+      values:
+        name: "SSO Other Outcome"
+        code: "EVAL: 'SSOCP%d' % env['school_subject_outcome'].search_count([])"
+        subject_id: "REC: other_subject.id"
+        grade_id: "REC: grade.id"
+        academic_term_id: "REC: academic_term.id"
+
+    - step: "Create the learning objective of the other subject"
+      action: "create"
+      model: "school_subject_outcome_objective"
+      save_as: "other_tp"
+      values:
+        outcome_id: "REC: other_outcome.id"
+        code: "OTP1"
+        description: "Belongs to another subject."
+
+scenarios:
+  - name: "Subject Outcome - Objectives and one active outcome per scope"
+    steps:
+      - step: "The outcome holds its three objectives"
+        action: "assert"
+        target: "outcome"
+        asserts:
+          objective_ids:
+            type: "o2m"
+            check: "count"
+            expected_count: 3
+
+      - step: "A second active outcome of the same scope is rejected"
+        action: "create"
+        model: "school_subject_outcome"
+        values:
+          name: "SSO Duplicate"
+          code: "/"
+          subject_id: "REC: subject.id"
+          grade_id: "REC: grade.id"
+          academic_term_id: "REC: academic_term.id"
+        expect_error:
+          type: "ValidationError"
+          message_contains: "active learning outcome already exists"
+
+      - step: "An archived outcome of the same scope is accepted"
+        action: "create"
+        model: "school_subject_outcome"
+        save_as: "archived_outcome"
+        values:
+          name: "SSO Archived"
+          code: "/"
+          active: false
+          subject_id: "REC: subject.id"
+          grade_id: "REC: grade.id"
+          academic_term_id: "REC: academic_term.id"
+
+      - step: "Restoring the archived outcome is rejected"
+        action: "write"
+        target: "archived_outcome"
+        values:
+          active: true
+        expect_error:
+          type: "ValidationError"
+          message_contains: "active learning outcome already exists"
+
+  - name: "Score Sheet Component - Objectives must match the sheet"
+    steps:
+      - step: "Create the score sheet of the subject"
+        action: "create"
+        model: "school_score_sheet"
+        save_as: "sheet"
+        values:
+          academic_term_id: "REC: academic_term.id"
+          grade_class_id: "REC: grade_class.id"
+          subject_id: "REC: subject.id"
+          teacher_id: "REC: teacher.id"
+          date: 2026-08-10
+          user_id: "REF: base.user_admin"
+          component_ids:
+            - - 0
+              - 0
+              - component_id: "REC: component_1.id"
+                objective_ids:
+                  - - 6
+                    - 0
+                    - - "REC: tp_1.id"
+
+      - step: "Choosing an objective of another subject is rejected"
+        action: "create"
+        model: "school_score_sheet_component"
+        values:
+          sheet_id: "REC: sheet.id"
+          component_id: "REC: component_2.id"
+          objective_ids:
+            - - 6
+              - 0
+              - - "REC: other_tp.id"
+        expect_error:
+          type: "ValidationError"
+          message_contains: "is outside the subject"
+
+      - step: "A component twice on the same sheet is rejected"
+        action: "create"
+        model: "school_score_sheet_component"
+        values:
+          sheet_id: "REC: sheet.id"
+          component_id: "REC: component_1.id"
+        expect_error:
+          type: "ValidationError"
+          message_contains: "only appear once"
+
+      - step:
+          "Changing the subject of the sheet is rejected while it keeps the objectives"
+        action: "write"
+        target: "sheet"
+        values:
+          subject_id: "REC: other_subject.id"
+        expect_error:
+          type: "ValidationError"
+          message_contains: "is outside the subject"
+
+  - name: "Score Sheet - Generating lines keeps the objectives chosen"
+    steps:
+      - step: "Create the score sheet of the subject"
+        action: "create"
+        model: "school_score_sheet"
+        save_as: "sheet"
+        values:
+          academic_term_id: "REC: academic_term.id"
+          grade_class_id: "REC: grade_class.id"
+          subject_id: "REC: subject.id"
+          teacher_id: "REC: teacher.id"
+          date: 2026-08-10
+          user_id: "REF: base.user_admin"
+
+      - step: "Generate the lines"
+        action: "call"
+        target: "sheet"
+        method: "action_generate_lines"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          component_ids:
+            type: "o2m"
+            check: "count"
+            expected_count: 3
+
+      - step: "Find the record of the first daily test"
+        action: "search"
+        model: "school_score_sheet_component"
+        domain:
+          - ["sheet_id", "=", "REC: sheet.id"]
+          - ["component_id", "=", "REC: component_1.id"]
+        save_as: "sheet_component_1"
+        expect_count: 1
+
+      - step: "Choose the objective TP 1 on the first daily test"
+        action: "write"
+        target: "sheet_component_1"
+        values:
+          objective_ids:
+            - - 6
+              - 0
+              - - "REC: tp_1.id"
+
+      - step: "Generate the lines again"
+        action: "call"
+        target: "sheet"
+        method: "action_generate_lines"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          component_ids:
+            type: "o2m"
+            check: "count"
+            expected_count: 3
+
+      - step: "The objective is still chosen"
+        action: "assert"
+        target: "sheet_component_1"
+        asserts:
+          objective_ids:
+            type: "m2m"
+            check: "count"
+            expected_count: 1
+
+      - step: "The objective shows the component that measures it"
+        action: "assert"
+        target: "tp_1"
+        asserts:
+          score_sheet_component_ids:
+            type: "m2m"
+            check: "count"
+            expected_count: 1
+
+  - name: "Report Card - Learning objective follows the scored components"
+    steps:
+      - step: "Create the score sheet of the subject"
+        action: "create"
+        model: "school_score_sheet"
+        save_as: "sheet"
+        values:
+          academic_term_id: "REC: academic_term.id"
+          grade_class_id: "REC: grade_class.id"
+          subject_id: "REC: subject.id"
+          teacher_id: "REC: teacher.id"
+          date: 2026-08-10
+          user_id: "REF: base.user_admin"
+          line_ids:
+            - - 0
+              - 0
+              - enrollment_id: "REC: enrollment_1.id"
+                component_id: "REC: component_1.id"
+                score: 90.0
+            - - 0
+              - 0
+              - enrollment_id: "REC: enrollment_1.id"
+                component_id: "REC: component_3.id"
+                score: 80.0
+            - - 0
+              - 0
+              - enrollment_id: "REC: enrollment_1.id"
+                component_id: "REC: component_pts.id"
+                score: 86.0
+          component_ids:
+            - - 0
+              - 0
+              - component_id: "REC: component_1.id"
+                objective_ids:
+                  - - 6
+                    - 0
+                    - - "REC: tp_1.id"
+            - - 0
+              - 0
+              - component_id: "REC: component_3.id"
+                objective_ids:
+                  - - 6
+                    - 0
+                    - - "REC: tp_2.id"
+                      - "REC: tp_1.id"
+            - - 0
+              - 0
+              - component_id: "REC: component_2.id"
+                objective_ids:
+                  - - 6
+                    - 0
+                    - - "REC: tp_3.id"
+
+      - step: "Confirm the score sheet"
+        action: "call"
+        target: "sheet"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve the score sheet, which finishes it"
+        action: "call"
+        target: "sheet"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "done"
+
+      - step: "Create the report card"
+        action: "create"
+        model: "school_report_card"
+        save_as: "card"
+        values:
+          enrollment_id: "REC: enrollment_1.id"
+          type_id: "REC: mid_type.id"
+          print_date: 2026-12-20
+          print_city: "Jakarta"
+          user_id: "REF: base.user_admin"
+
+      - step: "Generate the lines"
+        action: "call"
+        target: "card"
+        method: "action_generate_lines"
+        as_user: "base.user_admin"
+        refresh: true
+
+      - step: "Find the line of the subject"
+        action: "search"
+        model: "school_report_card_line"
+        domain:
+          - ["report_card_id", "=", "REC: card.id"]
+          - ["subject_id", "=", "REC: subject.id"]
+        save_as: "line"
+        expect_count: 1
+
+      - step: "Only the scored components give their objectives, once each, in order"
+        action: "assert"
+        target: "line"
+        asserts:
+          learning_objective:
+            type: "value"
+            expected: "Explains the basic concepts.\nSolves routine problems."
+
+      - step: "Write the learning objective by hand"
+        action: "write"
+        target: "line"
+        values:
+          learning_objective: "Written by the homeroom teacher."
+
+      - step: "Compute the scores"
+        action: "call"
+        target: "card"
+        method: "action_compute_scores"
+        as_user: "base.user_admin"
+        refresh: true
+
+      - step: "Computing does not overwrite the text"
+        action: "assert"
+        target: "line"
+        asserts:
+          learning_objective:
+            type: "value"
+            expected: "Written by the homeroom teacher."
+
+      - step: "Refill the learning objective"
+        action: "call"
+        target: "card"
+        method: "action_refill_learning_objective"
+        as_user: "base.user_admin"
+        refresh: true
+
+      - step: "Refilling overwrites the text"
+        action: "assert"
+        target: "line"
+        asserts:
+          learning_objective:
+            type: "value"
+            expected: "Explains the basic concepts.\nSolves routine problems."
+
+      - step: "Empty the learning objective"
+        action: "write"
+        target: "line"
+        values:
+          learning_objective: false
+
+      - step: "Compute the scores"
+        action: "call"
+        target: "card"
+        method: "action_compute_scores"
+        as_user: "base.user_admin"
+        refresh: true
+
+      - step: "Computing fills an empty text"
+        action: "assert"
+        target: "line"
+        asserts:
+          learning_objective:
+            type: "value"
+            expected: "Explains the basic concepts.\nSolves routine problems."
+  - name: "Report Card - A subject without scored objectives stays empty"
+    steps:
+      - step: "Create the score sheet of the subject"
+        action: "create"
+        model: "school_score_sheet"
+        save_as: "sheet"
+        values:
+          academic_term_id: "REC: academic_term.id"
+          grade_class_id: "REC: grade_class.id"
+          subject_id: "REC: subject.id"
+          teacher_id: "REC: teacher.id"
+          date: 2026-08-10
+          user_id: "REF: base.user_admin"
+          line_ids:
+            - - 0
+              - 0
+              - enrollment_id: "REC: enrollment_1.id"
+                component_id: "REC: component_pts.id"
+                score: 86.0
+          component_ids:
+            - - 0
+              - 0
+              - component_id: "REC: component_1.id"
+                objective_ids:
+                  - - 6
+                    - 0
+                    - - "REC: tp_1.id"
+
+      - step: "Confirm the score sheet"
+        action: "call"
+        target: "sheet"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve the score sheet, which finishes it"
+        action: "call"
+        target: "sheet"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "done"
+
+      - step: "Create the report card"
+        action: "create"
+        model: "school_report_card"
+        save_as: "card"
+        values:
+          enrollment_id: "REC: enrollment_1.id"
+          type_id: "REC: mid_type.id"
+          print_date: 2026-12-20
+          print_city: "Jakarta"
+          user_id: "REF: base.user_admin"
+
+      - step: "Generate the lines"
+        action: "call"
+        target: "card"
+        method: "action_generate_lines"
+        as_user: "base.user_admin"
+        refresh: true
+
+      - step: "Find the line of the subject"
+        action: "search"
+        model: "school_report_card_line"
+        domain:
+          - ["report_card_id", "=", "REC: card.id"]
+          - ["subject_id", "=", "REC: subject.id"]
+        save_as: "line"
+        expect_count: 1
+
+      - step: "Only the mid-term exam was scored, so the text is empty"
+        action: "assert"
+        target: "line"
+        asserts:
+          learning_objective:
+            type: "value"
+            expected: false
+
+      - step: "Write the learning objective by hand"
+        action: "write"
+        target: "line"
+        values:
+          learning_objective: "Written by the homeroom teacher."
+
+      - step: "Refill the learning objective"
+        action: "call"
+        target: "card"
+        method: "action_refill_learning_objective"
+        as_user: "base.user_admin"
+        refresh: true
+
+      - step: "Refilling empties the text, the field stays editable"
+        action: "assert"
+        target: "line"
+        asserts:
+          learning_objective:
+            type: "value"
+            expected: false
+  - name: "Report Card - Objectives of a score sheet that is not done are not used"
+    steps:
+      - step: "Create the score sheet of the subject"
+        action: "create"
+        model: "school_score_sheet"
+        save_as: "sheet"
+        values:
+          academic_term_id: "REC: academic_term.id"
+          grade_class_id: "REC: grade_class.id"
+          subject_id: "REC: subject.id"
+          teacher_id: "REC: teacher.id"
+          date: 2026-08-10
+          user_id: "REF: base.user_admin"
+          line_ids:
+            - - 0
+              - 0
+              - enrollment_id: "REC: enrollment_1.id"
+                component_id: "REC: component_1.id"
+                score: 90.0
+          component_ids:
+            - - 0
+              - 0
+              - component_id: "REC: component_1.id"
+                objective_ids:
+                  - - 6
+                    - 0
+                    - - "REC: tp_1.id"
+
+      - step: "Create the report card"
+        action: "create"
+        model: "school_report_card"
+        save_as: "card"
+        values:
+          enrollment_id: "REC: enrollment_1.id"
+          type_id: "REC: mid_type.id"
+          print_date: 2026-12-20
+          print_city: "Jakarta"
+          user_id: "REF: base.user_admin"
+
+      - step: "Generate the lines"
+        action: "call"
+        target: "card"
+        method: "action_generate_lines"
+        as_user: "base.user_admin"
+        refresh: true
+
+      - step: "Find the line of the subject"
+        action: "search"
+        model: "school_report_card_line"
+        domain:
+          - ["report_card_id", "=", "REC: card.id"]
+          - ["subject_id", "=", "REC: subject.id"]
+        save_as: "line"
+        expect_count: 1
+
+      - step: "The sheet is still draft, so the text is empty"
+        action: "assert"
+        target: "line"
+        asserts:
+          learning_objective:
+            type: "value"
+            expected: false

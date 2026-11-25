@@ -362,4 +362,73 @@ odoo.define("ssi_school_academic.school_score_sheet_tour", function (require) {
             ]
         )
     );
+
+    // IK: docs/school_score_sheet/09-choose-objectives.md
+    tour.register(
+        "ssi_school_academic_school_score_sheet_choose_objectives",
+        {test: true, url: "/web"},
+        [].concat(
+            // Flow 1 and 2 -- Open the Score Sheets menu, open the record.
+            openSheetsList(),
+            openRecord("TOUR SSS Subject OBJECTIVE"),
+            [
+                // Flow 3 -- Click the Edit button.
+                {
+                    content: "Click the Edit button",
+                    trigger: ".o_form_button_edit",
+                },
+                {
+                    content: "Form is now editable",
+                    trigger: ".o_form_view.o_form_editable",
+                    run: function () {
+                        // Assertion only; do not trigger the default click.
+                    },
+                },
+
+                // Flow 4 -- Open the Learning Objectives tab.
+                {
+                    content: "Open the Learning Objectives tab",
+                    trigger: ".o_notebook .nav-link:contains(Learning Objectives)",
+                },
+
+                // Flow 5 -- Click the Learning Objectives cell of a row and
+                // choose an objective.
+                {
+                    content: "Click the Learning Objectives cell of the first row",
+                    trigger:
+                        ".o_field_one2many[name='component_ids'] .o_data_row:contains(TOUR SSS Daily Test 1) .o_data_cell:last",
+                },
+                {
+                    content: "Type the objective",
+                    trigger:
+                        ".o_selected_row .o_field_many2manytags[name='objective_ids'] input",
+                    run: "text TOUR SSS TP One",
+                },
+                {
+                    content: "Pick the objective from the dropdown",
+                    trigger:
+                        ".ui-autocomplete .ui-menu-item a:contains(TOUR SSS TP One)",
+                    in_modal: false,
+                },
+
+                // Flow 6 -- Click the Save button.
+                {
+                    content: "Save the record",
+                    trigger: ".o_form_button_save",
+                },
+
+                // Post-Condition -- the chosen objective is listed on the
+                // row of the component.
+                {
+                    content: "The objective is listed on the row",
+                    trigger:
+                        ".o_field_one2many[name='component_ids'] .o_data_row:contains(TOUR SSS TP One)",
+                    extra_trigger: ".o_form_view.o_form_readonly",
+                    run: function () {
+                        // Assertion only; do not trigger the default click.
+                    },
+                },
+            ]
+        )
+    );
 });

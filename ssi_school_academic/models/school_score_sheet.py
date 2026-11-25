@@ -194,6 +194,19 @@ class SchoolScoreSheet(models.Model):
         },
         help="Score lines, one per enrollment and per score component.",
     )
+    component_ids = fields.One2many(
+        string="Components",
+        comodel_name="school_score_sheet_component",
+        inverse_name="sheet_id",
+        readonly=True,
+        states={
+            "draft": [
+                ("readonly", False),
+            ],
+        },
+        help="Daily tests and assignments of this sheet, each with the "
+        "learning objectives (TP) it measures.",
+    )
     generate_lines_ok = fields.Boolean(
         string="Can Generate Lines",
         compute="_compute_policy",
@@ -269,12 +282,32 @@ Solution: Open the existing score sheet, or cancel it before creating a new one
                 )
                 raise ValidationError(error_message)
 
+    @api.constrains(
+        "subject_id",
+        "grade_class_id",
+        "academic_term_id",
+    )
+    def _check_component_objectives(self):
+        """Check the objectives of the components after a scope change.
+
+        The learning objectives chosen on the components must belong to
+        the subject, grade and academic term of the sheet, so they are
+        checked again when one of those changes.
+
+        :raises ValidationError: when an objective of a component is
+            outside the new scope of the sheet.
+        """
+        for record in self:
+            record.component_ids._check_objective_scope()
+
     def action_generate_lines(self):
         """Fill the lines from the open enrollments of the class.
 
         Replaces every line of the sheet with one line per open
-        enrollment and per active score component. The button is shown
-        according to the ``generate_lines_ok`` policy.
+        enrollment and per active score component, and adds a component
+        record for each daily test and assignment that has none yet.
+        The button is shown according to the ``generate_lines_ok``
+        policy.
 
         :return: nothing
         """
@@ -314,6 +347,42 @@ Solution: Restart the document before generating the lines
             for component in components:
                 values.append(self._prepare_line_values(enrollment, component))
         self.env["school_score_sheet_line"].create(values)
+        self._upsert_component_records()
+
+    def _upsert_component_records(self):
+        """Add a component record for each daily test and assignment.
+
+        Components that already have a record keep it, with the
+        learning objectives chosen on it, so generating the lines again
+        never removes a choice.
+
+        :return: nothing
+        """
+        self.ensure_one()
+        existing = self.component_ids.mapped("component_id")
+        components = self.env["school_score_component"].search(
+            self._get_objective_component_domain(), order="sequence, id"
+        )
+        self.env["school_score_sheet_component"].create(
+            [
+                {"sheet_id": self.id, "component_id": component.id}
+                for component in components
+                if component not in existing
+            ]
+        )
+
+    def _get_objective_component_domain(self):
+        """Return the domain of the components that get a TP choice.
+
+        Extension point: the active daily tests and assignments. The
+        mid-term and final exams are not linked to learning objectives.
+
+        :return: domain for ``school_score_component``
+        """
+        self.ensure_one()
+        return self._get_component_domain() + [
+            ("category", "in", ["daily_test", "assignment"]),
+        ]
 
     def _get_enrollment_domain(self):
         """Return the domain of the enrollments that get a line.
