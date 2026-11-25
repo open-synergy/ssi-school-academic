@@ -19,7 +19,8 @@ class TestUiSchoolReportCard(HttpSavepointCase):
         One open enrollment is shared by every scenario. The unique key
         of a live report card is its enrollment and report card type,
         so every scenario owns a dedicated Report Card Type (suffixed
-        CREATE, GENERATE, COMPUTE, CONFIRM, APPROVE, REJECT, CANCEL).
+        CREATE, GENERATE, COMPUTE, REFILL, CONFIRM, APPROVE, REJECT,
+        CANCEL).
         No suffix is a prefix of another, so the list always shows one
         uniquely-named row per scenario.
         """
@@ -121,6 +122,13 @@ class TestUiSchoolReportCard(HttpSavepointCase):
         compute.invalidate_cache()
         cls._create_done_sheet()
 
+        # ── Refill tour: lines generated after the sheet is done, then a
+        # text typed by hand over the filled learning objective ──
+        refill = cls._create_card("REFILL")
+        refill.with_user(cls.admin).action_generate_lines()
+        refill.invalidate_cache()
+        refill.line_ids.write({"learning_objective": "TOUR SRC manual text"})
+
         # ── Confirm tour: a Draft report card ──
         cls._create_card("CONFIRM")
 
@@ -214,6 +222,22 @@ class TestUiSchoolReportCard(HttpSavepointCase):
 
         :return: nothing
         """
+        outcome = cls.env["school_subject_outcome"].create(
+            {
+                "name": "TOUR SRC Outcome",
+                "code": "/",
+                "subject_id": cls.subject.id,
+                "grade_id": cls.grade.id,
+                "academic_term_id": cls.term.id,
+            }
+        )
+        objective = cls.env["school_subject_outcome_objective"].create(
+            {
+                "outcome_id": outcome.id,
+                "code": "TOUR SRC TP",
+                "description": "TOUR SRC objective description",
+            }
+        )
         sheet = cls.env["school_score_sheet"].create(
             {
                 "academic_term_id": cls.term.id,
@@ -230,6 +254,16 @@ class TestUiSchoolReportCard(HttpSavepointCase):
                             "enrollment_id": cls.enrollment.id,
                             "component_id": cls.component.id,
                             "score": 90.0,
+                        },
+                    )
+                ],
+                "component_ids": [
+                    (
+                        0,
+                        0,
+                        {
+                            "component_id": cls.component.id,
+                            "objective_ids": [(6, 0, [objective.id])],
                         },
                     )
                 ],
@@ -282,6 +316,17 @@ class TestUiSchoolReportCard(HttpSavepointCase):
         self.start_tour(
             "/web",
             "ssi_school_academic_school_report_card_compute_scores",
+            login="admin",
+        )
+
+    def test_refill_learning_objective(self):
+        """Run the refill learning objective tour for the report card.
+
+        IK: docs/school_report_card/09-refill-learning-objective.md
+        """
+        self.start_tour(
+            "/web",
+            "ssi_school_academic_school_report_card_refill_learning_objective",
             login="admin",
         )
 

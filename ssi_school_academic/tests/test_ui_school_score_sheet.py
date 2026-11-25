@@ -141,6 +141,27 @@ class TestUiSchoolScoreSheet(HttpSavepointCase):
             }
         )
 
+        # ── Choose Objectives tour: a Draft sheet with its components and
+        # a learning outcome of the same subject, grade and term ──
+        objective = cls._create_sheet("OBJECTIVE")
+        cls._add_lines(objective)
+        outcome = cls.env["school_subject_outcome"].create(
+            {
+                "name": "TOUR SSS Outcome",
+                "code": "/",
+                "subject_id": objective.subject_id.id,
+                "grade_id": cls.grade.id,
+                "academic_term_id": cls.term.id,
+            }
+        )
+        cls.env["school_subject_outcome_objective"].create(
+            {
+                "outcome_id": outcome.id,
+                "code": "TOUR SSS TP One",
+                "description": "TOUR SSS objective description",
+            }
+        )
+
         # ── Confirm tour: a Draft sheet with lines ──
         confirm = cls._create_sheet("CONFIRM")
         cls._add_lines(confirm)
@@ -372,5 +393,16 @@ class TestUiSchoolScoreSheet(HttpSavepointCase):
         self.start_tour(
             "/web",
             "ssi_school_academic_school_score_sheet_restart_approval",
+            login="admin",
+        )
+
+    def test_choose_objectives(self):
+        """Run the choose objectives tour for ``school_score_sheet``.
+
+        IK: docs/school_score_sheet/09-choose-objectives.md
+        """
+        self.start_tour(
+            "/web",
+            "ssi_school_academic_school_score_sheet_choose_objectives",
             login="admin",
         )

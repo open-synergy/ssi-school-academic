@@ -50,6 +50,10 @@
             />
             <script
                 type="text/javascript"
+                src="/ssi_school_academic/static/tests/tours/school_subject_outcome_tour.js"
+            />
+            <script
+                type="text/javascript"
                 src="/ssi_school_academic/static/tests/tours/school_report_card_main_subject_tour.js"
             />
             <script

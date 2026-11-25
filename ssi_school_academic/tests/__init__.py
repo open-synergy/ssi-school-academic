@@ -14,6 +14,7 @@ from . import (  # noqa: F401
     test_school_score_predicate,
     test_school_score_sheet,
     test_school_subject,
+    test_school_subject_outcome,
     test_ui_print_report_card_ledger,
     test_ui_school_report_card,
     test_ui_school_report_card_main_subject,
@@ -22,4 +23,5 @@ from . import (  # noqa: F401
     test_ui_school_score_predicate,
     test_ui_school_score_sheet,
     test_ui_school_subject,
+    test_ui_school_subject_outcome,
 )

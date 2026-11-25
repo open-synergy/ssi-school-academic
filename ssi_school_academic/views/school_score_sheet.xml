@@ -120,6 +120,30 @@
                     </field>
                 </page>
             </xpath>
+            <xpath expr="//page[@name='score']" position="after">
+                <page name="objective" string="Learning Objectives">
+                    <field name="component_ids" colspan="4" nolabel="1">
+                        <tree editable="bottom" create="0">
+                            <field name="component_id" />
+                            <field
+                                    name="objective_ids"
+                                    widget="many2many_tags"
+                                    domain="[('subject_id', '=', parent.subject_id), ('grade_id', '=', parent.grade_id), ('academic_term_id', '=', parent.academic_term_id)]"
+                                />
+                        </tree>
+                        <form>
+                            <group col="2">
+                                <field name="component_id" />
+                                <field
+                                        name="objective_ids"
+                                        widget="many2many_tags"
+                                        domain="[('subject_id', '=', parent.subject_id), ('grade_id', '=', parent.grade_id), ('academic_term_id', '=', parent.academic_term_id)]"
+                                    />
+                            </group>
+                        </form>
+                    </field>
+                </page>
+            </xpath>
             <xpath expr="//group[@name='policy_2']" position="inside">
                 <field name="generate_lines_ok" />
             </xpath>

@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 OpenSynergy Indonesia
+     Copyright 2026 PT. Simetri Sinergi Indonesia
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+<record id="school_subject_outcome_view_search" model="ir.ui.view">
+    <field name="name">school_subject_outcome - search</field>
+    <field name="model">school_subject_outcome</field>
+    <field
+            name="inherit_id"
+            ref="ssi_master_data_mixin.mixin_master_data_view_search"
+        />
+    <field name="mode">primary</field>
+    <field name="arch" type="xml">
+        <data>
+            <xpath expr="//search" position="inside">
+                <field name="subject_id" />
+                <field name="grade_id" />
+                <field name="academic_term_id" />
+                <group expand="0" string="Group By">
+                    <filter
+                            name="group_by_subject_id"
+                            string="Subject"
+                            context="{'group_by': 'subject_id'}"
+                        />
+                    <filter
+                            name="group_by_grade_id"
+                            string="Grade"
+                            context="{'group_by': 'grade_id'}"
+                        />
+                    <filter
+                            name="group_by_academic_term_id"
+                            string="Academic Term"
+                            context="{'group_by': 'academic_term_id'}"
+                        />
+                </group>
+            </xpath>
+        </data>
+    </field>
+</record>
+
+<record id="school_subject_outcome_view_tree" model="ir.ui.view">
+    <field name="name">school_subject_outcome - tree</field>
+    <field name="model">school_subject_outcome</field>
+    <field name="inherit_id" ref="ssi_master_data_mixin.mixin_master_data_view_tree" />
+    <field name="mode">primary</field>
+    <field name="arch" type="xml">
+        <data>
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="subject_id" />
+                <field name="grade_id" />
+                <field name="academic_term_id" />
+            </xpath>
+        </data>
+    </field>
+</record>
+
+<record id="school_subject_outcome_view_form" model="ir.ui.view">
+    <field name="name">school_subject_outcome - form</field>
+    <field name="model">school_subject_outcome</field>
+    <field name="inherit_id" ref="ssi_master_data_mixin.mixin_master_data_view_form" />
+    <field name="mode">primary</field>
+    <field name="arch" type="xml">
+        <data>
+            <xpath expr="//field[@name='code']" position="after">
+                <field name="subject_id" />
+                <field name="grade_id" />
+                <field name="academic_term_id" />
+            </xpath>
+            <xpath expr="//notebook/page[@name='note']" position="before">
+                <page name="objective" string="Learning Objectives">
+                    <field name="objective_ids" nolabel="1">
+                        <tree editable="bottom">
+                            <field name="sequence" widget="handle" />
+                            <field name="code" />
+                            <field name="description" />
+                            <field
+                                    name="score_sheet_component_ids"
+                                    widget="many2many_tags"
+                                />
+                        </tree>
+                        <form>
+                            <group name="objective_group_1">
+                                <field name="sequence" />
+                                <field name="code" />
+                                <field name="description" />
+                                <field
+                                        name="score_sheet_component_ids"
+                                        widget="many2many_tags"
+                                    />
+                            </group>
+                        </form>
+                    </field>
+                </page>
+            </xpath>
+        </data>
+    </field>
+</record>
+
+<record id="school_subject_outcome_action" model="ir.actions.act_window">
+    <field name="name">Subject Outcomes</field>
+    <field name="type">ir.actions.act_window</field>
+    <field name="res_model">school_subject_outcome</field>
+    <field name="view_mode">tree,form</field>
+</record>
+
+<menuitem
+        id="school_subject_outcome_menu"
+        name="Subject Outcomes"
+        parent="ssi_school.menu_subject_configuration"
+        action="school_subject_outcome_action"
+        groups="school_subject_outcome_group"
+        sequence="15"
+    />
+
+</odoo>

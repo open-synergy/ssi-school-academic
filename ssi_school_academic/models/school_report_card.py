@@ -298,6 +298,14 @@ class SchoolReportCard(models.Model):
         compute_sudo=True,
         help="Policy that determines whether the Generate Lines button " "is visible.",
     )
+    refill_learning_objective_ok = fields.Boolean(
+        string="Can Refill Learning Objective",
+        compute="_compute_policy",
+        store=False,
+        compute_sudo=True,
+        help="Policy that determines whether the Refill Learning "
+        "Objective button is visible.",
+    )
     compute_scores_ok = fields.Boolean(
         string="Can Compute Scores",
         compute="_compute_policy",
@@ -417,6 +425,19 @@ Solution: Select an enrollment that is open
         for record in self.sudo():
             record._compute_scores()
 
+    def action_refill_learning_objective(self):
+        """Overwrite the learning objective of every line.
+
+        Builds the text again from the score sheets that are done and
+        replaces what is on the lines, the text typed by hand included.
+        The button is shown according to the
+        ``refill_learning_objective_ok`` policy.
+
+        :return: nothing
+        """
+        for record in self.sudo():
+            record._refill_learning_objective()
+
     def _check_draft_state(self, context):
         """Raise when the report card is not in draft state.
 
@@ -458,7 +479,9 @@ Solution: Restart the document before running this action
         """Fill the final score of every line.
 
         A line without any entered score is left not scored, with an
-        empty final score, instead of getting a computed zero.
+        empty final score, instead of getting a computed zero. The
+        learning objective text is filled for the lines that have none;
+        a text that is already there is never overwritten.
 
         :raises UserError: when the report card is not in draft state.
         :return: nothing
@@ -478,6 +501,17 @@ Solution: Restart the document before running this action
                 )
             else:
                 line.write({"is_scored": False, "final_score": False})
+        self.line_ids._refill_learning_objective(False)
+
+    def _refill_learning_objective(self):
+        """Overwrite the learning objective of every line.
+
+        :raises UserError: when the report card is not in draft state.
+        :return: nothing
+        """
+        self.ensure_one()
+        self._check_draft_state("Refill learning objective")
+        self.line_ids._refill_learning_objective(True)
 
     def _get_subject_domain(self):
         """Return the domain of the subjects that get a line.
@@ -768,6 +802,7 @@ Solution: Ask the administrator to add you to the report card Viewer group
             "manual_number_ok",
             "generate_lines_ok",
             "compute_scores_ok",
+            "refill_learning_objective_ok",
         ]
         res += policy_field
         return res

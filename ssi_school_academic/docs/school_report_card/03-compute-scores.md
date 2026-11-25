@@ -32,4 +32,8 @@
 - A line whose subject has no entered score at all shows **-** as its Final Score and
   has no Predicate; the line stays on the report card.
 - The **Predicate** of every other line follows its Final Score.
+- The **Learning Objective Achievement** of a line is filled from the learning
+  objectives of the scored daily tests and assignments only when it is empty. A text
+  that is already there, typed by hand or filled before, is kept; use
+  `09-refill-learning-objective` to overwrite it.
 - Status stays **Draft**.
