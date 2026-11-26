@@ -8,7 +8,10 @@ School Academic - Operating Unit
 
 Operating Unit support for SSI School Academic module.
 Adds operating unit access control for the transactional models
-school_score_sheet and school_report_card.
+school_score_sheet and school_report_card, and for the master data
+school_teaching_assignment. The score sheets made by the generate wizard
+and the assignments made by the copy wizard carry the operating unit of
+the teaching assignment they come from.
 
 
 Work Instruction
@@ -23,6 +26,11 @@ Report Card
 ---------------
 
 * `Create School Report Card <docs/school_report_card/01-create.html>`_
+
+Teaching Assignment
+---------------------
+
+* `Create Teaching Assignment <docs/school_teaching_assignment/01-create.html>`_
 
 
 Bug Tracker

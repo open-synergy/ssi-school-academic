@@ -17,6 +17,10 @@
                 type="text/javascript"
                 src="/ssi_school_academic_operating_unit/static/tests/tours/school_report_card_tour.js"
             />
+            <script
+                type="text/javascript"
+                src="/ssi_school_academic_operating_unit/static/tests/tours/school_teaching_assignment_tour.js"
+            />
         </xpath>
     </template>
 </odoo>
