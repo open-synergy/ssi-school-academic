@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 OpenSynergy Indonesia
+     Copyright 2026 PT. Simetri Sinergi Indonesia
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+<record id="school_teaching_assignment_view_search" model="ir.ui.view">
+    <field name="name">school_teaching_assignment - search</field>
+    <field name="model">school_teaching_assignment</field>
+    <field
+            name="inherit_id"
+            ref="ssi_master_data_mixin.mixin_master_data_view_search"
+        />
+    <field name="mode">primary</field>
+    <field name="arch" type="xml">
+        <data>
+            <xpath expr="//search" position="inside">
+                <field name="teacher_id" />
+                <field name="academic_term_id" />
+                <group expand="0" string="Group By">
+                    <filter
+                            name="group_by_teacher_id"
+                            string="Teacher"
+                            context="{'group_by': 'teacher_id'}"
+                        />
+                    <filter
+                            name="group_by_academic_term_id"
+                            string="Academic Term"
+                            context="{'group_by': 'academic_term_id'}"
+                        />
+                </group>
+            </xpath>
+        </data>
+    </field>
+</record>
+
+<record id="school_teaching_assignment_view_tree" model="ir.ui.view">
+    <field name="name">school_teaching_assignment - tree</field>
+    <field name="model">school_teaching_assignment</field>
+    <field name="inherit_id" ref="ssi_master_data_mixin.mixin_master_data_view_tree" />
+    <field name="mode">primary</field>
+    <field name="arch" type="xml">
+        <data>
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="teacher_id" />
+                <field name="academic_term_id" />
+                <field name="main_weekly_hours" />
+                <field name="assistant_weekly_hours" />
+                <field name="total_weekly_hours" />
+            </xpath>
+        </data>
+    </field>
+</record>
+
+<record id="school_teaching_assignment_view_form" model="ir.ui.view">
+    <field name="name">school_teaching_assignment - form</field>
+    <field name="model">school_teaching_assignment</field>
+    <field name="inherit_id" ref="ssi_master_data_mixin.mixin_master_data_view_form" />
+    <field name="mode">primary</field>
+    <field name="arch" type="xml">
+        <data>
+            <xpath expr="//field[@name='code']" position="after">
+                <field name="company_id" groups="base.group_multi_company" />
+                <field name="teacher_id" />
+                <field name="academic_term_id" />
+                <field name="main_weekly_hours" />
+                <field name="assistant_weekly_hours" />
+                <field name="total_weekly_hours" />
+            </xpath>
+            <xpath expr="//notebook/page[@name='note']" position="before">
+                <page name="line" string="Lines">
+                    <field name="line_ids" nolabel="1">
+                        <tree editable="bottom">
+                            <field
+                                    name="homeroom_id"
+                                    domain="[('academic_term_id', '=', parent.academic_term_id), ('state', '!=', 'cancel')]"
+                                    context="{'teaching_assignment_label': True}"
+                                />
+                            <field name="grade_class_id" />
+                            <field name="grade_id" invisible="1" />
+                            <field
+                                    name="subject_id"
+                                    domain="[('grade_ids', '=', grade_id)]"
+                                />
+                            <field name="role" />
+                            <field name="weekly_hours" />
+                        </tree>
+                        <form>
+                            <group name="line_group_1">
+                                <field
+                                        name="homeroom_id"
+                                        domain="[('academic_term_id', '=', parent.academic_term_id), ('state', '!=', 'cancel')]"
+                                        context="{'teaching_assignment_label': True}"
+                                    />
+                                <field name="grade_class_id" />
+                                <field name="grade_id" invisible="1" />
+                                <field
+                                        name="subject_id"
+                                        domain="[('grade_ids', '=', grade_id)]"
+                                    />
+                                <field name="role" />
+                                <field name="weekly_hours" />
+                            </group>
+                        </form>
+                    </field>
+                </page>
+            </xpath>
+        </data>
+    </field>
+</record>
+
+<record id="school_teaching_assignment_action" model="ir.actions.act_window">
+    <field name="name">Teaching Assignments</field>
+    <field name="type">ir.actions.act_window</field>
+    <field name="res_model">school_teaching_assignment</field>
+    <field name="view_mode">tree,form</field>
+</record>
+
+<menuitem
+        id="school_teaching_assignment_menu"
+        name="Teaching Assignments"
+        parent="ssi_school.menu_subject_configuration"
+        action="school_teaching_assignment_action"
+        groups="school_teaching_assignment_group"
+        sequence="20"
+    />
+
+<record
+        id="copy_teaching_assignment_from_previous_term_action"
+        model="ir.actions.act_window"
+    >
+    <field name="name">Copy Teaching Assignments</field>
+    <field name="res_model">copy_teaching_assignment_from_previous_term</field>
+    <field name="view_mode">form</field>
+    <field name="target">new</field>
+</record>
+
+<menuitem
+        id="copy_teaching_assignment_from_previous_term_menu"
+        name="Copy Teaching Assignments"
+        parent="ssi_school.menu_subject_configuration"
+        action="copy_teaching_assignment_from_previous_term_action"
+        groups="school_teaching_assignment_group"
+        sequence="25"
+    />
+</odoo>

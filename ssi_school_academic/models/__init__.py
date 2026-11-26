@@ -4,6 +4,7 @@
 
 from . import (  # noqa: F401
     school_grade,
+    school_homeroom,
     school_report_card,
     school_report_card_co_curricular,
     school_report_card_extracurricular,
@@ -22,4 +23,7 @@ from . import (  # noqa: F401
     school_subject_minimum_score,
     school_subject_outcome,
     school_subject_outcome_objective,
+    school_teacher,
+    school_teaching_assignment,
+    school_teaching_assignment_line,
 )

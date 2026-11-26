@@ -446,6 +446,9 @@ msgstr "Hari Tidak Hadir"
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject_outcome__academic_term_id
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject_outcome_objective__academic_term_id
 #: model_terms:ir.ui.view,arch_db:ssi_school_academic.school_subject_outcome_view_search
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_teaching_assignment__academic_term_id
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_teaching_assignment_line__academic_term_id
+#: model_terms:ir.ui.view,arch_db:ssi_school_academic.school_teaching_assignment_view_search
 msgid "Academic Term"
 msgstr "Periode Akademik"
 
@@ -911,6 +914,7 @@ msgstr "Kolom"
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__company_id
 #: model:res.groups,name:ssi_school_academic.school_report_card_company_group
 #: model:res.groups,name:ssi_school_academic.school_score_sheet_company_group
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_teaching_assignment__company_id
 msgid "Company"
 msgstr "Perusahaan"
 
@@ -1306,6 +1310,7 @@ msgstr "Buat Baris"
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject_outcome__grade_id
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject_outcome_objective__grade_id
 #: model_terms:ir.ui.view,arch_db:ssi_school_academic.school_subject_outcome_view_search
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_teaching_assignment_line__grade_id
 msgid "Grade"
 msgstr "Tingkat"
 
@@ -1315,6 +1320,7 @@ msgstr "Tingkat"
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__grade_class_id
 #: model_terms:ir.ui.view,arch_db:ssi_school_academic.school_report_card_view_search
 #: model_terms:ir.ui.view,arch_db:ssi_school_academic.school_score_sheet_view_search
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_teaching_assignment_line__grade_class_id
 msgid "Grade Class"
 msgstr "Kelas Tingkat"
 
@@ -1382,6 +1388,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:ssi_school_academic.school_score_component_view_search
 #: model_terms:ir.ui.view,arch_db:ssi_school_academic.school_score_sheet_view_search
 #: model_terms:ir.ui.view,arch_db:ssi_school_academic.school_subject_view_search
+#: model_terms:ir.ui.view,arch_db:ssi_school_academic.school_teaching_assignment_view_search
 msgid "Group By"
 msgstr "Kelompokkan Berdasarkan"
 
@@ -1412,6 +1419,7 @@ msgstr "Memiliki Nilai"
 
 #. module: ssi_school_academic
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__homeroom_id
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_teaching_assignment_line__homeroom_id
 msgid "Homeroom"
 msgstr "Wali Kelas"
 
@@ -1637,6 +1645,8 @@ msgstr "Leger tempat baris ini berada."
 
 #. module: ssi_school_academic
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__line_ids
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_teaching_assignment__line_ids
+#: model_terms:ir.ui.view,arch_db:ssi_school_academic.school_teaching_assignment_view_form
 msgid "Lines"
 msgstr "Baris"
 
@@ -2473,6 +2483,7 @@ msgstr "Lembar Nilai"
 
 #. module: ssi_school_academic
 #: model:ir.ui.menu,name:ssi_school_academic.school_score_sheet_menu
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_teaching_assignment_line__score_sheet_ids
 msgid "Score Sheets"
 msgstr "Lembar Nilai"
 
@@ -2679,6 +2690,7 @@ msgstr "Baris siswa pada leger."
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject_outcome__subject_id
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_subject_outcome_objective__subject_id
 #: model_terms:ir.ui.view,arch_db:ssi_school_academic.school_subject_outcome_view_search
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_teaching_assignment_line__subject_id
 #, python-format
 msgid "Subject"
 msgstr "Mata Pelajaran"
@@ -2753,6 +2765,9 @@ msgstr "Jumlah dari sel bernilai pada baris ini."
 #. module: ssi_school_academic
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__teacher_id
 #: model_terms:ir.ui.view,arch_db:ssi_school_academic.school_score_sheet_view_search
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_teaching_assignment__teacher_id
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_teaching_assignment_line__teacher_id
+#: model_terms:ir.ui.view,arch_db:ssi_school_academic.school_teaching_assignment_view_search
 msgid "Teacher"
 msgstr "Guru"
 
@@ -3324,3 +3339,518 @@ msgstr ""
 "ID Basis Data: %s\n"
 "Masalah: Tujuan %s berada di luar mata pelajaran, tingkat, dan periode komponen lembar %s.\n"
 "Solusi: Pilih hanya tujuan dengan mata pelajaran, tingkat, dan periode yang sama dengan lembar\n"
+
+
+#. module: ssi_school_academic
+#: model:ir.model,name:ssi_school_academic.model_school_teaching_assignment
+msgid "School Teaching Assignment"
+msgstr "Pembelajaran Guru Sekolah"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_teaching_assignment__company_id
+msgid "Company the teaching assignment belongs to."
+msgstr "Perusahaan pemilik pembelajaran guru."
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_teaching_assignment__teacher_id
+msgid "Teacher whose teaching assignment is recorded."
+msgstr "Guru yang pembelajarannya dicatat."
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_teaching_assignment__academic_term_id
+msgid ""
+"Academic term the teaching assignment is valid for. One academic term is "
+"one semester."
+msgstr ""
+"Periode akademik berlakunya pembelajaran guru. Satu periode akademik "
+"adalah satu semester."
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_teaching_assignment__line_ids
+msgid ""
+"Homerooms and subjects the teacher teaches in the term, each with the role"
+" of the teacher and the weekly hours."
+msgstr ""
+"Rombel dan mata pelajaran yang diajar guru pada periode ini, masing-masing"
+" dengan peran guru dan jam per minggu."
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_teaching_assignment__main_weekly_hours
+msgid "Main Weekly Hours"
+msgstr "JP Mingguan Utama"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_teaching_assignment__main_weekly_hours
+msgid "Total weekly hours of the lines where the teacher is the main teacher."
+msgstr ""
+"Total jam per minggu dari baris yang gurunya berperan sebagai guru utama."
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_teaching_assignment__assistant_weekly_hours
+msgid "Assistant Weekly Hours"
+msgstr "JP Mingguan Pendamping"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_teaching_assignment__assistant_weekly_hours
+msgid ""
+"Total weekly hours of the lines where the teacher is an assistant teacher."
+msgstr ""
+"Total jam per minggu dari baris yang gurunya berperan sebagai guru "
+"pendamping."
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_teaching_assignment__total_weekly_hours
+msgid "Total Weekly Hours"
+msgstr "Total JP Mingguan"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_teaching_assignment__total_weekly_hours
+msgid "Total weekly hours of all the lines, whatever the role of the teacher."
+msgstr "Total jam per minggu dari seluruh baris, apa pun peran gurunya."
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_teaching_assignment.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Save teaching assignment\n"
+"Database ID: %s\n"
+"Problem: This teacher already has a teaching assignment in this term.\n"
+"Solution: Edit the existing teaching assignment, or archive it first\n"
+msgstr ""
+"\n"
+"Konteks: Simpan pembelajaran guru\n"
+"ID Basis Data: %s\n"
+"Masalah: Guru ini sudah memiliki pembelajaran guru pada periode ini.\n"
+"Solusi: Ubah pembelajaran guru yang ada, atau arsipkan terlebih dahulu\n"
+
+#. module: ssi_school_academic
+#: model:ir.model,name:ssi_school_academic.model_school_teaching_assignment_line
+msgid "School Teaching Assignment Line"
+msgstr "Baris Pembelajaran Guru Sekolah"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_teaching_assignment_line__assignment_id
+#: model:res.groups,name:ssi_school_academic.school_teaching_assignment_group
+msgid "Teaching Assignment"
+msgstr "Pembelajaran Guru"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_teaching_assignment_line__assignment_id
+msgid "Teaching assignment this line belongs to."
+msgstr "Pembelajaran guru pemilik baris ini."
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_teaching_assignment_line__teacher_id
+msgid "Teacher of the selected Teaching Assignment."
+msgstr "Guru dari Pembelajaran Guru yang dipilih."
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_teaching_assignment_line__academic_term_id
+msgid "Academic term of the selected Teaching Assignment."
+msgstr "Periode akademik dari Pembelajaran Guru yang dipilih."
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_teaching_assignment_line__homeroom_id
+msgid ""
+"Homeroom the teacher teaches. Only homerooms that are not cancelled can be"
+" chosen; the form narrows them further to the academic term of the "
+"assignment."
+msgstr ""
+"Rombel yang diajar guru. Hanya rombel yang tidak dibatalkan yang dapat "
+"dipilih; formulir mempersempitnya lagi ke periode akademik pembelajaran "
+"guru."
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_teaching_assignment_line__grade_class_id
+msgid "Grade class of the selected Homeroom."
+msgstr "Kelas tingkat dari Wali Kelas yang dipilih."
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_teaching_assignment_line__grade_id
+msgid ""
+"Grade of the selected Homeroom. It decides which subjects can be chosen."
+msgstr ""
+"Tingkat dari Wali Kelas yang dipilih. Tingkat ini menentukan mata "
+"pelajaran yang dapat dipilih."
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_teaching_assignment_line__subject_id
+msgid ""
+"Subject the teacher teaches. Only subjects taught in the Grade of the "
+"Homeroom can be chosen."
+msgstr ""
+"Mata pelajaran yang diajar guru. Hanya mata pelajaran yang diajarkan pada "
+"Tingkat dari Wali Kelas yang dapat dipilih."
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_teaching_assignment_line__role
+msgid "Role"
+msgstr "Peran"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_teaching_assignment_line__role
+msgid ""
+"Role of the teacher in this subject. The main teacher gives the scores and"
+" owns the score sheet; an assistant teacher may only read it."
+msgstr ""
+"Peran guru pada mata pelajaran ini. Guru utama memberi nilai dan memiliki "
+"lembar nilai; guru pendamping hanya dapat membacanya."
+
+#. module: ssi_school_academic
+#: model:ir.model.fields.selection,name:ssi_school_academic.selection__school_teaching_assignment_line__role__main
+msgid "Main"
+msgstr "Utama"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields.selection,name:ssi_school_academic.selection__school_teaching_assignment_line__role__assistant
+msgid "Assistant"
+msgstr "Pendamping"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_teaching_assignment_line__weekly_hours
+msgid "Weekly Hours"
+msgstr "JP per Minggu"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_teaching_assignment_line__weekly_hours
+msgid ""
+"Number of lesson hours (JP) the teacher teaches the subject in this "
+"homeroom per week."
+msgstr ""
+"Jumlah jam pelajaran (JP) guru mengajar mata pelajaran ini di rombel ini "
+"per minggu."
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_teaching_assignment_line__score_sheet_ids
+msgid "Score sheets that were created from this line."
+msgstr "Lembar nilai yang dibuat dari baris ini."
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_teaching_assignment_line.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Save teaching assignment line\n"
+"Database ID: %s\n"
+"Problem: This subject of the homeroom already has a main teacher in this "
+"term.\n"
+"Solution: Set the role to assistant, or change the line of the other "
+"teacher\n"
+msgstr ""
+"\n"
+"Konteks: Simpan baris pembelajaran guru\n"
+"ID Basis Data: %s\n"
+"Masalah: Mata pelajaran rombel ini sudah memiliki guru utama pada periode "
+"ini.\n"
+"Solusi: Ubah peran menjadi pendamping, atau ubah baris guru yang lain\n"
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_teaching_assignment_line.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Save teaching assignment line\n"
+"Database ID: %s\n"
+"Problem: This teacher already teaches this subject in this homeroom.\n"
+"Solution: Edit the existing line instead of adding a new one\n"
+msgstr ""
+"\n"
+"Konteks: Simpan baris pembelajaran guru\n"
+"ID Basis Data: %s\n"
+"Masalah: Guru ini sudah mengajar mata pelajaran ini di rombel ini.\n"
+"Solusi: Ubah baris yang ada, jangan menambah baris baru\n"
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_teaching_assignment_line.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Save teaching assignment line\n"
+"Database ID: %s\n"
+"Problem: The subject is not taught in the grade of the homeroom.\n"
+"Solution: Choose a subject that is taught in the grade of the homeroom\n"
+msgstr ""
+"\n"
+"Konteks: Simpan baris pembelajaran guru\n"
+"ID Basis Data: %s\n"
+"Masalah: Mata pelajaran tidak diajarkan pada tingkat rombel.\n"
+"Solusi: Pilih mata pelajaran yang diajarkan pada tingkat rombel\n"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_homeroom__teaching_assignment_line_ids
+msgid "Teaching Assignment Lines"
+msgstr "Baris Pembelajaran Guru"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_homeroom__teaching_assignment_line_ids
+msgid ""
+"Lines of the teaching assignments that name this homeroom, for every "
+"teacher who teaches in it."
+msgstr ""
+"Baris pembelajaran guru yang menyebut rombel ini, untuk setiap guru yang "
+"mengajar di dalamnya."
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_teacher__teaching_assignment_ids
+#: model:ir.model.fields,field_description:ssi_school_academic.field_generate_score_sheet_from_teaching_assignment__assignment_ids
+#: model:ir.model.fields,field_description:ssi_school_academic.field_copy_teaching_assignment_from_previous_term__assignment_ids
+#: model:ir.actions.act_window,name:ssi_school_academic.school_teaching_assignment_action
+#: model:ir.ui.menu,name:ssi_school_academic.school_teaching_assignment_menu
+#: model_terms:ir.ui.view,arch_db:ssi_school_academic.school_homeroom_view_form
+msgid "Teaching Assignments"
+msgstr "Pembelajaran Guru"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_teacher__teaching_assignment_ids
+msgid "Teaching assignments of this teacher, one per academic term."
+msgstr "Pembelajaran guru dari guru ini, satu untuk setiap periode akademik."
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__teaching_assignment_line_id
+msgid "Teaching Assignment Line"
+msgstr "Baris Pembelajaran Guru"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_score_sheet__teaching_assignment_line_id
+msgid ""
+"Main line of the teaching assignment this score sheet was made for. It is "
+"optional: a score sheet without it works as before. Choosing it fills the "
+"term, class, subject and teacher."
+msgstr ""
+"Baris utama pembelajaran guru yang menjadi dasar lembar nilai ini. "
+"Bersifat opsional: lembar nilai tanpa baris ini bekerja seperti "
+"sebelumnya. Memilihnya akan mengisi periode, kelas, mata pelajaran, dan "
+"guru."
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__allowed_teaching_assignment_line_ids
+msgid "Allowed Teaching Assignment Lines"
+msgstr "Baris Pembelajaran Guru yang Diizinkan"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_score_sheet__allowed_teaching_assignment_line_ids
+msgid ""
+"Main lines of the teaching assignment of the logged in teacher in the "
+"academic term of the sheet. It is empty for a user who is not a teacher or"
+" has no line in the term."
+msgstr ""
+"Baris utama pembelajaran guru dari guru yang sedang masuk pada periode "
+"akademik lembar nilai. Kosong bagi pengguna yang bukan guru atau tidak "
+"memiliki baris pada periode ini."
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__allowed_grade_class_ids
+msgid "Allowed Grade Classes"
+msgstr "Kelas Tingkat yang Diizinkan"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_score_sheet__allowed_grade_class_ids
+msgid ""
+"Grade classes that can be chosen. They are the classes of the allowed "
+"lines, or every grade class when there is no allowed line."
+msgstr ""
+"Kelas tingkat yang dapat dipilih. Yaitu kelas dari baris yang diizinkan, "
+"atau seluruh kelas tingkat bila tidak ada baris yang diizinkan."
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__allowed_subject_ids
+msgid "Allowed Subjects"
+msgstr "Mata Pelajaran yang Diizinkan"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_score_sheet__allowed_subject_ids
+msgid ""
+"Subjects that can be chosen. They are the subjects of the allowed lines of"
+" the chosen class, or every subject when there is no allowed line."
+msgstr ""
+"Mata pelajaran yang dapat dipilih. Yaitu mata pelajaran dari baris yang "
+"diizinkan pada kelas yang dipilih, atau seluruh mata pelajaran bila tidak "
+"ada baris yang diizinkan."
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__assistant_user_ids
+msgid "Assistant Users"
+msgstr "Pengguna Pendamping"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_score_sheet__assistant_user_ids
+msgid ""
+"Users of the assistant teachers of the term, class and subject of the "
+"sheet. They may read the sheet, nothing else."
+msgstr ""
+"Pengguna dari guru pendamping pada periode, kelas, dan mata pelajaran "
+"lembar nilai. Mereka hanya boleh membaca lembar nilai."
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_score_sheet.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Search score sheet by assistant user\n"
+"Database ID: -\n"
+"Problem: The operator %s is not supported on assistant users.\n"
+"Solution: Search with the operator in, =, not in or !=\n"
+msgstr ""
+"\n"
+"Konteks: Cari lembar nilai berdasarkan pengguna pendamping\n"
+"ID Basis Data: -\n"
+"Masalah: Operator %s tidak didukung pada pengguna pendamping.\n"
+"Solusi: Cari dengan operator in, =, not in, atau !=\n"
+
+#. module: ssi_school_academic
+#: model:ir.model,name:ssi_school_academic.model_generate_score_sheet_from_teaching_assignment
+msgid "Generate Score Sheet From Teaching Assignment"
+msgstr "Buat Lembar Nilai dari Pembelajaran Guru"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_generate_score_sheet_from_teaching_assignment__assignment_ids
+msgid "Teaching assignments whose main lines get a score sheet."
+msgstr "Pembelajaran guru yang baris utamanya mendapat lembar nilai."
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_generate_score_sheet_from_teaching_assignment__result_note
+#: model:ir.model.fields,field_description:ssi_school_academic.field_copy_teaching_assignment_from_previous_term__result_note
+msgid "Result"
+msgstr "Hasil"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_generate_score_sheet_from_teaching_assignment__result_note
+msgid ""
+"What the wizard did: the number of score sheets created and every line "
+"that was skipped, with the reason."
+msgstr ""
+"Yang dikerjakan wizard: jumlah lembar nilai yang dibuat dan setiap baris "
+"yang dilewati beserta alasannya."
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/wizards/generate_score_sheet_from_teaching_assignment.py:0
+#, python-format
+msgid "Score sheets created: %s"
+msgstr "Lembar nilai dibuat: %s"
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/wizards/generate_score_sheet_from_teaching_assignment.py:0
+#, python-format
+msgid "Skipped %s: a score sheet already exists."
+msgstr "Dilewati %s: lembar nilai sudah ada."
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/wizards/generate_score_sheet_from_teaching_assignment.py:0
+#, python-format
+msgid "Skipped %s: the teacher has no user."
+msgstr "Dilewati %s: guru tidak memiliki pengguna."
+
+#. module: ssi_school_academic
+#: model:ir.model,name:ssi_school_academic.model_copy_teaching_assignment_from_previous_term
+msgid "Copy Teaching Assignment From Previous Term"
+msgstr "Salin Pembelajaran Guru dari Periode Sebelumnya"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_copy_teaching_assignment_from_previous_term__source_term_id
+msgid "Source Term"
+msgstr "Periode Asal"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_copy_teaching_assignment_from_previous_term__source_term_id
+msgid "Academic term whose teaching assignments are copied."
+msgstr "Periode akademik yang pembelajaran gurunya disalin."
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_copy_teaching_assignment_from_previous_term__target_term_id
+msgid "Target Term"
+msgstr "Periode Tujuan"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_copy_teaching_assignment_from_previous_term__target_term_id
+msgid ""
+"Academic term the teaching assignments are copied to. It must differ from "
+"the source term."
+msgstr ""
+"Periode akademik tujuan penyalinan pembelajaran guru. Harus berbeda dari "
+"periode asal."
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_copy_teaching_assignment_from_previous_term__assignment_ids
+msgid ""
+"Teaching assignments to copy. All the assignments of the source term are "
+"offered when the source term is chosen."
+msgstr ""
+"Pembelajaran guru yang disalin. Seluruh pembelajaran guru pada periode "
+"asal ditawarkan saat periode asal dipilih."
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_copy_teaching_assignment_from_previous_term__result_note
+msgid ""
+"What the wizard did: the number of assignments and lines copied and "
+"everything that was skipped, with the reason."
+msgstr ""
+"Yang dikerjakan wizard: jumlah pembelajaran guru dan baris yang disalin "
+"serta semua yang dilewati beserta alasannya."
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/wizards/copy_teaching_assignment_from_previous_term.py:0
+#, python-format
+msgid "Assignments copied: %s, lines copied: %s"
+msgstr "Pembelajaran guru disalin: %s, baris disalin: %s"
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/wizards/copy_teaching_assignment_from_previous_term.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Copy teaching assignment\n"
+"Database ID: %s\n"
+"Problem: The target term is the same as the source term.\n"
+"Solution: Choose a target term that differs from the source term\n"
+msgstr ""
+"\n"
+"Konteks: Salin pembelajaran guru\n"
+"ID Basis Data: %s\n"
+"Masalah: Periode tujuan sama dengan periode asal.\n"
+"Solusi: Pilih periode tujuan yang berbeda dari periode asal\n"
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/wizards/copy_teaching_assignment_from_previous_term.py:0
+#, python-format
+msgid "Skipped %s: the teacher already has an assignment."
+msgstr "Dilewati %s: guru sudah memiliki pembelajaran guru."
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/wizards/copy_teaching_assignment_from_previous_term.py:0
+#, python-format
+msgid "Skipped %s: the target term has %s matching homerooms."
+msgstr "Dilewati %s: periode tujuan memiliki %s rombel yang cocok."
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/wizards/copy_teaching_assignment_from_previous_term.py:0
+#, python-format
+msgid "Skipped %s: the subject already has a main teacher."
+msgstr "Dilewati %s: mata pelajaran sudah memiliki guru utama."
+
+#. module: ssi_school_academic
+#: model:ir.actions.act_window,name:ssi_school_academic.copy_teaching_assignment_from_previous_term_action
+#: model:ir.ui.menu,name:ssi_school_academic.copy_teaching_assignment_from_previous_term_menu
+msgid "Copy Teaching Assignments"
+msgstr "Salin Pembelajaran Guru"
+
+#. module: ssi_school_academic
+#: model_terms:ir.ui.view,arch_db:ssi_school_academic.generate_score_sheet_from_teaching_assignment_view_form
+msgid "Generate"
+msgstr "Buat"
+
+#. module: ssi_school_academic
+#: model_terms:ir.ui.view,arch_db:ssi_school_academic.generate_score_sheet_from_teaching_assignment_view_form
+#: model_terms:ir.ui.view,arch_db:ssi_school_academic.copy_teaching_assignment_from_previous_term_view_form
+msgid "Close"
+msgstr "Tutup"
+
+#. module: ssi_school_academic
+#: model:ir.actions.act_window,name:ssi_school_academic.generate_score_sheet_from_teaching_assignment_action
+msgid "Generate Score Sheets"
+msgstr "Buat Lembar Nilai"
+
+#. module: ssi_school_academic
+#: model_terms:ir.ui.view,arch_db:ssi_school_academic.copy_teaching_assignment_from_previous_term_view_form
+msgid "Copy"
+msgstr "Salin"

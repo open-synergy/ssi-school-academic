@@ -54,6 +54,7 @@
         <data>
             <xpath expr="//field[@name='company_id']" position="after">
                 <field name="date" />
+                <field name="teaching_assignment_line_id" />
                 <field name="academic_term_id" />
                 <field name="grade_class_id" />
                 <field name="subject_id" />
@@ -71,8 +72,14 @@
     <field name="arch" type="xml">
         <data>
             <xpath expr="//field[@name='user_id']" position="after">
-                <field name="grade_class_id" />
+                <field
+                        name="grade_class_id"
+                        domain="[('id', 'in', allowed_grade_class_ids)]"
+                    />
                 <field name="grade_id" />
+                <field name="allowed_teaching_assignment_line_ids" invisible="1" />
+                <field name="allowed_grade_class_ids" invisible="1" />
+                <field name="allowed_subject_ids" invisible="1" />
             </xpath>
             <xpath expr="//header" position="inside">
                 <button
@@ -86,9 +93,16 @@
             </xpath>
             <xpath expr="//group[@name='header_right']" position="inside">
                 <field name="date" />
+                <field
+                        name="teaching_assignment_line_id"
+                        domain="[('id', 'in', allowed_teaching_assignment_line_ids)]"
+                    />
                 <field name="academic_term_id" />
                 <field name="academic_year_id" />
-                <field name="subject_id" />
+                <field
+                        name="subject_id"
+                        domain="[('grade_ids', '=', grade_id), ('id', 'in', allowed_subject_ids)]"
+                    />
                 <field name="teacher_id" />
             </xpath>
             <xpath expr="//page[1]" position="before">
