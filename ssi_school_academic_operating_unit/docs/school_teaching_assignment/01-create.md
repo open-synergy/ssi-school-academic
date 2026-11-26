@@ -21,9 +21,11 @@ the **Operating Unit / Multiple Operating Units** group
   after the **Company** field. Select one or more units, or leave it empty to make the
   assignment visible to every unit. The lines of the assignment have no operating unit
   of their own; they follow the assignment. The score sheets made from the assignment by
-  the generate wizard get the operating unit of the assignment when it has exactly one
-  unit, and the default operating unit of the user who runs the wizard otherwise. The
-  assignment made by the copy wizard keeps the operating units of the source assignment.
+  the generate wizard get the operating unit of the homeroom of each line when the
+  homeroom has one. When the homeroom has none, they get the operating unit of the
+  assignment if it has exactly one unit, and the default operating unit of the user who
+  runs the wizard otherwise. The assignment made by the copy wizard keeps the operating
+  units of the source assignment.
 
 ## Modified — Record Visibility
 

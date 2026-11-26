@@ -1,3 +1,7 @@
+# The homerooms of the setup are created without unit: with the unit of the
+# homeroom first in the priority they would otherwise take the default unit of
+# the creator, and the scenarios of the unit of the assignment would no longer
+# test the fallback. The scenarios of the homeroom unit write it on purpose.
 # T-01 (odoo-development-unit-test/test-traps.md): the `setup:` block replays
 # before every scenario inside one un-rolled-back transaction, so every
 # unique-constrained value it creates (codes, logins, and the name of an
@@ -181,6 +185,7 @@ setup:
         school_id: "REC: school.id"
         grade_id: "REC: grade.id"
         grade_class_id: "REC: class_x.id"
+        operating_unit_id: false
 
     - step: "Create the homeroom of class X in term 2"
       action: "create"
@@ -192,6 +197,7 @@ setup:
         school_id: "REC: school.id"
         grade_id: "REC: grade.id"
         grade_class_id: "REC: class_x.id"
+        operating_unit_id: false
 
     - step: "Create the user of the teacher"
       action: "create"
@@ -482,6 +488,284 @@ scenarios:
         expect_count: 1
 
       - step: "The sheet keeps the default unit B of the admin, never the first"
+        action: "assert"
+        target: "sheet"
+        asserts:
+          operating_unit_id:
+            type: "m2o"
+            expected: "REC: ou_b"
+
+  - name:
+      "Teaching Assignment OU - The unit of the homeroom wins when the assignment has no
+      unit"
+    steps:
+      - step: "Create the assignment"
+        action: "create"
+        model: "school_teaching_assignment"
+        save_as: "header"
+        values:
+          name: "SATAOU header"
+          code: "/"
+          teacher_id: "REC: teacher.id"
+          academic_term_id: "REC: term_1.id"
+
+      - step: "Give the homeroom of class X unit A"
+        action: "write"
+        target: "homeroom_x1"
+        values:
+          operating_unit_id: "REC: ou_a.id"
+
+      - step: "The teacher teaches subject A in class X"
+        action: "create"
+        model: "school_teaching_assignment_line"
+        save_as: "line"
+        values:
+          assignment_id: "REC: header.id"
+          homeroom_id: "REC: homeroom_x1.id"
+          subject_id: "REC: subject_a.id"
+          role: "main"
+          weekly_hours: 4
+
+      - step: "Open the generate wizard as the admin whose default unit is B"
+        action: "create"
+        model: "generate_score_sheet_from_teaching_assignment"
+        as_user: "user_admin_b"
+        save_as: "wizard"
+        values:
+          assignment_ids:
+            - - 6
+              - 0
+              - - "REC: header.id"
+
+      - step: "Run the generate wizard as that admin"
+        action: "call"
+        target: "wizard"
+        method: "action_generate"
+        as_user: "user_admin_b"
+        asserts:
+          result_note:
+            type: "value"
+            operator: "contains"
+            expected: "Score sheets created: 1"
+
+      - step: "Find the sheet made for the line"
+        action: "search"
+        model: "school_score_sheet"
+        domain:
+          - ["teaching_assignment_line_id", "=", "REC: line.id"]
+        save_as: "sheet"
+        expect_count: 1
+
+      - step:
+          "The sheet carries unit A of the homeroom, not the default unit B of the admin"
+        action: "assert"
+        target: "sheet"
+        asserts:
+          operating_unit_id:
+            type: "m2o"
+            expected: "REC: ou_a"
+
+  - name:
+      "Teaching Assignment OU - The unit of the homeroom wins over several units of the
+      assignment"
+    steps:
+      - step: "Create the assignment"
+        action: "create"
+        model: "school_teaching_assignment"
+        save_as: "header"
+        values:
+          name: "SATAOU header"
+          code: "/"
+          teacher_id: "REC: teacher.id"
+          academic_term_id: "REC: term_1.id"
+          operating_unit_ids:
+            - - 6
+              - 0
+              - - "REC: ou_a.id"
+                - "REC: ou_b.id"
+
+      - step: "Give the homeroom of class X unit A"
+        action: "write"
+        target: "homeroom_x1"
+        values:
+          operating_unit_id: "REC: ou_a.id"
+
+      - step: "The teacher teaches subject A in class X"
+        action: "create"
+        model: "school_teaching_assignment_line"
+        save_as: "line"
+        values:
+          assignment_id: "REC: header.id"
+          homeroom_id: "REC: homeroom_x1.id"
+          subject_id: "REC: subject_a.id"
+          role: "main"
+          weekly_hours: 4
+
+      - step: "Open the generate wizard as the admin whose default unit is B"
+        action: "create"
+        model: "generate_score_sheet_from_teaching_assignment"
+        as_user: "user_admin_b"
+        save_as: "wizard"
+        values:
+          assignment_ids:
+            - - 6
+              - 0
+              - - "REC: header.id"
+
+      - step: "Run the generate wizard as that admin"
+        action: "call"
+        target: "wizard"
+        method: "action_generate"
+        as_user: "user_admin_b"
+        asserts:
+          result_note:
+            type: "value"
+            operator: "contains"
+            expected: "Score sheets created: 1"
+
+      - step: "Find the sheet made for the line"
+        action: "search"
+        model: "school_score_sheet"
+        domain:
+          - ["teaching_assignment_line_id", "=", "REC: line.id"]
+        save_as: "sheet"
+        expect_count: 1
+
+      - step: "The sheet carries unit A of the homeroom"
+        action: "assert"
+        target: "sheet"
+        asserts:
+          operating_unit_id:
+            type: "m2o"
+            expected: "REC: ou_a"
+
+  - name:
+      "Teaching Assignment OU - The unit of the homeroom wins over the single unit of
+      the assignment"
+    steps:
+      - step: "Create the assignment"
+        action: "create"
+        model: "school_teaching_assignment"
+        save_as: "header"
+        values:
+          name: "SATAOU header"
+          code: "/"
+          teacher_id: "REC: teacher.id"
+          academic_term_id: "REC: term_1.id"
+          operating_unit_ids:
+            - - 6
+              - 0
+              - - "REC: ou_b.id"
+
+      - step: "Give the homeroom of class X unit A"
+        action: "write"
+        target: "homeroom_x1"
+        values:
+          operating_unit_id: "REC: ou_a.id"
+
+      - step: "The teacher teaches subject A in class X"
+        action: "create"
+        model: "school_teaching_assignment_line"
+        save_as: "line"
+        values:
+          assignment_id: "REC: header.id"
+          homeroom_id: "REC: homeroom_x1.id"
+          subject_id: "REC: subject_a.id"
+          role: "main"
+          weekly_hours: 4
+
+      - step: "Open the generate wizard as the admin whose default unit is B"
+        action: "create"
+        model: "generate_score_sheet_from_teaching_assignment"
+        as_user: "user_admin_b"
+        save_as: "wizard"
+        values:
+          assignment_ids:
+            - - 6
+              - 0
+              - - "REC: header.id"
+
+      - step: "Run the generate wizard as that admin"
+        action: "call"
+        target: "wizard"
+        method: "action_generate"
+        as_user: "user_admin_b"
+        asserts:
+          result_note:
+            type: "value"
+            operator: "contains"
+            expected: "Score sheets created: 1"
+
+      - step: "Find the sheet made for the line"
+        action: "search"
+        model: "school_score_sheet"
+        domain:
+          - ["teaching_assignment_line_id", "=", "REC: line.id"]
+        save_as: "sheet"
+        expect_count: 1
+
+      - step: "The sheet carries unit A of the homeroom, not unit B of the assignment"
+        action: "assert"
+        target: "sheet"
+        asserts:
+          operating_unit_id:
+            type: "m2o"
+            expected: "REC: ou_a"
+
+  - name: "Teaching Assignment OU - No unit anywhere leaves the default of the user"
+    steps:
+      - step: "Create the assignment"
+        action: "create"
+        model: "school_teaching_assignment"
+        save_as: "header"
+        values:
+          name: "SATAOU header"
+          code: "/"
+          teacher_id: "REC: teacher.id"
+          academic_term_id: "REC: term_1.id"
+
+      - step: "The teacher teaches subject A in class X"
+        action: "create"
+        model: "school_teaching_assignment_line"
+        save_as: "line"
+        values:
+          assignment_id: "REC: header.id"
+          homeroom_id: "REC: homeroom_x1.id"
+          subject_id: "REC: subject_a.id"
+          role: "main"
+          weekly_hours: 4
+
+      - step: "Open the generate wizard as the admin whose default unit is B"
+        action: "create"
+        model: "generate_score_sheet_from_teaching_assignment"
+        as_user: "user_admin_b"
+        save_as: "wizard"
+        values:
+          assignment_ids:
+            - - 6
+              - 0
+              - - "REC: header.id"
+
+      - step: "Run the generate wizard as that admin"
+        action: "call"
+        target: "wizard"
+        method: "action_generate"
+        as_user: "user_admin_b"
+        asserts:
+          result_note:
+            type: "value"
+            operator: "contains"
+            expected: "Score sheets created: 1"
+
+      - step: "Find the sheet made for the line"
+        action: "search"
+        model: "school_score_sheet"
+        domain:
+          - ["teaching_assignment_line_id", "=", "REC: line.id"]
+        save_as: "sheet"
+        expect_count: 1
+
+      - step: "The sheet keeps the default unit B of the admin"
         action: "assert"
         target: "sheet"
         asserts:
