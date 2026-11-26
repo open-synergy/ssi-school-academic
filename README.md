@@ -22,7 +22,7 @@ Available addons
 addon | version | maintainers | summary
 --- | --- | --- | ---
 [ssi_school_academic](ssi_school_academic/) | 14.0.1.14.0 |  | School Academic
-[ssi_school_academic_operating_unit](ssi_school_academic_operating_unit/) | 14.0.1.1.0 |  | School Academic - Operating Unit
+[ssi_school_academic_operating_unit](ssi_school_academic_operating_unit/) | 14.0.1.2.0 |  | School Academic - Operating Unit
 
 [//]: # (end addons)
 
