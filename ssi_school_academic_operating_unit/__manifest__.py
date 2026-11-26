@@ -15,6 +15,7 @@
     "depends": [
         "ssi_school_academic",
         "ssi_operating_unit_mixin",
+        "ssi_school_operating_unit",
         "web_tour",
     ],
     "data": [
