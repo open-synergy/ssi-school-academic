@@ -5,4 +5,5 @@
 from . import (  # noqa: F401
     school_report_card,
     school_score_sheet,
+    school_teaching_assignment,
 )

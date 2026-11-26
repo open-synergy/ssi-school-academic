@@ -1,0 +1,562 @@
+# T-01 (odoo-development-unit-test/test-traps.md): the `setup:` block replays
+# before every scenario inside one un-rolled-back transaction, so every
+# unique-constrained value it creates (codes, logins, and the name of an
+# operating unit, unique per company) is generated per replay from a count of
+# the existing records. The assertions of each scenario are limited to the
+# aliases the scenario builds itself, never to a count over the whole model.
+options:
+  auto_refresh: true
+
+setup:
+  steps:
+    - step: "Create the partner of Operating Unit A"
+      action: "create"
+      model: "res.partner"
+      save_as: "ou_a_partner"
+      values:
+        name: "SATAOU Operating Unit A Partner"
+
+    - step: "Create Operating Unit A"
+      action: "create"
+      model: "operating.unit"
+      save_as: "ou_a"
+      values:
+        name:
+          "EVAL: 'SATAOU Operating Unit A %d' % env['operating.unit'].search_count([])"
+        code: "EVAL: 'SATAOUA%d' % env['operating.unit'].search_count([])"
+        company_id: "REF: base.main_company"
+        partner_id: "REC: ou_a_partner.id"
+
+    - step: "Create the partner of Operating Unit B"
+      action: "create"
+      model: "res.partner"
+      save_as: "ou_b_partner"
+      values:
+        name: "SATAOU Operating Unit B Partner"
+
+    - step: "Create Operating Unit B"
+      action: "create"
+      model: "operating.unit"
+      save_as: "ou_b"
+      values:
+        name:
+          "EVAL: 'SATAOU Operating Unit B %d' % env['operating.unit'].search_count([])"
+        code: "EVAL: 'SATAOUB%d' % env['operating.unit'].search_count([])"
+        company_id: "REF: base.main_company"
+        partner_id: "REC: ou_b_partner.id"
+
+    # The viewer is a user of Operating Unit A only, in the teaching
+    # assignment group (read access to every assignment). The record rule of
+    # this module is global, so it narrows that access to unit A.
+    - step: "Create the user who sees Operating Unit A only"
+      action: "create"
+      model: "res.users"
+      save_as: "user_ou_a"
+      values:
+        name: "SATAOU User OU-A"
+        login: "EVAL: 'sataou_a_%d@ssi-school.test' % env['res.users'].search_count([])"
+        company_id: "REF: base.main_company"
+        groups_id:
+          - - 6
+            - 0
+            - - "REF: base.group_user"
+              - "REF: ssi_school_academic.school_teaching_assignment_group"
+        assigned_operating_unit_ids:
+          - - 6
+            - 0
+            - - "REC: ou_a.id"
+        default_operating_unit_id: "REC: ou_a.id"
+
+    # The academic admin works in both units but his default unit is B, which
+    # is the unit a document would get if the wizard did not propagate.
+    - step: "Create the academic admin whose default unit is B"
+      action: "create"
+      model: "res.users"
+      save_as: "user_admin_b"
+      values:
+        name: "SATAOU Academic Admin"
+        login:
+          "EVAL: 'sataou_admin_%d@ssi-school.test' % env['res.users'].search_count([])"
+        company_id: "REF: base.main_company"
+        groups_id:
+          - - 6
+            - 0
+            - - "REF: base.group_user"
+              - "REF: ssi_school_academic.school_teaching_assignment_group"
+        assigned_operating_unit_ids:
+          - - 6
+            - 0
+            - - "REC: ou_a.id"
+              - "REC: ou_b.id"
+        default_operating_unit_id: "REC: ou_b.id"
+
+    - step: "Create the grade type"
+      action: "create"
+      model: "school_grade_type"
+      save_as: "grade_type"
+      values:
+        name: "SATAOU Grade Type"
+        code: "EVAL: 'SATAOUGT%d' % env['school_grade_type'].search_count([])"
+
+    - step: "Create the school"
+      action: "create"
+      model: "school"
+      save_as: "school"
+      values:
+        name: "SATAOU School"
+        code: "EVAL: 'SATAOUSC%d' % env['school'].search_count([])"
+        grade_type_id: "REC: grade_type.id"
+
+    - step: "Create the academic year"
+      action: "create"
+      model: "school_academic_year"
+      save_as: "academic_year"
+      values:
+        name: "SATAOU Academic Year"
+        code: "EVAL: 'SATAOUAY%d' % env['school_academic_year'].search_count([])"
+        date_start: 2026-07-01
+        date_end: 2027-06-30
+
+    - step: "Create the first term"
+      action: "create"
+      model: "school_academic_term"
+      save_as: "term_1"
+      values:
+        name: "SATAOU Term 1"
+        code: "EVAL: 'SATAOUTM%d' % env['school_academic_term'].search_count([])"
+        date_start: 2026-07-01
+        date_end: 2026-12-31
+        year_id: "REC: academic_year.id"
+        state: "open"
+
+    - step: "Create the second term of the same year"
+      action: "create"
+      model: "school_academic_term"
+      save_as: "term_2"
+      values:
+        name: "SATAOU Term 2"
+        code: "EVAL: 'SATAOUTM%d' % env['school_academic_term'].search_count([])"
+        date_start: 2027-01-01
+        date_end: 2027-06-30
+        year_id: "REC: academic_year.id"
+
+    - step: "Create the grade"
+      action: "create"
+      model: "school_grade"
+      save_as: "grade"
+      values:
+        name: "SATAOU Grade"
+        code: "EVAL: 'SATAOUGR%d' % env['school_grade'].search_count([])"
+        type_id: "REC: grade_type.id"
+
+    - step: "Create class X"
+      action: "create"
+      model: "school_grade_class"
+      save_as: "class_x"
+      values:
+        name: "SATAOU Class X"
+        code: "EVAL: 'SATAOUCX%d' % env['school_grade_class'].search_count([])"
+        school_id: "REC: school.id"
+        grade_id: "REC: grade.id"
+
+    - step: "Create the subject taught in the grade"
+      action: "create"
+      model: "school_subject"
+      save_as: "subject_a"
+      values:
+        name: "SATAOU Subject A"
+        code: "EVAL: 'SATAOUSA%d' % env['school_subject'].search_count([])"
+        grade_ids:
+          - - 6
+            - 0
+            - - "REC: grade.id"
+
+    - step: "Create the homeroom of class X in term 1"
+      action: "create"
+      model: "school_homeroom"
+      save_as: "homeroom_x1"
+      values:
+        academic_year_id: "REC: academic_year.id"
+        academic_term_id: "REC: term_1.id"
+        school_id: "REC: school.id"
+        grade_id: "REC: grade.id"
+        grade_class_id: "REC: class_x.id"
+
+    - step: "Create the homeroom of class X in term 2"
+      action: "create"
+      model: "school_homeroom"
+      save_as: "homeroom_x2"
+      values:
+        academic_year_id: "REC: academic_year.id"
+        academic_term_id: "REC: term_2.id"
+        school_id: "REC: school.id"
+        grade_id: "REC: grade.id"
+        grade_class_id: "REC: class_x.id"
+
+    - step: "Create the user of the teacher"
+      action: "create"
+      model: "res.users"
+      save_as: "teacher_user"
+      values:
+        name: "SATAOU Teacher User"
+        login: "EVAL: 'sataou_teacher_%d' % env['res.users'].search_count([])"
+
+    - step: "Create the home address of the teacher"
+      action: "create"
+      model: "res.partner"
+      save_as: "teacher_partner"
+      values:
+        name: "SATAOU Teacher Home"
+
+    - step: "Create the employee of the teacher"
+      action: "create"
+      model: "hr.employee"
+      save_as: "employee"
+      values:
+        name: "SATAOU Teacher Employee"
+        company_id: "base.main_company"
+        address_home_id: "REC: teacher_partner.id"
+        user_id: "REC: teacher_user.id"
+
+    - step: "Create the teacher"
+      action: "create"
+      model: "school_teacher"
+      save_as: "teacher"
+      values:
+        name: "SATAOU Teacher"
+        code: "EVAL: 'SATAOUTC%d' % env['school_teacher'].search_count([])"
+        employee_id: "REC: employee.id"
+
+    - step: "Create the home address of teacher 2"
+      action: "create"
+      model: "res.partner"
+      save_as: "partner_2"
+      values:
+        name: "SATAOU Teacher Home 2"
+
+    - step: "Create the employee of teacher 2"
+      action: "create"
+      model: "hr.employee"
+      save_as: "employee_2"
+      values:
+        name: "SATAOU Teacher Employee 2"
+        company_id: "base.main_company"
+        address_home_id: "REC: partner_2.id"
+
+    - step: "Create the second teacher, whose assignment is of unit B"
+      action: "create"
+      model: "school_teacher"
+      save_as: "teacher_2"
+      values:
+        name: "SATAOU Teacher 2"
+        code: "EVAL: 'SATAOUTC%d' % env['school_teacher'].search_count([])"
+        employee_id: "REC: employee_2.id"
+
+    - step: "Create the home address of teacher 3"
+      action: "create"
+      model: "res.partner"
+      save_as: "partner_3"
+      values:
+        name: "SATAOU Teacher Home 3"
+
+    - step: "Create the employee of teacher 3"
+      action: "create"
+      model: "hr.employee"
+      save_as: "employee_3"
+      values:
+        name: "SATAOU Teacher Employee 3"
+        company_id: "base.main_company"
+        address_home_id: "REC: partner_3.id"
+
+    - step: "Create the third teacher, whose assignment has no unit"
+      action: "create"
+      model: "school_teacher"
+      save_as: "teacher_3"
+      values:
+        name: "SATAOU Teacher 3"
+        code: "EVAL: 'SATAOUTC%d' % env['school_teacher'].search_count([])"
+        employee_id: "REC: employee_3.id"
+
+scenarios:
+  - name: "Teaching Assignment OU - Users only read the assignments of their unit"
+    steps:
+      - step: "Create the assignment of unit A"
+        action: "create"
+        model: "school_teaching_assignment"
+        save_as: "header_a"
+        values:
+          name: "SATAOU header A"
+          code: "/"
+          teacher_id: "REC: teacher.id"
+          academic_term_id: "REC: term_1.id"
+          operating_unit_ids:
+            - - 6
+              - 0
+              - - "REC: ou_a.id"
+
+      - step: "Create the assignment of unit B"
+        action: "create"
+        model: "school_teaching_assignment"
+        save_as: "header_b"
+        values:
+          name: "SATAOU header B"
+          code: "/"
+          teacher_id: "REC: teacher_2.id"
+          academic_term_id: "REC: term_1.id"
+          operating_unit_ids:
+            - - 6
+              - 0
+              - - "REC: ou_b.id"
+
+      - step: "Create the assignment without any unit"
+        action: "create"
+        model: "school_teaching_assignment"
+        save_as: "header_none"
+        values:
+          name: "SATAOU header none"
+          code: "/"
+          teacher_id: "REC: teacher_3.id"
+          academic_term_id: "REC: term_1.id"
+
+      - step: "The unit A user finds the assignment of A and the one without unit"
+        action: "search"
+        model: "school_teaching_assignment"
+        as_user: "user_ou_a"
+        domain:
+          - - "id"
+            - "in"
+            - - "REC: header_a.id"
+              - "REC: header_b.id"
+              - "REC: header_none.id"
+        save_as: "seen_headers"
+        expect_count: 2
+
+      - step: "The unit A user finds the assignment of unit A"
+        action: "search"
+        model: "school_teaching_assignment"
+        as_user: "user_ou_a"
+        domain:
+          - ["id", "=", "REC: header_a.id"]
+        save_as: "seen_header_a"
+        expect_count: 1
+
+      - step: "The unit A user finds the assignment without unit"
+        action: "search"
+        model: "school_teaching_assignment"
+        as_user: "user_ou_a"
+        domain:
+          - ["id", "=", "REC: header_none.id"]
+        save_as: "seen_header_none"
+        expect_count: 1
+
+      - step: "The unit A user does not find the assignment of unit B"
+        action: "search"
+        model: "school_teaching_assignment"
+        as_user: "user_ou_a"
+        domain:
+          - ["id", "=", "REC: header_b.id"]
+        save_as: "seen_header_b"
+        expect_count: 0
+
+  - name: "Teaching Assignment OU - Generated sheets carry the unit of the assignment"
+    steps:
+      - step: "Create the assignment of unit A"
+        action: "create"
+        model: "school_teaching_assignment"
+        save_as: "header"
+        values:
+          name: "SATAOU header"
+          code: "/"
+          teacher_id: "REC: teacher.id"
+          academic_term_id: "REC: term_1.id"
+          operating_unit_ids:
+            - - 6
+              - 0
+              - - "REC: ou_a.id"
+
+      - step: "The teacher teaches subject A in class X"
+        action: "create"
+        model: "school_teaching_assignment_line"
+        save_as: "line"
+        values:
+          assignment_id: "REC: header.id"
+          homeroom_id: "REC: homeroom_x1.id"
+          subject_id: "REC: subject_a.id"
+          role: "main"
+          weekly_hours: 4
+
+      - step: "Open the generate wizard as the admin whose default unit is B"
+        action: "create"
+        model: "generate_score_sheet_from_teaching_assignment"
+        as_user: "user_admin_b"
+        save_as: "wizard"
+        values:
+          assignment_ids:
+            - - 6
+              - 0
+              - - "REC: header.id"
+
+      - step: "Run the generate wizard as that admin"
+        action: "call"
+        target: "wizard"
+        method: "action_generate"
+        as_user: "user_admin_b"
+        asserts:
+          result_note:
+            type: "value"
+            operator: "contains"
+            expected: "Score sheets created: 1"
+
+      - step: "Find the sheet made for the line"
+        action: "search"
+        model: "school_score_sheet"
+        domain:
+          - ["teaching_assignment_line_id", "=", "REC: line.id"]
+        save_as: "sheet"
+        expect_count: 1
+
+      - step: "The sheet carries unit A, not the default unit B of the admin"
+        action: "assert"
+        target: "sheet"
+        asserts:
+          operating_unit_id:
+            type: "m2o"
+            expected: "REC: ou_a"
+
+  - name: "Teaching Assignment OU - Several units leave the default of the user"
+    steps:
+      - step: "Create the assignment of both units"
+        action: "create"
+        model: "school_teaching_assignment"
+        save_as: "header"
+        values:
+          name: "SATAOU header"
+          code: "/"
+          teacher_id: "REC: teacher.id"
+          academic_term_id: "REC: term_1.id"
+          operating_unit_ids:
+            - - 6
+              - 0
+              - - "REC: ou_a.id"
+                - "REC: ou_b.id"
+
+      - step: "The teacher teaches subject A in class X"
+        action: "create"
+        model: "school_teaching_assignment_line"
+        save_as: "line"
+        values:
+          assignment_id: "REC: header.id"
+          homeroom_id: "REC: homeroom_x1.id"
+          subject_id: "REC: subject_a.id"
+          role: "main"
+          weekly_hours: 4
+
+      - step: "Open the generate wizard as the admin whose default unit is B"
+        action: "create"
+        model: "generate_score_sheet_from_teaching_assignment"
+        as_user: "user_admin_b"
+        save_as: "wizard"
+        values:
+          assignment_ids:
+            - - 6
+              - 0
+              - - "REC: header.id"
+
+      - step: "Run the generate wizard as that admin"
+        action: "call"
+        target: "wizard"
+        method: "action_generate"
+        as_user: "user_admin_b"
+        asserts:
+          result_note:
+            type: "value"
+            operator: "contains"
+            expected: "Score sheets created: 1"
+
+      - step: "Find the sheet made for the line"
+        action: "search"
+        model: "school_score_sheet"
+        domain:
+          - ["teaching_assignment_line_id", "=", "REC: line.id"]
+        save_as: "sheet"
+        expect_count: 1
+
+      - step: "The sheet keeps the default unit B of the admin, never the first"
+        action: "assert"
+        target: "sheet"
+        asserts:
+          operating_unit_id:
+            type: "m2o"
+            expected: "REC: ou_b"
+
+  - name: "Teaching Assignment OU - A copied assignment keeps the units"
+    steps:
+      - step: "Create the source assignment of both units"
+        action: "create"
+        model: "school_teaching_assignment"
+        save_as: "header"
+        values:
+          name: "SATAOU header"
+          code: "/"
+          teacher_id: "REC: teacher.id"
+          academic_term_id: "REC: term_1.id"
+          operating_unit_ids:
+            - - 6
+              - 0
+              - - "REC: ou_a.id"
+                - "REC: ou_b.id"
+
+      - step: "The teacher teaches subject A in class X"
+        action: "create"
+        model: "school_teaching_assignment_line"
+        save_as: "line"
+        values:
+          assignment_id: "REC: header.id"
+          homeroom_id: "REC: homeroom_x1.id"
+          subject_id: "REC: subject_a.id"
+          role: "main"
+          weekly_hours: 4
+
+      - step: "Open the copy wizard as the admin whose default unit is B"
+        action: "create"
+        model: "copy_teaching_assignment_from_previous_term"
+        as_user: "user_admin_b"
+        save_as: "wizard"
+        values:
+          source_term_id: "REC: term_1.id"
+          target_term_id: "REC: term_2.id"
+          assignment_ids:
+            - - 6
+              - 0
+              - - "REC: header.id"
+
+      - step: "Run the copy wizard as that admin"
+        action: "call"
+        target: "wizard"
+        method: "action_copy"
+        as_user: "user_admin_b"
+        asserts:
+          result_note:
+            type: "value"
+            operator: "contains"
+            expected: "Assignments copied: 1, lines copied: 1"
+
+      - step: "Find the assignment created in term 2"
+        action: "search"
+        model: "school_teaching_assignment"
+        domain:
+          - ["teacher_id", "=", "REC: teacher.id"]
+          - ["academic_term_id", "=", "REC: term_2.id"]
+        save_as: "target"
+        expect_count: 1
+
+      - step: "The copy has both units of the source"
+        action: "assert"
+        target: "target"
+        asserts:
+          operating_unit_ids:
+            type: "m2m"
+            check: "exact"
+            expected_records:
+              - "REC: ou_a"
+              - "REC: ou_b"

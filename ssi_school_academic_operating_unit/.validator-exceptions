@@ -1,0 +1,4 @@
+# Both wizards below are EXTENSIONS (_inherit of the same _name) that only
+# override a values seam; the model and its ACL belong to ssi_school_academic.
+module acl-wizard-satu-user-access-tanpa-all-access|copy_teaching_assignment_from_previous_term: tidak ada ACL sama sekali -- extension of a wizard whose ACL lives in ssi_school_academic; a second ACL here would duplicate it
+module acl-wizard-satu-user-access-tanpa-all-access|generate_score_sheet_from_teaching_assignment: tidak ada ACL sama sekali -- extension of a wizard whose ACL lives in ssi_school_academic; a second ACL here would duplicate it
