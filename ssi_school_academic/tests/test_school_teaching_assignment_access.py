@@ -23,19 +23,19 @@ class TestSchoolTeachingAssignmentAccess(YamlTransactionCase):
     value of a method).
     """
 
-    def _create_teacher(self, label, with_groups=True):
+    def _create_teacher(self, label):
         """Create a teacher with an employee and an internal user.
 
+        The user gets the score sheet user group.
+
         :param label: short text used in the names and the login
-        :param with_groups: give the user the score sheet user group
         :return: tuple of the ``school_teacher`` and the ``res.users``
         """
         env = self.env
-        groups = [env.ref("base.group_user").id]
-        if with_groups:
-            groups.append(
-                env.ref("ssi_school_academic.school_score_sheet_user_group").id
-            )
+        groups = [
+            env.ref("base.group_user").id,
+            env.ref("ssi_school_academic.school_score_sheet_user_group").id,
+        ]
         user = env["res.users"].create(
             {
                 "name": "SSTAA User %s" % label,
@@ -346,6 +346,79 @@ class TestSchoolTeachingAssignmentAccess(YamlTransactionCase):
         )
         sheet.onchange_teaching_assignment_line_id()
         self.assertFalse(sheet.teaching_assignment_line_id)
+
+    def test_onchange_subject_with_several_lines_in_a_class(self):
+        """Check the subject when the teacher has several lines in a class.
+
+        Pure Python (P1, L-01): the onchange method is called on a new
+        record and the value it assigns is asserted. With two main
+        lines in the class no subject is chosen on the teacher's
+        behalf: a subject outside those lines is cleared, and a
+        subject of one of them is kept.
+        """
+        env = self.env
+        subject_c = env["school_subject"].create(
+            {
+                "name": "SSTAA Subject C",
+                "code": "SSTAASC%d" % env["school_subject"].search_count([]),
+                "grade_ids": [(6, 0, [self.class_x.grade_id.id])],
+            }
+        )
+        self._create_line(
+            self.teacher_main, self.line_main_x.homeroom_id, self.subject_b, "main"
+        )
+        sheet_model = env["school_score_sheet"].with_user(self.user_main)
+        values = {
+            "academic_term_id": self.term.id,
+            "grade_class_id": self.class_x.id,
+        }
+        sheet = sheet_model.new(dict(values, subject_id=subject_c.id))
+        sheet.onchange_subject_id()
+        self.assertFalse(sheet.subject_id)
+        sheet = sheet_model.new(dict(values, subject_id=self.subject_a.id))
+        sheet.onchange_subject_id()
+        self.assertEqual(sheet.subject_id, self.subject_a)
+
+    def test_onchange_class_keeps_the_line_that_fits(self):
+        """Check the line is kept when it already belongs to the class.
+
+        Pure Python (P1, L-01): the onchange method is called on a new
+        record and the value it keeps is asserted. The user is not a
+        teacher, so a new search would find no line: the line stays
+        only because it already fits the chosen class.
+        """
+        sheet = (
+            self.env["school_score_sheet"]
+            .with_user(self.user_none)
+            .new(
+                {
+                    "academic_term_id": self.term.id,
+                    "grade_class_id": self.class_x.id,
+                    "teaching_assignment_line_id": self.line_main_x.id,
+                }
+            )
+        )
+        sheet.onchange_teaching_assignment_line_id()
+        self.assertEqual(sheet.teaching_assignment_line_id, self.line_main_x)
+
+    def test_generate_wizard_default_without_active_ids(self):
+        """Check the generate wizard defaults from the active records.
+
+        Pure Python (P1, L-01): the values returned by ``default_get``
+        are asserted. The assignments of ``active_ids`` are taken, and
+        an empty ``active_ids`` leaves the field empty.
+        """
+        wizard_model = self.env["generate_score_sheet_from_teaching_assignment"]
+        assignment = self.line_asst.assignment_id
+        context = {"active_model": "school_teaching_assignment"}
+        values = wizard_model.with_context(
+            dict(context, active_ids=[assignment.id])
+        ).default_get(["assignment_ids"])
+        self.assertEqual(values["assignment_ids"], [(6, 0, [assignment.id])])
+        values = wizard_model.with_context(dict(context, active_ids=[])).default_get(
+            ["assignment_ids"]
+        )
+        self.assertFalse(values.get("assignment_ids"))
 
     def test_main_teacher_reads_own_sheets_only(self):
         """Check a teacher finds the own sheets and no other sheet.
