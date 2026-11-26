@@ -80,6 +80,10 @@
                 type="text/javascript"
                 src="/ssi_school_academic/static/tests/tours/print_report_card_ledger_tour.js"
             />
+            <script
+                type="text/javascript"
+                src="/ssi_school_academic/static/tests/tours/school_teaching_assignment_tour.js"
+            />
         </xpath>
     </template>
 </odoo>

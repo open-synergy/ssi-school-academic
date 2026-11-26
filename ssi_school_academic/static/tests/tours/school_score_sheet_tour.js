@@ -91,6 +91,14 @@ odoo.define("ssi_school_academic.school_score_sheet_tour", function (require) {
                 },
             },
             {
+                // Flow 3 -- the optional Teaching Assignment Line is offered.
+                content: "The Teaching Assignment Line field is displayed",
+                trigger: ".o_field_widget[name='teaching_assignment_line_id']",
+                run: function () {
+                    // Assertion only; do not trigger the default click.
+                },
+            },
+            {
                 content: "Select the Grade Class",
                 trigger: ".o_field_many2one[name='grade_class_id'] input",
                 run: "text TOUR SSS Class",

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 OpenSynergy Indonesia
+     Copyright 2026 PT. Simetri Sinergi Indonesia
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+<record id="school_homeroom_view_form" model="ir.ui.view">
+    <field name="name">school_homeroom - form (teaching assignment)</field>
+    <field name="model">school_homeroom</field>
+    <field name="inherit_id" ref="ssi_school.school_homeroom_view_form" />
+    <field name="arch" type="xml">
+        <data>
+            <xpath expr="//notebook" position="inside">
+                <page
+                        name="teaching_assignment"
+                        string="Teaching Assignments"
+                        groups="ssi_school_academic.school_teaching_assignment_group,ssi_school_academic.school_score_sheet_user_group"
+                    >
+                    <field name="teaching_assignment_line_ids" nolabel="1" readonly="1">
+                        <tree create="0" delete="0" edit="0">
+                            <field name="teacher_id" />
+                            <field name="subject_id" />
+                            <field name="role" />
+                            <field name="weekly_hours" />
+                        </tree>
+                        <form>
+                            <group name="line_group_1">
+                                <field name="teacher_id" />
+                                <field name="subject_id" />
+                                <field name="role" />
+                                <field name="weekly_hours" />
+                            </group>
+                        </form>
+                    </field>
+                </page>
+            </xpath>
+        </data>
+    </field>
+</record>
+</odoo>

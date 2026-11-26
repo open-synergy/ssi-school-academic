@@ -26,6 +26,13 @@ learning objectives (TP), are kept as master data. Teachers choose the
 objectives each daily test and assignment of a score sheet measures, and the
 Learning Objective Achievement of the report card lines is filled from the
 objectives of the components the student was scored for.
+A teaching assignment records, per teacher and academic term, the homerooms and
+subjects the teacher teaches, as the main or as an assistant teacher, with the
+weekly hours. The score sheets of the main teachers are generated from it, the
+assignments of a term can be copied to the next term, a new score sheet of a
+teacher is filled with the teacher and the classes and subjects of the main
+lines, and an assistant teacher may read, but never change, the score sheet of
+the homeroom and subject assisted.
 
 
 Work Instruction
@@ -39,6 +46,10 @@ Work Instruction
 * `Archive Score Component <docs/school_score_component/03-archive.html>`_
 * `Create Subject Outcome <docs/school_subject_outcome/01-create.html>`_
 * `Edit Subject Outcome <docs/school_subject_outcome/02-edit.html>`_
+* `Create Teaching Assignment <docs/school_teaching_assignment/01-create.html>`_
+* `Edit Teaching Assignment <docs/school_teaching_assignment/02-edit.html>`_
+* `Generate Score Sheets from Teaching Assignment <docs/school_teaching_assignment/03-generate-score-sheets.html>`_
+* `Copy Teaching Assignments from the Previous Term <docs/school_teaching_assignment/04-copy-from-previous-term.html>`_
 * `Create Report Card Main Subject <docs/school_report_card_main_subject/01-create.html>`_
 * `Edit Report Card Main Subject <docs/school_report_card_main_subject/02-edit.html>`_
 * `Archive Report Card Main Subject <docs/school_report_card_main_subject/03-archive.html>`_

@@ -16,6 +16,19 @@
     <field name="perm_create" eval="1" />
 </record>
 
+<record id="school_score_sheet_assistant_teacher_rule" model="ir.rule">
+    <field name="name">School Score Sheet - Assistant Teachers (read only)</field>
+    <field name="model_id" ref="model_school_score_sheet" />
+    <field name="groups" eval="[(4, ref('base.group_user'))]" />
+    <field name="domain_force">[
+      ('assistant_user_ids','in',[user.id]),
+    ]</field>
+    <field name="perm_unlink" eval="0" />
+    <field name="perm_write" eval="0" />
+    <field name="perm_read" eval="1" />
+    <field name="perm_create" eval="0" />
+</record>
+
 <record id="school_score_sheet_company_rule" model="ir.rule">
     <field name="name">School Score Sheet - Responsible to company data</field>
     <field name="model_id" ref="model_school_score_sheet" />

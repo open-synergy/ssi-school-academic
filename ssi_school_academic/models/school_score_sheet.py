@@ -6,6 +6,7 @@ from datetime import date as datetime_date
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
+from odoo.osv import expression
 
 from odoo.addons.ssi_decorator import ssi_decorator
 
@@ -112,6 +113,7 @@ class SchoolScoreSheet(models.Model):
         comodel_name="school_academic_term",
         required=True,
         ondelete="restrict",
+        default=lambda self: self._default_academic_term_id(),
         readonly=True,
         states={
             "draft": [
@@ -174,6 +176,7 @@ class SchoolScoreSheet(models.Model):
         comodel_name="school_teacher",
         required=True,
         ondelete="restrict",
+        default=lambda self: self._default_teacher_id(),
         readonly=True,
         states={
             "draft": [
@@ -181,6 +184,61 @@ class SchoolScoreSheet(models.Model):
             ],
         },
         help="Teacher who gives the scores of this sheet.",
+    )
+    teaching_assignment_line_id = fields.Many2one(
+        string="Teaching Assignment Line",
+        comodel_name="school_teaching_assignment_line",
+        ondelete="restrict",
+        readonly=True,
+        states={
+            "draft": [
+                ("readonly", False),
+            ],
+        },
+        help="Main line of the teaching assignment this score sheet "
+        "was made for. It is optional: a score sheet without it works "
+        "as before. Choosing it fills the term, class, subject and "
+        "teacher.",
+    )
+    allowed_teaching_assignment_line_ids = fields.Many2many(
+        string="Allowed Teaching Assignment Lines",
+        comodel_name="school_teaching_assignment_line",
+        compute="_compute_allowed_teaching_assignment",
+        store=False,
+        compute_sudo=True,
+        help="Main lines of the teaching assignment of the logged in "
+        "teacher in the academic term of the sheet. It is empty for a "
+        "user who is not a teacher or has no line in the term.",
+    )
+    allowed_grade_class_ids = fields.Many2many(
+        string="Allowed Grade Classes",
+        comodel_name="school_grade_class",
+        compute="_compute_allowed_teaching_assignment",
+        store=False,
+        compute_sudo=True,
+        help="Grade classes that can be chosen. They are the classes "
+        "of the allowed lines, or every grade class when there is no "
+        "allowed line.",
+    )
+    allowed_subject_ids = fields.Many2many(
+        string="Allowed Subjects",
+        comodel_name="school_subject",
+        compute="_compute_allowed_teaching_assignment",
+        store=False,
+        compute_sudo=True,
+        help="Subjects that can be chosen. They are the subjects of "
+        "the allowed lines of the chosen class, or every subject when "
+        "there is no allowed line.",
+    )
+    assistant_user_ids = fields.Many2many(
+        string="Assistant Users",
+        comodel_name="res.users",
+        compute="_compute_assistant_user_ids",
+        search="_search_assistant_user_ids",
+        store=False,
+        compute_sudo=True,
+        help="Users of the assistant teachers of the term, class and "
+        "subject of the sheet. They may read the sheet, nothing else.",
     )
     line_ids = fields.One2many(
         string="Lines",
@@ -223,6 +281,258 @@ class SchoolScoreSheet(models.Model):
         "class. It is 0 when the subject has no minimum score for that "
         "grade. The score grid shows a score below it in red.",
     )
+
+    @api.model
+    def _default_academic_term_id(self):
+        """Return the first academic term that is on progress.
+
+        :return: a ``school_academic_term`` record, empty when no term
+            is on progress
+        """
+        return self.env["school_teaching_assignment"]._default_academic_term_id()
+
+    @api.model
+    def _default_teacher_id(self):
+        """Return the teacher of the logged in user.
+
+        The employee of the user is read as the superuser, because a
+        teacher may not read the employee records.
+
+        :return: a ``school_teacher`` record, empty when the user is
+            not a teacher
+        """
+        return self._get_current_teacher()
+
+    @api.model
+    def _get_current_teacher(self):
+        """Return the teacher record of the logged in user.
+
+        Extension point.
+
+        :return: a ``school_teacher`` record, empty when the user has
+            no employee, or the employee is not a teacher
+        """
+        return self.env.user.sudo().employee_id.teacher_id
+
+    def _get_teaching_assignment_line_criteria(self, teacher):
+        """Return the domain of the lines a teacher may make sheets for.
+
+        Extension point: the main lines of the teacher in the academic
+        term of the sheet.
+
+        :param teacher: the ``school_teacher`` record
+        :return: domain for ``school_teaching_assignment_line``
+        """
+        self.ensure_one()
+        return [
+            ("role", "=", "main"),
+            ("teacher_id", "=", teacher.id),
+            ("academic_term_id", "=", self.academic_term_id.id),
+        ]
+
+    def _get_allowed_teaching_assignment_lines(self):
+        """Return the main lines of the logged in teacher in the term.
+
+        :return: a ``school_teaching_assignment_line`` recordset, empty
+            when the user is not a teacher or has no line in the term
+        """
+        self.ensure_one()
+        lines = self.env["school_teaching_assignment_line"]
+        teacher = self._get_current_teacher()
+        if teacher and self.academic_term_id:
+            lines = lines.sudo().search(
+                self._get_teaching_assignment_line_criteria(teacher)
+            )
+        return lines
+
+    @api.depends(
+        "academic_term_id",
+        "grade_class_id",
+    )
+    def _compute_allowed_teaching_assignment(self):
+        """Compute the lines, classes and subjects the user may pick.
+
+        The result depends on the logged in user too, which is why the
+        fields are not stored. When the user has main lines in the term,
+        the classes are the classes of those lines and the subjects are
+        the subjects of the lines of the chosen class. When there is no
+        such line, every class and every subject stays available, so an
+        administrator or a teacher without a line is not restricted.
+        """
+        for record in self:
+            lines = record._get_allowed_teaching_assignment_lines()
+            classes = lines.mapped("grade_class_id")
+            subject_lines = lines
+            if record.grade_class_id:
+                subject_lines = lines.filtered(
+                    lambda r, record=record: r.grade_class_id == record.grade_class_id
+                )
+            subjects = subject_lines.mapped("subject_id")
+            if not lines:
+                classes = self.env["school_grade_class"].sudo().search([])
+                subjects = self.env["school_subject"].sudo().search([])
+            record.allowed_teaching_assignment_line_ids = lines
+            record.allowed_grade_class_ids = classes
+            record.allowed_subject_ids = subjects
+
+    @api.depends(
+        "academic_term_id",
+        "grade_class_id",
+        "subject_id",
+    )
+    def _compute_assistant_user_ids(self):
+        """Compute the users of the assistant teachers of the sheet.
+
+        Collects the users of the assistant lines of the teaching
+        assignments that name the same academic term, grade class and
+        subject as the sheet.
+        """
+        for record in self:
+            result = self.env["res.users"]
+            lines = (
+                self.env["school_teaching_assignment_line"]
+                .sudo()
+                .search(
+                    [
+                        ("role", "=", "assistant"),
+                        ("academic_term_id", "=", record.academic_term_id.id),
+                        ("grade_class_id", "=", record.grade_class_id.id),
+                        ("subject_id", "=", record.subject_id.id),
+                    ]
+                )
+            )
+            if lines:
+                result = lines.mapped("teacher_id.employee_id.user_id")
+            record.assistant_user_ids = result
+
+    @api.model
+    def _search_assistant_user_ids(self, operator, value):
+        """Search the sheets an assistant teacher may read.
+
+        Used by the record rule of the assistant teachers. The sheets
+        are found from the assistant lines of the given users, matched
+        on academic term, grade class and subject. Only the operators
+        ``in``, ``=``, ``not in`` and ``!=`` are supported.
+
+        :param operator: search operator on ``assistant_user_ids``
+        :param value: a user id, or a list of user ids
+        :return: domain on ``id`` of ``school_score_sheet``
+        :raises UserError: when the operator is not supported.
+        """
+        if operator not in ("in", "=", "not in", "!="):
+            error_message = (
+                _(
+                    """
+Context: Search score sheet by assistant user
+Database ID: -
+Problem: The operator %s is not supported on assistant users.
+Solution: Search with the operator in, =, not in or !=
+"""
+                )
+                % (operator,)
+            )
+            raise UserError(error_message)
+        user_ids = value if isinstance(value, (list, tuple)) else [value]
+        lines = (
+            self.env["school_teaching_assignment_line"]
+            .sudo()
+            .search(
+                [
+                    ("role", "=", "assistant"),
+                    ("teacher_id.employee_id.user_id", "in", user_ids),
+                ]
+            )
+        )
+        domains = [
+            [
+                ("academic_term_id", "=", line.academic_term_id.id),
+                ("grade_class_id", "=", line.grade_class_id.id),
+                ("subject_id", "=", line.subject_id.id),
+            ]
+            for line in lines
+        ]
+        sheet_ids = []
+        if domains:
+            sheet_ids = self.sudo().search(expression.OR(domains)).ids
+        result_operator = "in" if operator in ("in", "=") else "not in"
+        return [("id", result_operator, sheet_ids)]
+
+    @api.onchange("teaching_assignment_line_id")
+    def onchange_academic_term_id(self):
+        """Fill the academic term from the chosen teaching assignment line.
+
+        The line is read as the superuser, because a user may be
+        hidden from the lines of other teachers.
+        """
+        if self.teaching_assignment_line_id:
+            self.academic_term_id = (
+                self.teaching_assignment_line_id.sudo().academic_term_id
+            )
+
+    @api.onchange("teaching_assignment_line_id")
+    def onchange_grade_class_id(self):
+        """Fill the grade class from the chosen teaching assignment line.
+
+        The line is read as the superuser, because a user may be
+        hidden from the lines of other teachers.
+        """
+        if self.teaching_assignment_line_id:
+            self.grade_class_id = self.teaching_assignment_line_id.sudo().grade_class_id
+
+    @api.onchange("teaching_assignment_line_id")
+    def onchange_teacher_id(self):
+        """Fill the teacher from the chosen teaching assignment line.
+
+        The line is read as the superuser, because a user may be
+        hidden from the lines of other teachers.
+        """
+        if self.teaching_assignment_line_id:
+            self.teacher_id = self.teaching_assignment_line_id.sudo().teacher_id
+
+    @api.onchange(
+        "teaching_assignment_line_id",
+        "academic_term_id",
+        "grade_class_id",
+    )
+    def onchange_subject_id(self):
+        """Fill the subject from the line, or from the only allowed one.
+
+        The subject of the chosen line is taken. Without a line, the
+        subject is taken when the logged in teacher has exactly one main
+        line in the chosen class, and it is cleared when the current
+        subject is not among the allowed ones.
+        """
+        line = self.teaching_assignment_line_id.sudo()
+        if line:
+            self.subject_id = line.subject_id
+            return
+        lines = self._get_allowed_teaching_assignment_lines().filtered(
+            lambda r: r.grade_class_id == self.grade_class_id
+        )
+        if len(lines) == 1:
+            self.subject_id = lines.subject_id
+        elif lines and self.subject_id not in lines.mapped("subject_id"):
+            self.subject_id = False
+
+    @api.onchange("grade_class_id")
+    def onchange_teaching_assignment_line_id(self):
+        """Fill the line from the only allowed one of the chosen class.
+
+        The current line is kept when it still fits the chosen class.
+        Otherwise the line is the only main line of the logged in
+        teacher in the chosen class, or empty when there are several or
+        none.
+        """
+        line = self.teaching_assignment_line_id.sudo()
+        if line and line.grade_class_id == self.grade_class_id:
+            return
+        result = False
+        lines = self._get_allowed_teaching_assignment_lines().filtered(
+            lambda r: r.grade_class_id == self.grade_class_id
+        )
+        if len(lines) == 1:
+            result = lines
+        self.teaching_assignment_line_id = result
 
     @api.depends(
         "subject_id",
