@@ -873,6 +873,11 @@ msgid "Class whose students are listed on the ledger."
 msgstr "Kelas yang siswanya tercantum pada leger."
 
 #. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_teaching_assignment_line__homeroom_id
+msgid "Class Group"
+msgstr "Rombel"
+
+#. module: ssi_school_academic
 #: model_terms:ir.ui.view,arch_db:ssi_school_academic.school_subject_view_form
 msgid "Classification"
 msgstr "Klasifikasi"
@@ -1419,7 +1424,6 @@ msgstr "Memiliki Nilai"
 
 #. module: ssi_school_academic
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__homeroom_id
-#: model:ir.model.fields,field_description:ssi_school_academic.field_school_teaching_assignment_line__homeroom_id
 msgid "Homeroom"
 msgstr "Wali Kelas"
 

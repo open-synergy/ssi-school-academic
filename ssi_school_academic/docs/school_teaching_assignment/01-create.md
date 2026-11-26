@@ -9,8 +9,9 @@
 
 - **Data:** The **Teacher** and the **Academic Term** the assignment is for already
   exist.
-- **Data:** A **Homeroom** that is not cancelled exists in that academic term for every
-  class the teacher teaches, and the **Subject** is taught in the Grade of the homeroom.
+- **Data:** A **Class Group** (homeroom) that is not cancelled exists in that academic
+  term for every class the teacher teaches, and the **Subject** is taught in the Grade
+  of the homeroom.
 - **Config:** The teacher has no other teaching assignment in the same academic term.
 - **Access:** User is in group `Teaching Assignment`.
 
@@ -29,8 +30,9 @@
 4. Open the **Lines** tab.
 5. Click **Add a line** for each homeroom and subject the teacher teaches, and fill in
    the line:
-   - **Homeroom** _(required)_: Select the homeroom. Only homerooms of the academic term
-     that are not cancelled are offered. **Grade Class** is filled from the homeroom.
+   - **Class Group** _(required)_: Select the homeroom. Only homerooms of the academic
+     term that are not cancelled are offered. **Grade Class** is filled from the
+     homeroom.
    - **Subject** _(required)_: Select the subject. Only subjects taught in the Grade of
      the homeroom are offered.
    - **Role** _(required)_: Select **Main** for the teacher who gives the scores, or

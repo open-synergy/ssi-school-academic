@@ -47,7 +47,7 @@ class SchoolTeachingAssignmentLine(models.Model):
         help="Academic term of the selected Teaching Assignment.",
     )
     homeroom_id = fields.Many2one(
-        string="Homeroom",
+        string="Class Group",
         comodel_name="school_homeroom",
         required=True,
         ondelete="restrict",
