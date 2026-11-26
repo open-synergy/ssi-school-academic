@@ -257,18 +257,22 @@ class TestSchoolTeachingAssignmentAccess(YamlTransactionCase):
         sheet_model = self.env["school_score_sheet"].with_user(self.user_main)
         sheet = sheet_model.new({"academic_term_id": self.term.id})
         self.assertEqual(
-            sheet.allowed_teaching_assignment_line_ids,
+            sheet.allowed_teaching_assignment_line_ids._origin,
             self.line_main_x | self.line_main_y,
         )
-        self.assertEqual(sheet.allowed_grade_class_ids, self.class_x | self.class_y)
-        self.assertEqual(sheet.allowed_subject_ids, self.subject_a | self.subject_b)
+        self.assertEqual(
+            sheet.allowed_grade_class_ids._origin, self.class_x | self.class_y
+        )
+        self.assertEqual(
+            sheet.allowed_subject_ids._origin, self.subject_a | self.subject_b
+        )
         sheet = sheet_model.new(
             {
                 "academic_term_id": self.term.id,
                 "grade_class_id": self.class_y.id,
             }
         )
-        self.assertEqual(sheet.allowed_subject_ids, self.subject_b)
+        self.assertEqual(sheet.allowed_subject_ids._origin, self.subject_b)
 
     def test_allowed_lines_open_for_a_user_without_lines(self):
         """Check that a user without a main line is not restricted.
@@ -283,13 +287,13 @@ class TestSchoolTeachingAssignmentAccess(YamlTransactionCase):
             .with_user(self.user_none)
             .new({"academic_term_id": self.term.id})
         )
-        self.assertFalse(sheet.allowed_teaching_assignment_line_ids)
+        self.assertFalse(sheet.allowed_teaching_assignment_line_ids._origin)
         self.assertEqual(
-            sheet.allowed_grade_class_ids,
+            sheet.allowed_grade_class_ids._origin,
             env["school_grade_class"].search([]),
         )
         self.assertEqual(
-            sheet.allowed_subject_ids,
+            sheet.allowed_subject_ids._origin,
             env["school_subject"].search([]),
         )
 

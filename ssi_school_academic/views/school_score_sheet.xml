@@ -54,10 +54,7 @@
         <data>
             <xpath expr="//field[@name='company_id']" position="after">
                 <field name="date" />
-                <field
-                        name="teaching_assignment_line_id"
-                        domain="[('role', '=', 'main'), ('academic_term_id', '=', academic_term_id)]"
-                    />
+                <field name="teaching_assignment_line_id" />
                 <field name="academic_term_id" />
                 <field name="grade_class_id" />
                 <field name="subject_id" />
@@ -96,6 +93,10 @@
             </xpath>
             <xpath expr="//group[@name='header_right']" position="inside">
                 <field name="date" />
+                <field
+                        name="teaching_assignment_line_id"
+                        domain="[('id', 'in', allowed_teaching_assignment_line_ids)]"
+                    />
                 <field name="academic_term_id" />
                 <field name="academic_year_id" />
                 <field

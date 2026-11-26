@@ -321,7 +321,7 @@ odoo.define("ssi_school_academic.school_teaching_assignment_tour", function (req
                 // The Source Term offers every assignment of that term.
                 content: "The assignments of the source term are offered",
                 trigger:
-                    ".o_field_many2many_tags[name='assignment_ids']:contains(TOUR TC Assignment)",
+                    ".o_field_many2manytags[name='assignment_ids'] .o_badge_text:contains(TOUR TC Assignment)",
                 run: function () {
                     // Assertion only; do not trigger the default click action.
                 },
