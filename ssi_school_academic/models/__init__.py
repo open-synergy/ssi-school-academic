@@ -4,6 +4,8 @@
 
 from . import (  # noqa: F401
     school,
+    school_curriculum,
+    school_curriculum_line,
     school_grade,
     school_homeroom,
     school_report_card,

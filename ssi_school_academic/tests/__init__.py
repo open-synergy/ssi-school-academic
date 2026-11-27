@@ -5,6 +5,7 @@
 from . import (  # noqa: F401
     test_print_report_card_ledger,
     test_school,
+    test_school_curriculum,
     test_school_grade,
     test_school_report_card,
     test_school_report_card_main_subject,
@@ -21,6 +22,7 @@ from . import (  # noqa: F401
     test_school_teaching_assignment_access,
     test_school_score_sheet_teaching_assignment,
     test_ui_print_report_card_ledger,
+    test_ui_school_curriculum,
     test_ui_school_report_card,
     test_ui_school_report_card_main_subject,
     test_ui_school_report_card_type,

@@ -1,0 +1,677 @@
+options:
+  auto_refresh: true
+
+setup:
+  steps:
+    - step: "Create the grade type"
+      action: "create"
+      model: "school_grade_type"
+      save_as: "grade_type"
+      values:
+        name: "SSCU Grade Type"
+        code: "EVAL: 'SSCUGT%d' % env['school_grade_type'].search_count([])"
+
+    - step: "Create the school"
+      action: "create"
+      model: "school"
+      save_as: "school"
+      values:
+        name: "SSCU School"
+        code: "EVAL: 'SSCUSC%d' % env['school'].search_count([])"
+        grade_type_id: "REC: grade_type.id"
+
+    - step: "Create the first academic year"
+      action: "create"
+      model: "school_academic_year"
+      save_as: "year_a"
+      values:
+        name: "SSCU Year A"
+        code: "EVAL: 'SSCUYA%d' % env['school_academic_year'].search_count([])"
+        date_start: 2026-07-01
+        date_end: 2027-06-30
+
+    - step: "Create the second academic year"
+      action: "create"
+      model: "school_academic_year"
+      save_as: "year_b"
+      values:
+        name: "SSCU Year B"
+        code: "EVAL: 'SSCUYB%d' % env['school_academic_year'].search_count([])"
+        date_start: 2027-07-01
+        date_end: 2028-06-30
+
+    - step: "Create grade 1"
+      action: "create"
+      model: "school_grade"
+      save_as: "grade_1"
+      values:
+        name: "SSCU Grade 1"
+        code: "EVAL: 'SSCUG1%d' % env['school_grade'].search_count([])"
+        type_id: "REC: grade_type.id"
+
+    - step: "Create grade 2"
+      action: "create"
+      model: "school_grade"
+      save_as: "grade_2"
+      values:
+        name: "SSCU Grade 2"
+        code: "EVAL: 'SSCUG2%d' % env['school_grade'].search_count([])"
+        type_id: "REC: grade_type.id"
+
+    - step: "Create the general subject taught in grade 1 only"
+      action: "create"
+      model: "school_subject"
+      save_as: "subject_a"
+      values:
+        name: "SSCU Subject A"
+        code: "EVAL: 'SSCUSA%d' % env['school_subject'].search_count([])"
+        subject_group: "general"
+        grade_ids:
+          - - 6
+            - 0
+            - - "REC: grade_1.id"
+
+    - step: "Create the vocational subject taught in both grades"
+      action: "create"
+      model: "school_subject"
+      save_as: "subject_b"
+      values:
+        name: "SSCU Subject B"
+        code: "EVAL: 'SSCUSB%d' % env['school_subject'].search_count([])"
+        subject_group: "vocational"
+        grade_ids:
+          - - 6
+            - 0
+            - - "REC: grade_1.id"
+              - "REC: grade_2.id"
+
+    - step: "Create the cancel reason"
+      action: "create"
+      model: "base.cancel_reason"
+      save_as: "cancel_reason"
+      values:
+        name: "SSCU Cancel Reason"
+        code: "EVAL: 'SSCUCR%d' % env['base.cancel_reason'].search_count([])"
+
+scenarios:
+  - name: "School Curriculum - Workflow from draft to done and restart after cancel"
+    steps:
+      - step: "Create the draft curriculum SSCU Workflow"
+        action: "create"
+        model: "school_curriculum"
+        save_as: "curriculum"
+        values:
+          title: "SSCU Workflow"
+          school_id: "REC: school.id"
+          academic_year_id: "REC: year_a.id"
+          effective_start: 2026-07-01
+          effective_end: 2027-06-30
+          user_id: "REF: base.user_admin"
+
+      - step: "Add a line to the draft curriculum"
+        action: "create"
+        model: "school_curriculum_line"
+        save_as: "line"
+        values:
+          curriculum_id: "REC: curriculum.id"
+          subject_id: "REC: subject_a.id"
+          grade_id: "REC: grade_1.id"
+          weekly_hours: 4
+          total_class: 3
+
+      - step: "Confirm the curriculum"
+        action: "call"
+        target: "curriculum"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve the curriculum, which opens it"
+        action: "call"
+        target: "curriculum"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "The document number is generated when the curriculum opens"
+        action: "assert"
+        target: "curriculum"
+        asserts:
+          name:
+            type: "value"
+            operator: "not_equals"
+            expected: "/"
+
+      - step: "Finish the curriculum"
+        action: "call"
+        target: "curriculum"
+        method: "action_done"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "done"
+
+      - step: "Create the draft curriculum SSCU Cancelled"
+        action: "create"
+        model: "school_curriculum"
+        save_as: "curriculum_2"
+        values:
+          title: "SSCU Cancelled"
+          school_id: "REC: school.id"
+          academic_year_id: "REC: year_b.id"
+          effective_start: 2026-07-01
+          effective_end: 2027-06-30
+          user_id: "REF: base.user_admin"
+
+      - step: "Cancel the draft curriculum via the wizard"
+        action: "wizard"
+        model: "base.select_cancel_reason"
+        target: "curriculum_2"
+        as_user: "base.user_admin"
+        values:
+          cancel_reason_id: "REC: cancel_reason.id"
+        method: "action_confirm"
+        asserts:
+          state:
+            type: "value"
+            expected: "cancel"
+
+      - step: "Restart the cancelled curriculum"
+        action: "call"
+        target: "curriculum_2"
+        method: "action_restart"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "draft"
+
+  - name: "School Curriculum - Reject and restart"
+    steps:
+      - step: "Create the draft curriculum SSCU Rejected"
+        action: "create"
+        model: "school_curriculum"
+        save_as: "curriculum"
+        values:
+          title: "SSCU Rejected"
+          school_id: "REC: school.id"
+          academic_year_id: "REC: year_a.id"
+          effective_start: 2026-07-01
+          effective_end: 2027-06-30
+          user_id: "REF: base.user_admin"
+
+      - step: "Confirm the curriculum"
+        action: "call"
+        target: "curriculum"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Reject the curriculum"
+        action: "call"
+        target: "curriculum"
+        method: "action_reject_approval"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "reject"
+
+      - step: "Restart the rejected curriculum"
+        action: "call"
+        target: "curriculum"
+        method: "action_restart"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "draft"
+
+      - step: "Confirm the restarted curriculum"
+        action: "call"
+        target: "curriculum"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Cancel the curriculum that waits for approval"
+        action: "wizard"
+        model: "base.select_cancel_reason"
+        target: "curriculum"
+        as_user: "base.user_admin"
+        values:
+          cancel_reason_id: "REC: cancel_reason.id"
+        method: "action_confirm"
+        asserts:
+          state:
+            type: "value"
+            expected: "cancel"
+
+  - name: "School Curriculum - Total time and category of a line"
+    steps:
+      - step: "Create the draft curriculum SSCU Compute"
+        action: "create"
+        model: "school_curriculum"
+        save_as: "curriculum"
+        values:
+          title: "SSCU Compute"
+          school_id: "REC: school.id"
+          academic_year_id: "REC: year_a.id"
+          effective_start: 2026-07-01
+          effective_end: 2027-06-30
+          user_id: "REF: base.user_admin"
+
+      - step: "Add a line of the general subject, 4 hours for 3 classes"
+        action: "create"
+        model: "school_curriculum_line"
+        save_as: "line_a"
+        values:
+          curriculum_id: "REC: curriculum.id"
+          subject_id: "REC: subject_a.id"
+          grade_id: "REC: grade_1.id"
+          weekly_hours: 4
+          total_class: 3
+
+      - step: "Add a line of the vocational subject, 2 hours for 5 classes"
+        action: "create"
+        model: "school_curriculum_line"
+        save_as: "line_b"
+        values:
+          curriculum_id: "REC: curriculum.id"
+          subject_id: "REC: subject_b.id"
+          grade_id: "REC: grade_2.id"
+          weekly_hours: 2
+          total_class: 5
+
+      - step: "The total time is 4 x 3 and the category follows the subject group"
+        action: "assert"
+        target: "line_a"
+        asserts:
+          total_time:
+            type: "value"
+            expected: 12
+          category:
+            type: "value"
+            expected: "general"
+
+      - step: "The second line takes its category from its own subject"
+        action: "assert"
+        target: "line_b"
+        asserts:
+          total_time:
+            type: "value"
+            expected: 10
+          category:
+            type: "value"
+            expected: "vocational"
+
+      - step: "Change the weekly hours of the line"
+        action: "write"
+        target: "line_a"
+        values:
+          weekly_hours: 5
+
+      - step: "The total time follows the new weekly hours"
+        action: "assert"
+        target: "line_a"
+        asserts:
+          total_time:
+            type: "value"
+            expected: 15
+
+  - name: "School Curriculum - Line constraints"
+    steps:
+      - step: "Create the draft curriculum SSCU Line Constraints"
+        action: "create"
+        model: "school_curriculum"
+        save_as: "curriculum"
+        values:
+          title: "SSCU Line Constraints"
+          school_id: "REC: school.id"
+          academic_year_id: "REC: year_a.id"
+          effective_start: 2026-07-01
+          effective_end: 2027-06-30
+          user_id: "REF: base.user_admin"
+
+      - step: "Add a valid line"
+        action: "create"
+        model: "school_curriculum_line"
+        save_as: "line"
+        values:
+          curriculum_id: "REC: curriculum.id"
+          subject_id: "REC: subject_a.id"
+          grade_id: "REC: grade_1.id"
+          weekly_hours: 4
+          total_class: 3
+
+      - step: "A grade outside the applicable grades of the subject is rejected"
+        action: "create"
+        model: "school_curriculum_line"
+        values:
+          curriculum_id: "REC: curriculum.id"
+          subject_id: "REC: subject_a.id"
+          grade_id: "REC: grade_2.id"
+          weekly_hours: 4
+          total_class: 3
+        expect_error:
+          type: "ValidationError"
+          message_contains: "not applicable to the grade"
+
+      - step: "The same subject and grade twice is rejected"
+        action: "create"
+        model: "school_curriculum_line"
+        values:
+          curriculum_id: "REC: curriculum.id"
+          subject_id: "REC: subject_a.id"
+          grade_id: "REC: grade_1.id"
+          weekly_hours: 2
+          total_class: 2
+        expect_error:
+          type: "ValidationError"
+          message_contains: "already listed"
+
+      - step: "Zero weekly hours is rejected"
+        action: "create"
+        model: "school_curriculum_line"
+        values:
+          curriculum_id: "REC: curriculum.id"
+          subject_id: "REC: subject_b.id"
+          grade_id: "REC: grade_1.id"
+          weekly_hours: 0
+          total_class: 2
+        expect_error:
+          type: "ValidationError"
+          message_contains: "at least 1"
+
+      - step: "Zero classes is rejected"
+        action: "create"
+        model: "school_curriculum_line"
+        values:
+          curriculum_id: "REC: curriculum.id"
+          subject_id: "REC: subject_b.id"
+          grade_id: "REC: grade_1.id"
+          weekly_hours: 2
+          total_class: 0
+        expect_error:
+          type: "ValidationError"
+          message_contains: "at least 1"
+
+      - step: "The other subject of the same grade is accepted"
+        action: "create"
+        model: "school_curriculum_line"
+        values:
+          curriculum_id: "REC: curriculum.id"
+          subject_id: "REC: subject_b.id"
+          grade_id: "REC: grade_1.id"
+          weekly_hours: 2
+          total_class: 2
+
+  - name: "School Curriculum - One curriculum per school and academic year"
+    steps:
+      - step: "Create the draft curriculum SSCU Unique One"
+        action: "create"
+        model: "school_curriculum"
+        save_as: "curriculum"
+        values:
+          title: "SSCU Unique One"
+          school_id: "REC: school.id"
+          academic_year_id: "REC: year_a.id"
+          effective_start: 2026-07-01
+          effective_end: 2027-06-30
+          user_id: "REF: base.user_admin"
+
+      - step: "A second curriculum of the same school and academic year is rejected"
+        action: "create"
+        model: "school_curriculum"
+        values:
+          title: "SSCU Unique Two"
+          school_id: "REC: school.id"
+          academic_year_id: "REC: year_a.id"
+          effective_start: 2026-07-01
+          effective_end: 2027-06-30
+          user_id: "REF: base.user_admin"
+        expect_error:
+          type: "ValidationError"
+          message_contains: "already has a curriculum for this academic year"
+
+      - step: "Cancel the first curriculum"
+        action: "wizard"
+        model: "base.select_cancel_reason"
+        target: "curriculum"
+        as_user: "base.user_admin"
+        values:
+          cancel_reason_id: "REC: cancel_reason.id"
+        method: "action_confirm"
+        asserts:
+          state:
+            type: "value"
+            expected: "cancel"
+
+      - step: "Create the draft curriculum SSCU Unique Three"
+        action: "create"
+        model: "school_curriculum"
+        save_as: "curriculum_2"
+        values:
+          title: "SSCU Unique Three"
+          school_id: "REC: school.id"
+          academic_year_id: "REC: year_a.id"
+          effective_start: 2026-07-01
+          effective_end: 2027-06-30
+          user_id: "REF: base.user_admin"
+
+      - step:
+          "The cancelled curriculum cannot be restarted while another one holds the year"
+        action: "call"
+        target: "curriculum"
+        method: "action_restart"
+        as_user: "base.user_admin"
+        expect_error:
+          type: "ValidationError"
+          message_contains: "already has a curriculum for this academic year"
+
+  - name: "School Curriculum - One open curriculum per school"
+    steps:
+      - step: "Create the draft curriculum SSCU Open One"
+        action: "create"
+        model: "school_curriculum"
+        save_as: "curriculum"
+        values:
+          title: "SSCU Open One"
+          school_id: "REC: school.id"
+          academic_year_id: "REC: year_a.id"
+          effective_start: 2026-07-01
+          effective_end: 2027-06-30
+          user_id: "REF: base.user_admin"
+
+      - step: "Confirm the first curriculum"
+        action: "call"
+        target: "curriculum"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve the first curriculum, which opens it"
+        action: "call"
+        target: "curriculum"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Create the draft curriculum SSCU Open Two"
+        action: "create"
+        model: "school_curriculum"
+        save_as: "curriculum_2"
+        values:
+          title: "SSCU Open Two"
+          school_id: "REC: school.id"
+          academic_year_id: "REC: year_b.id"
+          effective_start: 2026-07-01
+          effective_end: 2027-06-30
+          user_id: "REF: base.user_admin"
+
+      - step: "Confirm the second curriculum"
+        action: "call"
+        target: "curriculum_2"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approving the second curriculum is rejected while the first is open"
+        action: "call"
+        target: "curriculum_2"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        expect_error:
+          type: "ValidationError"
+          message_contains: "already has a curriculum that is on progress"
+
+  - name: "School Curriculum - Effective dates"
+    steps:
+      - step: "An effective start later than the effective end is rejected"
+        action: "create"
+        model: "school_curriculum"
+        values:
+          title: "SSCU Dates"
+          school_id: "REC: school.id"
+          academic_year_id: "REC: year_a.id"
+          effective_start: 2027-07-01
+          effective_end: 2026-07-01
+          user_id: "REF: base.user_admin"
+        expect_error:
+          type: "ValidationError"
+          message_contains: "cannot be later than effective end"
+
+  - name: "School Curriculum - Header and lines are locked outside draft"
+    steps:
+      - step: "Create the draft curriculum SSCU Lock"
+        action: "create"
+        model: "school_curriculum"
+        save_as: "curriculum"
+        values:
+          title: "SSCU Lock"
+          school_id: "REC: school.id"
+          academic_year_id: "REC: year_a.id"
+          effective_start: 2026-07-01
+          effective_end: 2027-06-30
+          user_id: "REF: base.user_admin"
+
+      - step: "Add a line to the draft curriculum"
+        action: "create"
+        model: "school_curriculum_line"
+        save_as: "line"
+        values:
+          curriculum_id: "REC: curriculum.id"
+          subject_id: "REC: subject_a.id"
+          grade_id: "REC: grade_1.id"
+          weekly_hours: 4
+          total_class: 3
+
+      - step: "Confirm the curriculum"
+        action: "call"
+        target: "curriculum"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve the curriculum, which opens it"
+        action: "call"
+        target: "curriculum"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Changing a line of the open curriculum is rejected"
+        action: "write"
+        target: "line"
+        values:
+          weekly_hours: 6
+        expect_error:
+          type: "ValidationError"
+          message_contains: "can only be changed in draft"
+
+      - step: "Deleting a line of the open curriculum is rejected"
+        action: "unlink"
+        target: "line"
+        expect_error:
+          type: "ValidationError"
+          message_contains: "can only be changed in draft"
+
+      - step: "Adding a line to the open curriculum is rejected"
+        action: "create"
+        model: "school_curriculum_line"
+        values:
+          curriculum_id: "REC: curriculum.id"
+          subject_id: "REC: subject_b.id"
+          grade_id: "REC: grade_1.id"
+          weekly_hours: 2
+          total_class: 2
+        expect_error:
+          type: "ValidationError"
+          message_contains: "can only be changed in draft"
+
+      - step: "Changing the header of the open curriculum is rejected"
+        action: "write"
+        target: "curriculum"
+        values:
+          title: "SSCU Changed"
+        expect_error:
+          type: "ValidationError"
+          message_contains: "can only be changed in draft"
+
+      - step: "A field outside the draft-only fields can still be changed"
+        action: "write"
+        target: "curriculum"
+        values:
+          note: "Reviewed"
+
+      - step: "The note is saved and the title is untouched"
+        action: "assert"
+        target: "curriculum"
+        asserts:
+          note:
+            type: "value"
+            expected: "Reviewed"
+          title:
+            type: "value"
+            expected: "SSCU Lock"
