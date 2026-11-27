@@ -212,11 +212,13 @@ class SchoolTeachingAssignmentLine(models.Model):
         ]
         return bool(self.env["school_score_sheet"].sudo().search_count(domain))
 
-    def _check_no_active_score_sheet(self, context):
+    def _check_no_active_score_sheet(self, record_label):
         """Refuse to delete when a score sheet that is not cancelled exists.
 
-        :param str context: name of the deleted record, shown in the
-            ``Context`` line of the error message.
+        :param str record_label: name of the deleted record, shown in
+            the ``Context`` line of the error message. It is not named
+            ``context`` so that ``_()`` does not read it as the
+            environment context when it looks up the language.
         :raises UserError: when a line has a score sheet that is not
             cancelled for the same term, grade class and subject.
         """
@@ -231,7 +233,7 @@ Problem: A score sheet that is not cancelled exists for this term, class and sub
 Solution: Cancel or delete the score sheet first
 """
                     )
-                    % (context, record.id)
+                    % (record_label, record.id)
                 )
                 raise UserError(error_message)
 

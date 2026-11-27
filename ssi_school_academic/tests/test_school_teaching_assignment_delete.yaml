@@ -619,3 +619,133 @@ scenarios:
           - ["teaching_assignment_line_id", "=", false]
         save_as: "found_sheet"
         expect_count: 1
+
+  - name: "Teaching Assignment Delete - The line guard message is translated"
+    steps:
+      - step: "Prepare the Indonesian wizard"
+        action: "create"
+        model: "base.language.install"
+        save_as: "lang_wizard"
+        values:
+          lang: "id_ID"
+
+      - step: "Install the Indonesian language with its translations"
+        action: "call"
+        target: "lang_wizard"
+        method: "lang_install"
+
+      - step: "Create the assignment header_1"
+        action: "create"
+        model: "school_teaching_assignment"
+        save_as: "header_1"
+        values:
+          name: "SSTD header_1"
+          code: "/"
+          teacher_id: "REC: teacher_1.id"
+          academic_term_id: "REC: term_1.id"
+
+      - step: "Create the line line_1"
+        action: "create"
+        model: "school_teaching_assignment_line"
+        save_as: "line_1"
+        values:
+          assignment_id: "REC: header_1.id"
+          homeroom_id: "REC: homeroom_x.id"
+          subject_id: "REC: subject_a.id"
+          role: "main"
+          weekly_hours: 2
+
+      - step: "Create the score sheet sheet_manual"
+        action: "create"
+        model: "school_score_sheet"
+        save_as: "sheet_manual"
+        values:
+          academic_term_id: "REC: term_1.id"
+          grade_class_id: "REC: class_x.id"
+          subject_id: "REC: subject_a.id"
+          teacher_id: "REC: teacher_1.id"
+          date: 2026-08-10
+          user_id: "REF: base.user_admin"
+
+      - step: "Deleting the line is refused with the line label in Indonesian"
+        action: "unlink"
+        target: "line_1"
+        context:
+          lang: "id_ID"
+        expect_error:
+          type: "UserError"
+          message_contains: "Hapus baris pembelajaran guru"
+
+      - step: "The message is in Indonesian, not in English"
+        action: "unlink"
+        target: "line_1"
+        context:
+          lang: "id_ID"
+        expect_error:
+          type: "UserError"
+          message_contains: "Ada lembar nilai yang belum dibatalkan"
+
+  - name: "Teaching Assignment Delete - The document guard message is translated"
+    steps:
+      - step: "Prepare the Indonesian wizard"
+        action: "create"
+        model: "base.language.install"
+        save_as: "lang_wizard"
+        values:
+          lang: "id_ID"
+
+      - step: "Install the Indonesian language with its translations"
+        action: "call"
+        target: "lang_wizard"
+        method: "lang_install"
+
+      - step: "Create the assignment header_1"
+        action: "create"
+        model: "school_teaching_assignment"
+        save_as: "header_1"
+        values:
+          name: "SSTD header_1"
+          code: "/"
+          teacher_id: "REC: teacher_1.id"
+          academic_term_id: "REC: term_1.id"
+
+      - step: "Create the line line_1"
+        action: "create"
+        model: "school_teaching_assignment_line"
+        save_as: "line_1"
+        values:
+          assignment_id: "REC: header_1.id"
+          homeroom_id: "REC: homeroom_x.id"
+          subject_id: "REC: subject_a.id"
+          role: "main"
+          weekly_hours: 2
+
+      - step: "Create the score sheet sheet_manual"
+        action: "create"
+        model: "school_score_sheet"
+        save_as: "sheet_manual"
+        values:
+          academic_term_id: "REC: term_1.id"
+          grade_class_id: "REC: class_x.id"
+          subject_id: "REC: subject_a.id"
+          teacher_id: "REC: teacher_1.id"
+          date: 2026-08-10
+          user_id: "REF: base.user_admin"
+
+      - step: "Deleting the document is refused with the document label in Indonesian"
+        action: "unlink"
+        target: "header_1"
+        context:
+          lang: "id_ID"
+        expect_error:
+          type: "UserError"
+          message_contains: "Hapus pembelajaran guru"
+
+      - step: "The message is in Indonesian, not in English"
+        action: "unlink"
+        target: "header_1"
+        context:
+          lang: "id_ID"
+        expect_error:
+          type: "UserError"
+          message_contains: "Ada lembar nilai yang belum dibatalkan"
