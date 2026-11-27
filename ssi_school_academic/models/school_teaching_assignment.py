@@ -78,6 +78,21 @@ class SchoolTeachingAssignment(models.Model):
         "of the teacher.",
     )
 
+    def write(self, vals):
+        """Write the assignments and sync the draft score sheets.
+
+        When the teacher is written, the draft score sheet of every
+        main line of the assignment is handed to the new teacher.
+
+        :param dict vals: values to write.
+        :return: True
+        :rtype: bool
+        """
+        result = super().write(vals)
+        if "teacher_id" in vals:
+            self.mapped("line_ids")._sync_draft_score_sheet()
+        return result
+
     def unlink(self):
         """Delete the assignments, refused when a line is in use.
 
