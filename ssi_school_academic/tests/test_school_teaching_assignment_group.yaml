@@ -1,0 +1,64 @@
+scenarios:
+  - name: "Group - Teaching Assignment implies the homeroom viewer only"
+    steps:
+      - step: "Get the Teaching Assignment group"
+        action: "ref"
+        xml_id: "ssi_school_academic.school_teaching_assignment_group"
+        save_as: "ta_group"
+      - step: "Get the homeroom viewer group"
+        action: "ref"
+        xml_id: "ssi_school.school_homeroom_viewer_group"
+        save_as: "viewer_group"
+      - step: "The implied groups contain the homeroom viewer group"
+        action: "assert"
+        target: "ta_group"
+        asserts:
+          implied_ids:
+            type: "m2m"
+            check: "contains"
+            expected_records:
+              - "REC: viewer_group"
+      - step: "The implied groups do not contain the homeroom user group"
+        action: "search"
+        model: "res.groups"
+        domain:
+          - ["id", "=", "REC: ta_group.id"]
+          - ["implied_ids", "in", ["REF: ssi_school.school_homeroom_user_group"]]
+        save_as: "implies_user"
+        expect_count: 0
+
+  - name: "Group - A user with only Teaching Assignment gets the viewer"
+    steps:
+      - step: "Create the user with only the Teaching Assignment group"
+        action: "create"
+        model: "res.users"
+        save_as: "teacher"
+        values:
+          name: "TA Teacher"
+          login: "EVAL: 'ta_teacher_%d@example.com' % env['res.users'].search_count([])"
+          groups_id:
+            - - 6
+              - 0
+              - - "REF: base.group_user"
+                - "REF: ssi_school_academic.school_teaching_assignment_group"
+      - step: "Get the homeroom viewer group"
+        action: "ref"
+        xml_id: "ssi_school.school_homeroom_viewer_group"
+        save_as: "viewer_group"
+      - step: "The user holds the homeroom viewer group"
+        action: "assert"
+        target: "teacher"
+        asserts:
+          groups_id:
+            type: "m2m"
+            check: "contains"
+            expected_records:
+              - "REC: viewer_group"
+      - step: "The user does not hold the homeroom user group"
+        action: "search"
+        model: "res.users"
+        domain:
+          - ["id", "=", "REC: teacher.id"]
+          - ["groups_id", "in", ["REF: ssi_school.school_homeroom_user_group"]]
+        save_as: "user_with_homeroom_user"
+        expect_count: 0
