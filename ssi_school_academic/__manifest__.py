@@ -67,6 +67,7 @@
         "views/school_score_sheet.xml",
         "views/school_report_card.xml",
         "views/school_report_card_main_subject.xml",
+        "views/school.xml",
         "views/school_grade.xml",
         "views/school_teaching_assignment.xml",
         "views/school_homeroom.xml",

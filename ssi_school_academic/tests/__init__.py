@@ -4,6 +4,7 @@
 
 from . import (  # noqa: F401
     test_print_report_card_ledger,
+    test_school,
     test_school_grade,
     test_school_report_card,
     test_school_report_card_main_subject,
