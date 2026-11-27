@@ -133,14 +133,15 @@ class TestUiSchoolTeachingAssignment(HttpSavepointCase):
 
     @classmethod
     def setUpClass(cls):
-        """Create the master data the three tours work with.
+        """Create the master data the four tours work with.
 
         Pre-Condition IK: the teacher, the term, the homerooms and the
         subjects already exist. The create tour gets a teacher, a term,
         a homeroom and a subject to pick. The generate tour gets an
         assignment with one main line of a teacher who has a user. The
         copy tour gets two terms, an assignment in the first one, and
-        the homeroom of the same class in both terms.
+        the homeroom of the same class in both terms. The delete tour
+        gets an assignment with one line and no score sheet.
         """
         super().setUpClass()
         create = cls._create_structure("TA")
@@ -202,6 +203,30 @@ class TestUiSchoolTeachingAssignment(HttpSavepointCase):
             }
         )
 
+        delete = cls._create_structure("TD")
+        term_delete = cls._create_term(
+            delete["year"], "TOUR TD Term", "2026-07-01", "2026-12-31"
+        )
+        homeroom_delete = cls._create_homeroom(delete, term_delete)
+        teacher_delete = cls._create_teacher("TD", with_user=False)
+        header_delete = cls.env["school_teaching_assignment"].create(
+            {
+                "name": "TOUR TD Assignment",
+                "code": "/",
+                "teacher_id": teacher_delete.id,
+                "academic_term_id": term_delete.id,
+            }
+        )
+        cls.env["school_teaching_assignment_line"].create(
+            {
+                "assignment_id": header_delete.id,
+                "homeroom_id": homeroom_delete.id,
+                "subject_id": delete["subject"].id,
+                "role": "main",
+                "weekly_hours": 2,
+            }
+        )
+
     def test_create(self):
         """Run the create tour for ``school_teaching_assignment``.
 
@@ -232,5 +257,16 @@ class TestUiSchoolTeachingAssignment(HttpSavepointCase):
         self.start_tour(
             "/web",
             "ssi_school_academic_school_teaching_assignment_copy_from_previous_term",
+            login="admin",
+        )
+
+    def test_delete(self):
+        """Run the delete tour for ``school_teaching_assignment``.
+
+        IK: docs/school_teaching_assignment/05-delete.md
+        """
+        self.start_tour(
+            "/web",
+            "ssi_school_academic_school_teaching_assignment_delete",
             login="admin",
         )

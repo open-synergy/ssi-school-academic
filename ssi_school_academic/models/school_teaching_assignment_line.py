@@ -3,7 +3,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from odoo import _, api, fields, models
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError, ValidationError
 
 
 class SchoolTeachingAssignmentLine(models.Model):
@@ -127,6 +127,71 @@ class SchoolTeachingAssignmentLine(models.Model):
             )
             result.append((record.id, name))
         return result
+
+    def _has_active_score_sheet(self):
+        """Tell whether a score sheet that is not cancelled uses the line.
+
+        A score sheet uses the line when it has the same academic term,
+        grade class and subject, whatever its teacher and whatever the
+        role of the line. The sheets are searched as the superuser,
+        because a user of the teaching assignment may not read them.
+
+        :return: True when such a score sheet exists
+        :rtype: bool
+        """
+        self.ensure_one()
+        domain = [
+            ("state", "!=", "cancel"),
+            ("academic_term_id", "=", self.academic_term_id.id),
+            ("grade_class_id", "=", self.grade_class_id.id),
+            ("subject_id", "=", self.subject_id.id),
+        ]
+        return bool(self.env["school_score_sheet"].sudo().search_count(domain))
+
+    def _check_no_active_score_sheet(self, context):
+        """Refuse to delete when a score sheet that is not cancelled exists.
+
+        :param str context: name of the deleted record, shown in the
+            ``Context`` line of the error message.
+        :raises UserError: when a line has a score sheet that is not
+            cancelled for the same term, grade class and subject.
+        """
+        for record in self:
+            if record._has_active_score_sheet():
+                error_message = (
+                    _(
+                        """
+Context: Delete %s
+Database ID: %s
+Problem: A score sheet that is not cancelled exists for this term, class and subject.
+Solution: Cancel or delete the score sheet first
+"""
+                    )
+                    % (context, record.id)
+                )
+                raise UserError(error_message)
+
+    def unlink(self):
+        """Delete the lines and release the cancelled score sheets.
+
+        A line is refused when a score sheet that is not cancelled
+        exists for its academic term, grade class and subject. The
+        cancelled score sheets that point at the lines lose that link,
+        so the deletion is not blocked by the foreign key.
+
+        :return: True
+        :rtype: bool
+        :raises UserError: when a line has a score sheet that is not
+            cancelled.
+        """
+        self._check_no_active_score_sheet(_("teaching assignment line"))
+        sheets = (
+            self.env["school_score_sheet"]
+            .sudo()
+            .search([("teaching_assignment_line_id", "in", self.ids)])
+        )
+        sheets.write({"teaching_assignment_line_id": False})
+        return super().unlink()
 
     @api.constrains("role", "homeroom_id", "subject_id", "academic_term_id")
     def _check_unique_main_teacher(self):
