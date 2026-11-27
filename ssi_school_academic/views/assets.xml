@@ -84,6 +84,10 @@
                 type="text/javascript"
                 src="/ssi_school_academic/static/tests/tours/school_teaching_assignment_tour.js"
             />
+            <script
+                type="text/javascript"
+                src="/ssi_school_academic/static/tests/tours/school_curriculum_tour.js"
+            />
         </xpath>
     </template>
 </odoo>
