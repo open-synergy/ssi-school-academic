@@ -47,6 +47,17 @@ msgid ""
 msgstr ""
 
 #. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_teaching_assignment_line.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Delete %s\n"
+"Database ID: %s\n"
+"Problem: A score sheet that is not cancelled exists for this term, class and subject.\n"
+"Solution: Cancel or delete the score sheet first\n"
+msgstr ""
+
+#. module: ssi_school_academic
 #: code:addons/ssi_school_academic/models/school_subject_outcome.py:0
 #, python-format
 msgid ""
@@ -4055,4 +4066,16 @@ msgid ""
 "* 'draft' is the only base state provided by this mixin.\n"
 "* Other states (e.g. confirmed, done, cancel) are added by derivative mixin\n"
 "  modules (such as confirm/done/cancel mixins) via 'selection_add'."
+msgstr ""
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_teaching_assignment.py:0
+#, python-format
+msgid "teaching assignment"
+msgstr ""
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_teaching_assignment_line.py:0
+#, python-format
+msgid "teaching assignment line"
 msgstr ""
