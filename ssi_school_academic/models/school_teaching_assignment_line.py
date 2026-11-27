@@ -128,6 +128,70 @@ class SchoolTeachingAssignmentLine(models.Model):
             result.append((record.id, name))
         return result
 
+    def _sync_draft_score_sheet(self):
+        """Hand the draft score sheet of the main lines to their teacher.
+
+        Only a line whose role is main is handled; an assistant line
+        never writes. The draft score sheet that has the same academic
+        term, grade class and subject as the line is given the teacher
+        of the assignment and is linked to the line. The sheets are
+        found and written as the superuser, because a user of the
+        teaching assignment may not write them. A sheet that is not
+        draft is never touched.
+        """
+        sheet_model = self.env["school_score_sheet"].sudo()
+        for record in self.filtered(lambda r: r.role == "main"):
+            teacher = record.assignment_id.teacher_id
+            sheets = sheet_model.search(
+                [
+                    ("state", "=", "draft"),
+                    ("academic_term_id", "=", record.academic_term_id.id),
+                    ("grade_class_id", "=", record.grade_class_id.id),
+                    ("subject_id", "=", record.subject_id.id),
+                ]
+            )
+            sheets = sheets.filtered(
+                lambda s, t=teacher, r=record: s.teacher_id != t
+                or s.teaching_assignment_line_id != r
+            )
+            if sheets:
+                sheets.write(
+                    {
+                        "teacher_id": teacher.id,
+                        "teaching_assignment_line_id": record.id,
+                    }
+                )
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        """Create the lines and sync the draft score sheet of main lines.
+
+        The sync runs after the constraints, so a line that is refused
+        never moves a score sheet.
+
+        :param list vals_list: values of the lines to create.
+        :return: the created lines
+        :rtype: recordset
+        """
+        records = super().create(vals_list)
+        records._sync_draft_score_sheet()
+        return records
+
+    def write(self, vals):
+        """Write the lines and sync the draft score sheet on a new main role.
+
+        The sync runs only when the role is written, and only for the
+        lines that are main after the write.
+
+        :param dict vals: values to write.
+        :return: True
+        :rtype: bool
+        """
+        result = super().write(vals)
+        if vals.get("role") == "main":
+            self._sync_draft_score_sheet()
+        return result
+
     def _has_active_score_sheet(self):
         """Tell whether a score sheet that is not cancelled uses the line.
 

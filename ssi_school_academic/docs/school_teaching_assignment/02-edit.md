@@ -22,3 +22,8 @@
 
 - The line is updated and the three weekly hours totals are recomputed.
 - The score sheets already made from the line are kept.
+- The draft score sheet of the same term, class and subject follows the main teacher:
+  when the **Teacher** of the document is changed, or a main line is added, or the
+  **Role** of a line is changed to Main, that draft score sheet is given to the teacher
+  of the main line and linked to it. A line made Assistant moves nothing. A score sheet
+  that is confirmed, done or cancelled is never changed.
