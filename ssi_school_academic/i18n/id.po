@@ -217,6 +217,38 @@ msgstr ""
 "Solusi: Sesuaikan bobot rata-rata dan bobot komponen agar totalnya 100%%\n"
 
 #. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Validate school teaching hour settings\n"
+"Database ID: %s\n"
+"Problem: Co-teaching hour factor must be between 0 and 1.\n"
+"Solution: Enter a factor from 0 to 1\n"
+msgstr ""
+"\n"
+"Konteks: Validasi pengaturan JP sekolah\n"
+"ID Basis Data: %s\n"
+"Masalah: Faktor JP guru pendamping harus antara 0 dan 1.\n"
+"Solusi: Masukkan faktor dari 0 sampai 1\n"
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Validate school teaching hour settings\n"
+"Database ID: %s\n"
+"Problem: Teacher mandatory weekly hours must not be negative.\n"
+"Solution: Enter zero or a positive number of hours\n"
+msgstr ""
+"\n"
+"Konteks: Validasi pengaturan JP sekolah\n"
+"ID Basis Data: %s\n"
+"Masalah: JP wajib guru per minggu tidak boleh negatif.\n"
+"Solusi: Masukkan nol atau jumlah JP positif\n"
+
+#. module: ssi_school_academic
 #: code:addons/ssi_school_academic/models/school_score_predicate.py:0
 #, python-format
 msgid ""
@@ -893,6 +925,11 @@ msgstr "Kokurikuler"
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__co_curricular_ids
 msgid "Co-Curriculars"
 msgstr "Kokurikuler"
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school__co_teaching_hour_factor
+msgid "Co-Teaching Hour Factor"
+msgstr "Faktor JP Guru Pendamping"
 
 #. module: ssi_school_academic
 #: model:ir.model.fields,help:ssi_school_academic.field_school_report_card__co_curricular_ids
@@ -2591,6 +2628,11 @@ msgstr ""
 "sehingga penanda ini membedakan keduanya."
 
 #. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school__co_teaching_hour_factor
+msgid "Share of the subject hours counted for a co-teacher, from 0 to 1. For example 0.5 counts half of the subject hours. It is used by the teaching hour workload recap of Manpower Planning."
+msgstr "Bagian JP mata pelajaran yang dihitung untuk guru pendamping, dari 0 sampai 1. Misalnya 0,5 menghitung setengah dari JP mata pelajaran. Dipakai rekap beban JP pada Manpower Planning."
+
+#. module: ssi_school_academic
 #: model:ir.model.fields,help:ssi_school_academic.field_school_report_card_extracurricular__description
 msgid "Short description of the student's result in the activity."
 msgstr "Deskripsi singkat hasil siswa pada kegiatan."
@@ -2776,9 +2818,19 @@ msgid "Teacher"
 msgstr "Guru"
 
 #. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school__teacher_mandatory_weekly_hours
+msgid "Teacher Mandatory Weekly Hours"
+msgstr "JP Wajib Guru per Minggu"
+
+#. module: ssi_school_academic
 #: model:ir.model.fields,help:ssi_school_academic.field_school_score_sheet__teacher_id
 msgid "Teacher who gives the scores of this sheet."
 msgstr "Guru yang memberikan nilai pada lembar ini."
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school__teacher_mandatory_weekly_hours
+msgid "Teaching hours per week every teacher of this school must carry. It is used by the teaching hour workload recap of Manpower Planning. Zero means not set, so the recap does not judge a shortage or an excess of hours."
+msgstr "Jam pelajaran (JP) per minggu yang wajib diampu setiap guru sekolah ini. Dipakai rekap beban JP pada Manpower Planning. Nol berarti tidak ditetapkan, sehingga rekap tidak menilai kekurangan atau kelebihan JP."
 
 #. module: ssi_school_academic
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type__term_type
@@ -3343,7 +3395,6 @@ msgstr ""
 "ID Basis Data: %s\n"
 "Masalah: Tujuan %s berada di luar mata pelajaran, tingkat, dan periode komponen lembar %s.\n"
 "Solusi: Pilih hanya tujuan dengan mata pelajaran, tingkat, dan periode yang sama dengan lembar\n"
-
 
 #. module: ssi_school_academic
 #: model:ir.model,name:ssi_school_academic.model_school_teaching_assignment
