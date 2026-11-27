@@ -267,6 +267,28 @@ msgid ""
 msgstr ""
 
 #. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Validate school teaching hour settings\n"
+"Database ID: %s\n"
+"Problem: Co-teaching hour factor must be between 0 and 1.\n"
+"Solution: Enter a factor from 0 to 1\n"
+msgstr ""
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Validate school teaching hour settings\n"
+"Database ID: %s\n"
+"Problem: Teacher mandatory weekly hours must not be negative.\n"
+"Solution: Enter zero or a positive number of hours\n"
+msgstr ""
+
+#. module: ssi_school_academic
 #: code:addons/ssi_school_academic/models/school_score_predicate.py:0
 #, python-format
 msgid ""
@@ -974,6 +996,11 @@ msgid "Co-Curriculars"
 msgstr ""
 
 #. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school__co_teaching_hour_factor
+msgid "Co-Teaching Hour Factor"
+msgstr ""
+
+#. module: ssi_school_academic
 #: model:ir.model.fields,help:ssi_school_academic.field_school_report_card__co_curricular_ids
 msgid "Co-curricular themes written by hand."
 msgstr ""
@@ -1243,6 +1270,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_academic.field_print_report_card_ledger_cell__display_name
 #: model:ir.model.fields,field_description:ssi_school_academic.field_print_report_card_ledger_line__display_name
 #: model:ir.model.fields,field_description:ssi_school_academic.field_print_report_card_ledger_subject__display_name
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school__display_name
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_grade__display_name
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_homeroom__display_name
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__display_name
@@ -1664,6 +1692,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_academic.field_print_report_card_ledger_cell__id
 #: model:ir.model.fields,field_description:ssi_school_academic.field_print_report_card_ledger_line__id
 #: model:ir.model.fields,field_description:ssi_school_academic.field_print_report_card_ledger_subject__id
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school__id
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_grade__id
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_homeroom__id
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__id
@@ -1793,6 +1822,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_academic.field_print_report_card_ledger_cell____last_update
 #: model:ir.model.fields,field_description:ssi_school_academic.field_print_report_card_ledger_line____last_update
 #: model:ir.model.fields,field_description:ssi_school_academic.field_print_report_card_ledger_subject____last_update
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school____last_update
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_grade____last_update
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_homeroom____last_update
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card____last_update
@@ -2740,6 +2770,11 @@ msgid "Rows"
 msgstr ""
 
 #. module: ssi_school_academic
+#: model:ir.model,name:ssi_school_academic.model_school
+msgid "School"
+msgstr ""
+
+#. module: ssi_school_academic
 #: model:ir.model,name:ssi_school_academic.model_school_grade
 msgid "School Grade"
 msgstr ""
@@ -3042,6 +3077,14 @@ msgid ""
 msgstr ""
 
 #. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school__co_teaching_hour_factor
+msgid ""
+"Share of the subject hours counted for a co-teacher, from 0 to 1. For "
+"example 0.5 counts half of the subject hours. It is used by the teaching "
+"hour workload recap of Manpower Planning."
+msgstr ""
+
+#. module: ssi_school_academic
 #: model:ir.model.fields,help:ssi_school_academic.field_school_subject_outcome_objective__code
 msgid "Short code of the learning objective."
 msgstr ""
@@ -3303,6 +3346,11 @@ msgid "Teacher"
 msgstr ""
 
 #. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school__teacher_mandatory_weekly_hours
+msgid "Teacher Mandatory Weekly Hours"
+msgstr ""
+
+#. module: ssi_school_academic
 #: model:ir.model.fields,help:ssi_school_academic.field_school_teaching_assignment_line__teacher_id
 msgid "Teacher of the selected Teaching Assignment."
 msgstr ""
@@ -3363,6 +3411,14 @@ msgstr ""
 #. module: ssi_school_academic
 #: model:ir.model.fields,help:ssi_school_academic.field_generate_score_sheet_from_teaching_assignment__assignment_ids
 msgid "Teaching assignments whose main lines get a score sheet."
+msgstr ""
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school__teacher_mandatory_weekly_hours
+msgid ""
+"Teaching hours per week every teacher of this school must carry. It is used "
+"by the teaching hour workload recap of Manpower Planning. Zero means not "
+"set, so the recap does not judge a shortage or an excess of hours."
 msgstr ""
 
 #. module: ssi_school_academic
