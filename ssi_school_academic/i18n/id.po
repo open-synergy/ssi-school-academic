@@ -3739,6 +3739,36 @@ msgstr ""
 "Solusi: Pilih mata pelajaran yang diajarkan pada tingkat rombel\n"
 
 #. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_teaching_assignment_line.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Delete %s\n"
+"Database ID: %s\n"
+"Problem: A score sheet that is not cancelled exists for this term, class and "
+"subject.\n"
+"Solution: Cancel or delete the score sheet first\n"
+msgstr ""
+"\n"
+"Konteks: Hapus %s\n"
+"ID Basis Data: %s\n"
+"Masalah: Ada lembar nilai yang belum dibatalkan untuk periode, kelas, dan "
+"mata pelajaran ini.\n"
+"Solusi: Batalkan atau hapus lembar nilai terlebih dahulu\n"
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_teaching_assignment.py:0
+#, python-format
+msgid "teaching assignment"
+msgstr "pembelajaran guru"
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_teaching_assignment_line.py:0
+#, python-format
+msgid "teaching assignment line"
+msgstr "baris pembelajaran guru"
+
+#. module: ssi_school_academic
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_homeroom__teaching_assignment_line_ids
 msgid "Teaching Assignment Lines"
 msgstr "Baris Pembelajaran Guru"

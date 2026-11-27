@@ -78,6 +78,23 @@ class SchoolTeachingAssignment(models.Model):
         "of the teacher.",
     )
 
+    def unlink(self):
+        """Delete the assignments, refused when a line is in use.
+
+        An assignment is refused when a line has a score sheet that is
+        not cancelled for its term, grade class and subject. The lines
+        are deleted first, so the cancelled score sheets lose the link
+        to them.
+
+        :return: True
+        :rtype: bool
+        :raises UserError: when a line has a score sheet that is not
+            cancelled.
+        """
+        self.mapped("line_ids")._check_no_active_score_sheet(_("teaching assignment"))
+        self.mapped("line_ids").unlink()
+        return super().unlink()
+
     @api.model
     def _default_academic_term_id(self):
         """Return the first academic term that is on progress.

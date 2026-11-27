@@ -50,6 +50,7 @@ Work Instruction
 * `Edit Teaching Assignment <docs/school_teaching_assignment/02-edit.html>`_
 * `Generate Score Sheets from Teaching Assignment <docs/school_teaching_assignment/03-generate-score-sheets.html>`_
 * `Copy Teaching Assignments from the Previous Term <docs/school_teaching_assignment/04-copy-from-previous-term.html>`_
+* `Delete Teaching Assignment <docs/school_teaching_assignment/05-delete.html>`_
 * `Create Report Card Main Subject <docs/school_report_card_main_subject/01-create.html>`_
 * `Edit Report Card Main Subject <docs/school_report_card_main_subject/02-edit.html>`_
 * `Archive Report Card Main Subject <docs/school_report_card_main_subject/03-archive.html>`_

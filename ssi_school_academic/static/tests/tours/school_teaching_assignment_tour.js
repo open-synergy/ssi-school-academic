@@ -263,6 +263,77 @@ odoo.define("ssi_school_academic.school_teaching_assignment_tour", function (req
         )
     );
 
+    // IK: docs/school_teaching_assignment/05-delete.md
+    tour.register(
+        "ssi_school_academic_school_teaching_assignment_delete",
+        {test: true, url: "/web"},
+        [].concat(
+            // Flow 1 -- Open the Teaching Assignments menu.
+            openAssignmentList(),
+            [
+                // Flow 2 -- Find and open the record to delete.
+                {
+                    content: "Open the record",
+                    trigger:
+                        ".o_data_row:contains(TOUR TD Assignment) .o_data_cell:first",
+                },
+                {
+                    content: "Form is open",
+                    trigger: ".o_form_view",
+                    extra_trigger: ".o_form_view.o_form_readonly",
+                    run: function () {
+                        // Assertion only; do not trigger the default click action.
+                    },
+                },
+
+                // Flow 3 -- Click Action and choose Delete.
+                {
+                    content: "Open the Action menu",
+                    trigger: ".o_cp_action_menus button:contains(Action)",
+                    run: function () {
+                        this.$anchor[0].click();
+                    },
+                },
+                {
+                    content: "Click Delete",
+                    trigger: ".o_cp_action_menus .o_menu_item a",
+                    run: function () {
+                        var $item = $(".o_cp_action_menus .o_menu_item a").filter(
+                            function () {
+                                return $(this).text().trim() === "Delete";
+                            }
+                        );
+                        $item[0].click();
+                    },
+                },
+
+                // Flow 4 -- Click OK to confirm.
+                {
+                    content: "Confirm the deletion",
+                    trigger: ".modal-footer button.btn-primary",
+                    in_modal: true,
+                },
+
+                // Post-Condition -- the record is no longer listed. The 14.0
+                // form may show the next record, so go back to the list.
+                {
+                    content: "Click the list breadcrumb to return to the list",
+                    trigger:
+                        ".breadcrumb-item.o_back_button a:contains(Teaching Assignments)",
+                    extra_trigger: "body:not(:has(.modal))",
+                },
+                {
+                    content: "The deleted assignment is no longer listed",
+                    trigger:
+                        ".o_list_view:not(:has(.o_data_row:contains(TOUR TD Assignment)))",
+                    run: function () {
+                        // Assertion only; do not trigger the default click action.
+                    },
+                },
+            ]
+        )
+    );
+
     // IK: docs/school_teaching_assignment/04-copy-from-previous-term.md
     tour.register(
         "ssi_school_academic_school_teaching_assignment_copy_from_previous_term",

@@ -1,0 +1,621 @@
+options:
+  auto_refresh: true
+
+setup:
+  steps:
+    - step: "Create the grade type"
+      action: "create"
+      model: "school_grade_type"
+      save_as: "grade_type"
+      values:
+        name: "SSTD Grade Type"
+        code: "EVAL: 'SSTDGT%d' % env['school_grade_type'].search_count([])"
+
+    - step: "Create the school"
+      action: "create"
+      model: "school"
+      save_as: "school"
+      values:
+        name: "SSTD School"
+        code: "EVAL: 'SSTDSC%d' % env['school'].search_count([])"
+        grade_type_id: "REC: grade_type.id"
+
+    - step: "Create the academic year"
+      action: "create"
+      model: "school_academic_year"
+      save_as: "academic_year"
+      values:
+        name: "SSTD Academic Year"
+        code: "EVAL: 'SSTDAY%d' % env['school_academic_year'].search_count([])"
+        date_start: 2026-07-01
+        date_end: 2027-06-30
+
+    - step: "Create the term"
+      action: "create"
+      model: "school_academic_term"
+      save_as: "term_1"
+      values:
+        name: "SSTD Term 1"
+        code: "EVAL: 'SSTDTM%d' % env['school_academic_term'].search_count([])"
+        date_start: 2026-07-01
+        date_end: 2026-12-31
+        year_id: "REC: academic_year.id"
+
+    - step: "Create the grade"
+      action: "create"
+      model: "school_grade"
+      save_as: "grade"
+      values:
+        name: "SSTD Grade"
+        code: "EVAL: 'SSTDGR%d' % env['school_grade'].search_count([])"
+        type_id: "REC: grade_type.id"
+
+    - step: "Create class X"
+      action: "create"
+      model: "school_grade_class"
+      save_as: "class_x"
+      values:
+        name: "SSTD Class X"
+        code: "EVAL: 'SSTDCX%d' % env['school_grade_class'].search_count([])"
+        school_id: "REC: school.id"
+        grade_id: "REC: grade.id"
+
+    - step: "Create class Y"
+      action: "create"
+      model: "school_grade_class"
+      save_as: "class_y"
+      values:
+        name: "SSTD Class Y"
+        code: "EVAL: 'SSTDCY%d' % env['school_grade_class'].search_count([])"
+        school_id: "REC: school.id"
+        grade_id: "REC: grade.id"
+
+    - step: "Create subject A taught in the grade"
+      action: "create"
+      model: "school_subject"
+      save_as: "subject_a"
+      values:
+        name: "SSTD Subject A"
+        code: "EVAL: 'SSTDSA%d' % env['school_subject'].search_count([])"
+        grade_ids:
+          - - 6
+            - 0
+            - - "REC: grade.id"
+
+    - step: "Create subject B taught in the grade"
+      action: "create"
+      model: "school_subject"
+      save_as: "subject_b"
+      values:
+        name: "SSTD Subject B"
+        code: "EVAL: 'SSTDSB%d' % env['school_subject'].search_count([])"
+        grade_ids:
+          - - 6
+            - 0
+            - - "REC: grade.id"
+
+    - step: "Create the homeroom of class X"
+      action: "create"
+      model: "school_homeroom"
+      save_as: "homeroom_x"
+      values:
+        academic_year_id: "REC: academic_year.id"
+        academic_term_id: "REC: term_1.id"
+        school_id: "REC: school.id"
+        grade_id: "REC: grade.id"
+        grade_class_id: "REC: class_x.id"
+
+    - step: "Create the homeroom of class Y"
+      action: "create"
+      model: "school_homeroom"
+      save_as: "homeroom_y"
+      values:
+        academic_year_id: "REC: academic_year.id"
+        academic_term_id: "REC: term_1.id"
+        school_id: "REC: school.id"
+        grade_id: "REC: grade.id"
+        grade_class_id: "REC: class_y.id"
+
+    - step: "Create the home address of teacher 1"
+      action: "create"
+      model: "res.partner"
+      save_as: "partner_1"
+      values:
+        name: "SSTD Teacher Home 1"
+
+    - step: "Create the employee of teacher 1"
+      action: "create"
+      model: "hr.employee"
+      save_as: "employee_1"
+      values:
+        name: "SSTD Teacher Employee 1"
+        company_id: "base.main_company"
+        address_home_id: "REC: partner_1.id"
+
+    - step: "Create teacher 1"
+      action: "create"
+      model: "school_teacher"
+      save_as: "teacher_1"
+      values:
+        name: "SSTD Teacher 1"
+        code: "EVAL: 'SSTDTC%d' % env['school_teacher'].search_count([])"
+        employee_id: "REC: employee_1.id"
+
+    - step: "Create the home address of teacher 2"
+      action: "create"
+      model: "res.partner"
+      save_as: "partner_2"
+      values:
+        name: "SSTD Teacher Home 2"
+
+    - step: "Create the employee of teacher 2"
+      action: "create"
+      model: "hr.employee"
+      save_as: "employee_2"
+      values:
+        name: "SSTD Teacher Employee 2"
+        company_id: "base.main_company"
+        address_home_id: "REC: partner_2.id"
+
+    - step: "Create teacher 2"
+      action: "create"
+      model: "school_teacher"
+      save_as: "teacher_2"
+      values:
+        name: "SSTD Teacher 2"
+        code: "EVAL: 'SSTDTC%d' % env['school_teacher'].search_count([])"
+        employee_id: "REC: employee_2.id"
+
+scenarios:
+  - name: "Teaching Assignment Delete - A manual draft sheet blocks the line"
+    steps:
+      - step: "Create the assignment header_1"
+        action: "create"
+        model: "school_teaching_assignment"
+        save_as: "header_1"
+        values:
+          name: "SSTD header_1"
+          code: "/"
+          teacher_id: "REC: teacher_1.id"
+          academic_term_id: "REC: term_1.id"
+
+      - step: "Create the line line_1"
+        action: "create"
+        model: "school_teaching_assignment_line"
+        save_as: "line_1"
+        values:
+          assignment_id: "REC: header_1.id"
+          homeroom_id: "REC: homeroom_x.id"
+          subject_id: "REC: subject_a.id"
+          role: "main"
+          weekly_hours: 2
+
+      - step: "Create the score sheet sheet_manual"
+        action: "create"
+        model: "school_score_sheet"
+        save_as: "sheet_manual"
+        values:
+          academic_term_id: "REC: term_1.id"
+          grade_class_id: "REC: class_x.id"
+          subject_id: "REC: subject_a.id"
+          teacher_id: "REC: teacher_1.id"
+          date: 2026-08-10
+          user_id: "REF: base.user_admin"
+
+      - step: "Deleting the line is refused, the sheet has no link"
+        action: "unlink"
+        target: "line_1"
+        expect_error:
+          type: "UserError"
+          message_contains: "A score sheet that is not cancelled exists"
+
+  - name: "Teaching Assignment Delete - A linked draft sheet blocks the line"
+    steps:
+      - step: "Create the assignment header_1"
+        action: "create"
+        model: "school_teaching_assignment"
+        save_as: "header_1"
+        values:
+          name: "SSTD header_1"
+          code: "/"
+          teacher_id: "REC: teacher_1.id"
+          academic_term_id: "REC: term_1.id"
+
+      - step: "Create the line line_1"
+        action: "create"
+        model: "school_teaching_assignment_line"
+        save_as: "line_1"
+        values:
+          assignment_id: "REC: header_1.id"
+          homeroom_id: "REC: homeroom_x.id"
+          subject_id: "REC: subject_a.id"
+          role: "main"
+          weekly_hours: 2
+
+      - step: "Create the score sheet sheet_linked"
+        action: "create"
+        model: "school_score_sheet"
+        save_as: "sheet_linked"
+        values:
+          academic_term_id: "REC: term_1.id"
+          grade_class_id: "REC: class_x.id"
+          subject_id: "REC: subject_a.id"
+          teacher_id: "REC: teacher_1.id"
+          date: 2026-08-10
+          user_id: "REF: base.user_admin"
+          teaching_assignment_line_id: "REC: line_1.id"
+
+      - step: "Deleting the line is refused, the sheet is linked"
+        action: "unlink"
+        target: "line_1"
+        expect_error:
+          type: "UserError"
+          message_contains: "A score sheet that is not cancelled exists"
+
+  - name: "Teaching Assignment Delete - The assistant line is guarded too"
+    steps:
+      - step: "Create the assignment header_1"
+        action: "create"
+        model: "school_teaching_assignment"
+        save_as: "header_1"
+        values:
+          name: "SSTD header_1"
+          code: "/"
+          teacher_id: "REC: teacher_1.id"
+          academic_term_id: "REC: term_1.id"
+
+      - step: "Create the assignment header_2"
+        action: "create"
+        model: "school_teaching_assignment"
+        save_as: "header_2"
+        values:
+          name: "SSTD header_2"
+          code: "/"
+          teacher_id: "REC: teacher_2.id"
+          academic_term_id: "REC: term_1.id"
+
+      - step: "Create the line line_main"
+        action: "create"
+        model: "school_teaching_assignment_line"
+        save_as: "line_main"
+        values:
+          assignment_id: "REC: header_1.id"
+          homeroom_id: "REC: homeroom_x.id"
+          subject_id: "REC: subject_a.id"
+          role: "main"
+          weekly_hours: 2
+
+      - step: "Create the line line_assistant"
+        action: "create"
+        model: "school_teaching_assignment_line"
+        save_as: "line_assistant"
+        values:
+          assignment_id: "REC: header_2.id"
+          homeroom_id: "REC: homeroom_x.id"
+          subject_id: "REC: subject_a.id"
+          role: "assistant"
+          weekly_hours: 2
+
+      - step: "Create the score sheet sheet_manual"
+        action: "create"
+        model: "school_score_sheet"
+        save_as: "sheet_manual"
+        values:
+          academic_term_id: "REC: term_1.id"
+          grade_class_id: "REC: class_x.id"
+          subject_id: "REC: subject_a.id"
+          teacher_id: "REC: teacher_1.id"
+          date: 2026-08-10
+          user_id: "REF: base.user_admin"
+
+      - step: "Deleting the assistant line is refused"
+        action: "unlink"
+        target: "line_assistant"
+        expect_error:
+          type: "UserError"
+          message_contains: "A score sheet that is not cancelled exists"
+
+      - step: "Deleting the main line is refused"
+        action: "unlink"
+        target: "line_main"
+        expect_error:
+          type: "UserError"
+          message_contains: "A score sheet that is not cancelled exists"
+
+  - name: "Teaching Assignment Delete - One locked line blocks the document"
+    steps:
+      - step: "Create the assignment header_1"
+        action: "create"
+        model: "school_teaching_assignment"
+        save_as: "header_1"
+        values:
+          name: "SSTD header_1"
+          code: "/"
+          teacher_id: "REC: teacher_1.id"
+          academic_term_id: "REC: term_1.id"
+
+      - step: "Create the line line_locked"
+        action: "create"
+        model: "school_teaching_assignment_line"
+        save_as: "line_locked"
+        values:
+          assignment_id: "REC: header_1.id"
+          homeroom_id: "REC: homeroom_x.id"
+          subject_id: "REC: subject_a.id"
+          role: "main"
+          weekly_hours: 2
+
+      - step: "Create the line line_free"
+        action: "create"
+        model: "school_teaching_assignment_line"
+        save_as: "line_free"
+        values:
+          assignment_id: "REC: header_1.id"
+          homeroom_id: "REC: homeroom_y.id"
+          subject_id: "REC: subject_b.id"
+          role: "main"
+          weekly_hours: 2
+
+      - step: "Create the score sheet sheet_manual"
+        action: "create"
+        model: "school_score_sheet"
+        save_as: "sheet_manual"
+        values:
+          academic_term_id: "REC: term_1.id"
+          grade_class_id: "REC: class_x.id"
+          subject_id: "REC: subject_a.id"
+          teacher_id: "REC: teacher_1.id"
+          date: 2026-08-10
+          user_id: "REF: base.user_admin"
+
+      - step: "Deleting the document is refused"
+        action: "unlink"
+        target: "header_1"
+        expect_error:
+          type: "UserError"
+          message_contains: "A score sheet that is not cancelled exists"
+
+      - step: "The free line is still there"
+        action: "search"
+        model: "school_teaching_assignment_line"
+        domain:
+          - ["id", "=", "REC: line_free.id"]
+        save_as: "found_free"
+        expect_count: 1
+
+  - name: "Teaching Assignment Delete - Lines without a sheet are deleted"
+    steps:
+      - step: "Create the assignment header_1"
+        action: "create"
+        model: "school_teaching_assignment"
+        save_as: "header_1"
+        values:
+          name: "SSTD header_1"
+          code: "/"
+          teacher_id: "REC: teacher_1.id"
+          academic_term_id: "REC: term_1.id"
+
+      - step: "Create the line line_1"
+        action: "create"
+        model: "school_teaching_assignment_line"
+        save_as: "line_1"
+        values:
+          assignment_id: "REC: header_1.id"
+          homeroom_id: "REC: homeroom_x.id"
+          subject_id: "REC: subject_a.id"
+          role: "main"
+          weekly_hours: 2
+
+      - step: "Create the line line_2"
+        action: "create"
+        model: "school_teaching_assignment_line"
+        save_as: "line_2"
+        values:
+          assignment_id: "REC: header_1.id"
+          homeroom_id: "REC: homeroom_y.id"
+          subject_id: "REC: subject_b.id"
+          role: "main"
+          weekly_hours: 2
+
+      - step: "Create the score sheet sheet_other"
+        action: "create"
+        model: "school_score_sheet"
+        save_as: "sheet_other"
+        values:
+          academic_term_id: "REC: term_1.id"
+          grade_class_id: "REC: class_y.id"
+          subject_id: "REC: subject_a.id"
+          teacher_id: "REC: teacher_1.id"
+          date: 2026-08-10
+          user_id: "REF: base.user_admin"
+
+      - step: "Delete the line that has no sheet of its class and subject"
+        action: "unlink"
+        target: "line_1"
+
+      - step: "The line is gone"
+        action: "search"
+        model: "school_teaching_assignment_line"
+        domain:
+          - ["id", "=", "REC: line_1.id"]
+        save_as: "found_line_1"
+        expect_count: 0
+
+      - step: "Delete the document, whose last line has no sheet"
+        action: "unlink"
+        target: "header_1"
+
+      - step: "The document is gone"
+        action: "search"
+        model: "school_teaching_assignment"
+        domain:
+          - ["id", "=", "REC: header_1.id"]
+        save_as: "found_header_1"
+        expect_count: 0
+
+      - step: "Its remaining line is gone"
+        action: "search"
+        model: "school_teaching_assignment_line"
+        domain:
+          - ["id", "=", "REC: line_2.id"]
+        save_as: "found_line_2"
+        expect_count: 0
+
+  - name:
+      "Teaching Assignment Delete - A cancelled sheet does not block and is released"
+    steps:
+      - step: "Create the assignment header_1"
+        action: "create"
+        model: "school_teaching_assignment"
+        save_as: "header_1"
+        values:
+          name: "SSTD header_1"
+          code: "/"
+          teacher_id: "REC: teacher_1.id"
+          academic_term_id: "REC: term_1.id"
+
+      - step: "Create the line line_1"
+        action: "create"
+        model: "school_teaching_assignment_line"
+        save_as: "line_1"
+        values:
+          assignment_id: "REC: header_1.id"
+          homeroom_id: "REC: homeroom_x.id"
+          subject_id: "REC: subject_a.id"
+          role: "main"
+          weekly_hours: 2
+
+      - step: "Create the score sheet sheet_cancelled"
+        action: "create"
+        model: "school_score_sheet"
+        save_as: "sheet_cancelled"
+        values:
+          academic_term_id: "REC: term_1.id"
+          grade_class_id: "REC: class_x.id"
+          subject_id: "REC: subject_a.id"
+          teacher_id: "REC: teacher_1.id"
+          date: 2026-08-10
+          user_id: "REF: base.user_admin"
+          teaching_assignment_line_id: "REC: line_1.id"
+
+      - step: "Create the cancel reason"
+        action: "create"
+        model: "base.cancel_reason"
+        save_as: "cancel_reason"
+        values:
+          name: "SSTD Cancel Reason"
+          code: "EVAL: 'SSTDCR%d' % env['base.cancel_reason'].search_count([])"
+
+      - step: "Cancel the sheet via the wizard"
+        action: "wizard"
+        model: "base.select_cancel_reason"
+        target: "sheet_cancelled"
+        as_user: "base.user_admin"
+        values:
+          cancel_reason_id: "REC: cancel_reason.id"
+        method: "action_confirm"
+        asserts:
+          state:
+            type: "value"
+            expected: "cancel"
+
+      - step: "Delete the document, which has only a cancelled sheet"
+        action: "unlink"
+        target: "header_1"
+
+      - step: "The document is gone"
+        action: "search"
+        model: "school_teaching_assignment"
+        domain:
+          - ["id", "=", "REC: header_1.id"]
+        save_as: "found_header_1"
+        expect_count: 0
+
+      - step: "The cancelled sheet is kept and its link is empty"
+        action: "search"
+        model: "school_score_sheet"
+        domain:
+          - ["id", "=", "REC: sheet_cancelled.id"]
+          - ["teaching_assignment_line_id", "=", false]
+        save_as: "found_sheet"
+        expect_count: 1
+
+  - name:
+      "Teaching Assignment Delete - A cancelled linked sheet is released on a line
+      delete"
+    steps:
+      - step: "Create the assignment header_1"
+        action: "create"
+        model: "school_teaching_assignment"
+        save_as: "header_1"
+        values:
+          name: "SSTD header_1"
+          code: "/"
+          teacher_id: "REC: teacher_1.id"
+          academic_term_id: "REC: term_1.id"
+
+      - step: "Create the line line_1"
+        action: "create"
+        model: "school_teaching_assignment_line"
+        save_as: "line_1"
+        values:
+          assignment_id: "REC: header_1.id"
+          homeroom_id: "REC: homeroom_x.id"
+          subject_id: "REC: subject_a.id"
+          role: "main"
+          weekly_hours: 2
+
+      - step: "Create the score sheet sheet_cancelled"
+        action: "create"
+        model: "school_score_sheet"
+        save_as: "sheet_cancelled"
+        values:
+          academic_term_id: "REC: term_1.id"
+          grade_class_id: "REC: class_x.id"
+          subject_id: "REC: subject_a.id"
+          teacher_id: "REC: teacher_1.id"
+          date: 2026-08-10
+          user_id: "REF: base.user_admin"
+          teaching_assignment_line_id: "REC: line_1.id"
+
+      - step: "Create the cancel reason"
+        action: "create"
+        model: "base.cancel_reason"
+        save_as: "cancel_reason"
+        values:
+          name: "SSTD Cancel Reason 2"
+          code: "EVAL: 'SSTDCR%d' % env['base.cancel_reason'].search_count([])"
+
+      - step: "Cancel the sheet via the wizard"
+        action: "wizard"
+        model: "base.select_cancel_reason"
+        target: "sheet_cancelled"
+        as_user: "base.user_admin"
+        values:
+          cancel_reason_id: "REC: cancel_reason.id"
+        method: "action_confirm"
+        asserts:
+          state:
+            type: "value"
+            expected: "cancel"
+
+      - step: "Delete the line that only a cancelled sheet uses"
+        action: "unlink"
+        target: "line_1"
+
+      - step: "The line is gone"
+        action: "search"
+        model: "school_teaching_assignment_line"
+        domain:
+          - ["id", "=", "REC: line_1.id"]
+        save_as: "found_line_1"
+        expect_count: 0
+
+      - step: "The cancelled sheet is kept and its link is empty"
+        action: "search"
+        model: "school_score_sheet"
+        domain:
+          - ["id", "=", "REC: sheet_cancelled.id"]
+          - ["teaching_assignment_line_id", "=", false]
+        save_as: "found_sheet"
+        expect_count: 1
