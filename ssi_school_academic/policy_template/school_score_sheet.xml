@@ -180,4 +180,49 @@ if env.user.id in document.active_approver_user_ids.ids:
     <field name="group_ids" eval="[(6,0,[ref('school_score_sheet_user_group')])]" />
     <field name="restrict_additional" eval="0" />
 </record>
+
+<!-- Lock Column -->
+<record
+        id="policy_template_school_score_sheet_lock_column"
+        model="policy.template_detail"
+    >
+    <field name="template_id" ref="policy_template_school_score_sheet" />
+    <field
+            name="field_id"
+            search="[('model_id.model','=','school_score_sheet'),('name','=','lock_column_ok')]"
+        />
+    <field name="restrict_state" eval="1" />
+    <field
+            name="state_ids"
+            search="[('field_id.model_id.model','=','school_score_sheet'),('value','=','draft')]"
+        />
+    <field name="restrict_user" eval="1" />
+    <field name="computation_method">use_group</field>
+    <field name="group_ids" eval="[(6,0,[ref('school_score_sheet_user_group')])]" />
+    <field name="restrict_additional" eval="0" />
+</record>
+
+<!-- Unlock Column -->
+<record
+        id="policy_template_school_score_sheet_unlock_column"
+        model="policy.template_detail"
+    >
+    <field name="template_id" ref="policy_template_school_score_sheet" />
+    <field
+            name="field_id"
+            search="[('model_id.model','=','school_score_sheet'),('name','=','unlock_column_ok')]"
+        />
+    <field name="restrict_state" eval="1" />
+    <field
+            name="state_ids"
+            search="[('field_id.model_id.model','=','school_score_sheet'),('value','=','draft')]"
+        />
+    <field name="restrict_user" eval="1" />
+    <field name="computation_method">use_group</field>
+    <field
+            name="group_ids"
+            eval="[(6,0,[ref('school_score_sheet_validator_group')])]"
+        />
+    <field name="restrict_additional" eval="0" />
+</record>
 </odoo>

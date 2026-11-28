@@ -15,6 +15,7 @@ from . import (  # noqa: F401
     test_school_score_grid,
     test_school_score_predicate,
     test_school_score_sheet,
+    test_school_score_sheet_column_lock,
     test_school_score_sheet_component_access,
     test_school_subject,
     test_school_subject_outcome,

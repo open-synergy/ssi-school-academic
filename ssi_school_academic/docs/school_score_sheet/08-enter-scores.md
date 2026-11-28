@@ -64,4 +64,6 @@ score is entered, so the focus and the text typed in the next cell are never los
 - The calculated columns follow the same formulas as the report card. A student with no
   score for a column leaves that cell empty; it is not shown as `0`.
 - Status stays **Draft**.
+- A cell of a locked column (`10-lock-column`) is read only, and the keyboard moves over
+  it to the next cell that can be edited.
 - When the sheet is not **Draft**, the grid is read only.

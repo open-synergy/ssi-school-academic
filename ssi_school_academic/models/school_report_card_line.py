@@ -12,9 +12,12 @@ class SchoolReportCardLine(models.Model):
     A line holds the final score of the student for one subject, the
     minimum score (KKM) of that subject on the grade of the report card
     and the predicate the final score earns. The final score is filled
-    by the compute scores action of the report card from the score
-    sheets that are done. A line whose subject has no entered score at
-    all is not scored: it has no final score and no predicate.
+    by the compute scores action of the report card from the locked
+    score columns of the score sheets. A copy of the component scores
+    is kept on the line when the scores are computed, so the printed
+    report card does not change when a score sheet changes later. A
+    line whose subject has no entered score at all is not scored: it
+    has no final score and no predicate.
     """
 
     _name = "school_report_card_line"
@@ -75,6 +78,15 @@ class SchoolReportCardLine(models.Model):
         compute_sudo=True,
         help="Predicate the final score earns in the predicate table of "
         "the grade. It is empty when the grade has no predicate table.",
+    )
+    score_ids = fields.One2many(
+        string="Component Scores",
+        comodel_name="school_report_card_line_score",
+        inverse_name="line_id",
+        readonly=True,
+        help="Copy of the score of each component, taken when the "
+        "scores of the report card were computed. The print reads it, "
+        "so it does not change when a score sheet changes later.",
     )
     learning_objective = fields.Text(
         string="Learning Objective Achievement",
@@ -153,8 +165,9 @@ Solution: Remove the duplicate line
     def _get_scored_line_domain(self):
         """Return the domain of the score sheet lines of this line.
 
-        Only lines that were scored, on the score sheets that are done
-        for the same enrollment, subject and academic term as this line.
+        Only lines that were scored, in a locked column, on the score
+        sheets that are not cancelled, for the same enrollment, subject
+        and academic term as this line.
 
         :return: domain for ``school_score_sheet_line``
         :rtype: list
@@ -162,7 +175,8 @@ Solution: Remove the duplicate line
         self.ensure_one()
         card = self.report_card_id
         return [
-            ("sheet_id.state", "=", "done"),
+            ("is_locked", "=", True),
+            ("sheet_id.state", "!=", "cancel"),
             ("sheet_id.subject_id", "=", self.subject_id.id),
             ("sheet_id.academic_term_id", "=", card.academic_term_id.id),
             ("enrollment_id", "=", card.enrollment_id.id),
@@ -172,11 +186,11 @@ Solution: Remove the duplicate line
     def _get_component_scores(self):
         """Collect the scores of the student for the subject.
 
-        Reads the lines of the score sheets that are done for the same
-        enrollment, subject and academic term as this line. Only lines
-        that were scored count, so a score of 0 is included and a line
-        that was never filled is skipped. Also used by the report card
-        print.
+        Reads the lines of the locked columns of the score sheets for
+        the same enrollment, subject and academic term as this line.
+        Only lines that were scored count, so a score of 0 is included
+        and a line that was never filled is skipped. The compute scores
+        action of the report card copies the result to ``score_ids``.
 
         :return: score per component, ``{component_id: score}``.
         :rtype: dict
@@ -191,12 +205,48 @@ Solution: Remove the duplicate line
         )
         return {line.component_id.id: line.score for line in lines}
 
+    def _get_printed_component_scores(self):
+        """Return the copied scores of the line, for the print.
+
+        Reads ``score_ids``, the copy taken when the scores were
+        computed, so a score sheet that changes or is cancelled later
+        does not change the print.
+
+        :return: score per component, ``{component_id: score}``.
+        :rtype: dict
+        """
+        self.ensure_one()
+        return {score.component_id.id: score.score for score in self.score_ids}
+
+    def _prepare_score_commands(self, component_scores):
+        """Build the commands that replace the copied scores.
+
+        :param dict component_scores: ``{component_id: score}``
+        :return: x2many commands for ``score_ids``: remove all, then
+            one new record per component.
+        :rtype: list
+        """
+        self.ensure_one()
+        commands = [(5, 0, 0)]
+        for component_id in sorted(component_scores):
+            commands.append(
+                (
+                    0,
+                    0,
+                    {
+                        "component_id": component_id,
+                        "score": component_scores[component_id],
+                    },
+                )
+            )
+        return commands
+
     def _get_learning_objective_text(self):
         """Build the learning objective text from the scored cells.
 
         Takes the learning objectives chosen on the daily test and
-        assignment components that the student was scored for, on the
-        score sheets that are done. Each objective appears once, in the
+        assignment components that the student was scored for, in the
+        locked columns of the score sheets. Each objective appears once, in the
         order of the objectives, one description per line. A subject
         without such a cell gives an empty text.
 

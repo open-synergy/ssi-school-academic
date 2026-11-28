@@ -12,6 +12,8 @@
 - **Record:** Status is **Draft**.
 - **Data:** At least one enrollment of the Grade Class and Academic Term is **Open**,
   and at least one active **Score Component** exists.
+- **Data:** No column is locked. A locked column must be unlocked first
+  (`11-unlock-column`).
 - **Config:** An active `policy.template` for this model grants `generate_lines_ok` for
   state `draft` to the actor's group.
 - **Access:** User is in group `User`.
@@ -30,6 +32,8 @@
   active score component, ordered by student and component sequence.
 - Enrollments that are not open, and score components that are archived, get no line.
 - The **Score** of every new line is empty, which means not yet scored.
+- The **Columns** tab lists one row for each score component that has lines, of every
+  category, each not locked yet.
 - The **Learning Objectives** tab lists one row for each active daily test and
   assignment. A row that already exists is kept with its chosen objectives; only missing
   rows are added.

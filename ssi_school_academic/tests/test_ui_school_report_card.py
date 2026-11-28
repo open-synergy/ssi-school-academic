@@ -270,6 +270,8 @@ class TestUiSchoolReportCard(HttpSavepointCase):
             }
         )
         sheet = sheet.with_user(cls.admin)
+        sheet.column_ids.action_lock_column()
+        sheet.invalidate_cache()
         sheet.action_confirm()
         sheet.invalidate_cache()
         sheet.action_approve_approval()

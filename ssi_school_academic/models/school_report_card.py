@@ -17,7 +17,7 @@ class SchoolReportCard(models.Model):
     A report card is a transaction document for one open enrollment and
     one report card type, for example Mid-Term or Final. The homeroom
     teacher generates one line per subject of the grade, computes the
-    final scores from the score sheets that are done, fills in the
+    final scores from the locked score columns, fills in the
     manual parts (co-curricular, extracurricular, absences and notes)
     and finishes the document through approval. A finished report card
     is only read and printed again, even after the enrollment is done.
@@ -428,7 +428,7 @@ Solution: Select an enrollment that is open
     def action_refill_learning_objective(self):
         """Overwrite the learning objective of every line.
 
-        Builds the text again from the score sheets that are done and
+        Builds the text again from the locked score columns and
         replaces what is on the lines, the text typed by hand included.
         The button is shown according to the
         ``refill_learning_objective_ok`` policy.
@@ -478,8 +478,10 @@ Solution: Restart the document before running this action
     def _compute_scores(self):
         """Fill the final score of every line.
 
-        A line without any entered score is left not scored, with an
-        empty final score, instead of getting a computed zero. The
+        The scores are read from the locked columns of the score
+        sheets and copied to each line, which the print reads. A line
+        without any entered score is left not scored, with an empty
+        final score and no copy, instead of getting a computed zero. The
         learning objective text is filled for the lines that have none;
         a text that is already there is never overwritten.
 
@@ -497,10 +499,17 @@ Solution: Restart the document before running this action
                         "final_score": self.type_id.compute_final_score(
                             component_scores
                         ),
+                        "score_ids": line._prepare_score_commands(component_scores),
                     }
                 )
             else:
-                line.write({"is_scored": False, "final_score": False})
+                line.write(
+                    {
+                        "is_scored": False,
+                        "final_score": False,
+                        "score_ids": line._prepare_score_commands({}),
+                    }
+                )
         self.line_ids._refill_learning_objective(False)
 
     def _refill_learning_objective(self):
@@ -698,7 +707,7 @@ Solution: Ask the administrator to add you to the report card Viewer group
             for index, line in enumerate(lines, start=1):
                 scores = [""] * len(components)
                 if show_components:
-                    component_scores = line._get_component_scores()
+                    component_scores = line._get_printed_component_scores()
                     for position, component in enumerate(components):
                         if component.id in component_scores:
                             scores[position] = self._format_print_score(

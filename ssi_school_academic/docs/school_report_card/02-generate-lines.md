@@ -27,12 +27,12 @@
 
 - Every line of the report card is replaced by new lines: one line per active subject
   taught in the Grade.
-- Each line shows the **Final Score** computed from the score sheets that are done, the
-  **Minimum Score**, and the **Predicate** of that score. A line whose subject has no
-  entered score yet shows **-** as its Final Score and has no Predicate.
+- Each line shows the **Final Score** computed from the locked columns of the score
+  sheets, the **Minimum Score**, and the **Predicate** of that score. A line whose
+  subject has no entered score yet shows **-** as its Final Score and has no Predicate.
 - The **Learning Objective Achievement** of each line is filled with the descriptions of
   the learning objectives of the daily tests and assignments the student was scored for
-  on the score sheets that are done, one per line, without repeats. A line without such
-  a score has an empty text.
+  in the locked columns of the score sheets, one per line, without repeats. A line
+  without such a score has an empty text.
 - Subjects not taught in the Grade get no line.
 - Status stays **Draft**.

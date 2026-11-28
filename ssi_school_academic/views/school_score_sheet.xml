@@ -116,8 +116,13 @@
                                 />
                             <field name="student_id" />
                             <field name="component_id" />
-                            <field name="score" widget="score_entry" />
+                            <field
+                                    name="score"
+                                    widget="score_entry"
+                                    attrs="{'readonly': [('is_locked', '=', True)]}"
+                                />
                             <field name="is_scored" invisible="1" />
+                            <field name="is_locked" invisible="1" />
                         </tree>
                         <form>
                             <group col="2">
@@ -127,14 +132,47 @@
                                     />
                                 <field name="student_id" />
                                 <field name="component_id" />
-                                <field name="score" widget="score_entry" />
+                                <field
+                                        name="score"
+                                        widget="score_entry"
+                                        attrs="{'readonly': [('is_locked', '=', True)]}"
+                                    />
                                 <field name="is_scored" invisible="1" />
+                                <field name="is_locked" invisible="1" />
                             </group>
                         </form>
                     </field>
                 </page>
             </xpath>
             <xpath expr="//page[@name='score']" position="after">
+                <page name="column" string="Columns">
+                    <field name="column_ids" colspan="4" nolabel="1">
+                        <tree create="0" delete="0" editable="bottom">
+                            <field name="component_id" />
+                            <field name="is_locked" />
+                            <button
+                                    name="action_lock_column"
+                                    type="object"
+                                    string="Lock Column"
+                                    icon="fa-lock"
+                                    attrs="{'invisible': ['|', ('is_locked', '=', True), ('parent.lock_column_ok', '=', False)]}"
+                                />
+                            <button
+                                    name="action_unlock_column"
+                                    type="object"
+                                    string="Unlock Column"
+                                    icon="fa-unlock"
+                                    attrs="{'invisible': ['|', ('is_locked', '=', False), ('parent.unlock_column_ok', '=', False)]}"
+                                />
+                        </tree>
+                        <form>
+                            <group col="2">
+                                <field name="component_id" />
+                                <field name="is_locked" />
+                            </group>
+                        </form>
+                    </field>
+                </page>
                 <page name="objective" string="Learning Objectives">
                     <field name="component_ids" colspan="4" nolabel="1">
                         <tree editable="bottom" create="0">
@@ -160,6 +198,8 @@
             </xpath>
             <xpath expr="//group[@name='policy_2']" position="inside">
                 <field name="generate_lines_ok" />
+                <field name="lock_column_ok" />
+                <field name="unlock_column_ok" />
             </xpath>
         </data>
     </field>

@@ -11,6 +11,8 @@
 
 - **Record:** Status is **Draft**.
 - **Data:** Every line belongs to an **Open** enrollment.
+- **Data:** Every column that has lines is locked (`10-lock-column`). A sheet without
+  lines has no column to lock.
 - **Config:** An active `policy.template` for this model grants `confirm_ok` for state
   `draft` to the actor's group.
 - **Config:** An active `approval.template` for this model matches this record and has
@@ -30,3 +32,4 @@
 - Approval records are created for each approver level defined by the approval template.
 - Confirming is rejected with an error when a line belongs to an enrollment that is no
   longer open.
+- Confirming is rejected with an error naming the columns that are not locked yet.

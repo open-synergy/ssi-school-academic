@@ -374,6 +374,19 @@ scenarios:
             check: "count"
             expected_count: 2
 
+      - step: "Find the columns of the score sheet"
+        action: "search"
+        model: "school_score_sheet_component"
+        domain:
+          - ["sheet_id", "=", "REC: sheet.id"]
+        save_as: "sheet_columns"
+
+      - step: "Lock every column of the score sheet"
+        action: "call"
+        target: "sheet_columns"
+        method: "action_lock_column"
+        as_user: "base.user_admin"
+
       - step: "Confirm the sheet"
         action: "call"
         target: "sheet"
@@ -615,6 +628,19 @@ scenarios:
         values:
           state: "draft"
 
+      - step: "Find the columns of the score sheet"
+        action: "search"
+        model: "school_score_sheet_component"
+        domain:
+          - ["sheet_id", "=", "REC: sheet.id"]
+        save_as: "sheet_columns"
+
+      - step: "Lock every column of the score sheet"
+        action: "call"
+        target: "sheet_columns"
+        method: "action_lock_column"
+        as_user: "base.user_admin"
+
       - step: "Confirming a sheet whose enrollment is not open is rejected"
         action: "call"
         target: "sheet"
@@ -650,6 +676,19 @@ scenarios:
               - 0
               - enrollment_id: "REC: enrollment_1.id"
                 component_id: "REC: component_1.id"
+
+      - step: "Find the columns of the score sheet"
+        action: "search"
+        model: "school_score_sheet_component"
+        domain:
+          - ["sheet_id", "=", "REC: sheet.id"]
+        save_as: "sheet_columns"
+
+      - step: "Lock every column of the score sheet"
+        action: "call"
+        target: "sheet_columns"
+        method: "action_lock_column"
+        as_user: "base.user_admin"
 
       - step: "Confirm the sheet"
         action: "call"
@@ -698,6 +737,19 @@ scenarios:
               - 0
               - enrollment_id: "REC: enrollment_1.id"
                 component_id: "REC: component_1.id"
+
+      - step: "Find the columns of the score sheet"
+        action: "search"
+        model: "school_score_sheet_component"
+        domain:
+          - ["sheet_id", "=", "REC: sheet.id"]
+        save_as: "sheet_columns"
+
+      - step: "Lock every column of the score sheet"
+        action: "call"
+        target: "sheet_columns"
+        method: "action_lock_column"
+        as_user: "base.user_admin"
 
       - step: "Confirm the sheet"
         action: "call"
