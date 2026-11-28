@@ -21,6 +21,7 @@ msgstr ""
 #. module: ssi_school_academic_operating_unit
 #: model:ir.model.fields,field_description:ssi_school_academic_operating_unit.field_copy_teaching_assignment_from_previous_term__display_name
 #: model:ir.model.fields,field_description:ssi_school_academic_operating_unit.field_generate_score_sheet_from_teaching_assignment__display_name
+#: model:ir.model.fields,field_description:ssi_school_academic_operating_unit.field_school_curriculum__display_name
 #: model:ir.model.fields,field_description:ssi_school_academic_operating_unit.field_school_report_card__display_name
 #: model:ir.model.fields,field_description:ssi_school_academic_operating_unit.field_school_score_sheet__display_name
 #: model:ir.model.fields,field_description:ssi_school_academic_operating_unit.field_school_teaching_assignment__display_name
@@ -35,6 +36,7 @@ msgstr ""
 #. module: ssi_school_academic_operating_unit
 #: model:ir.model.fields,field_description:ssi_school_academic_operating_unit.field_copy_teaching_assignment_from_previous_term__id
 #: model:ir.model.fields,field_description:ssi_school_academic_operating_unit.field_generate_score_sheet_from_teaching_assignment__id
+#: model:ir.model.fields,field_description:ssi_school_academic_operating_unit.field_school_curriculum__id
 #: model:ir.model.fields,field_description:ssi_school_academic_operating_unit.field_school_report_card__id
 #: model:ir.model.fields,field_description:ssi_school_academic_operating_unit.field_school_score_sheet__id
 #: model:ir.model.fields,field_description:ssi_school_academic_operating_unit.field_school_teaching_assignment__id
@@ -44,6 +46,7 @@ msgstr ""
 #. module: ssi_school_academic_operating_unit
 #: model:ir.model.fields,field_description:ssi_school_academic_operating_unit.field_copy_teaching_assignment_from_previous_term____last_update
 #: model:ir.model.fields,field_description:ssi_school_academic_operating_unit.field_generate_score_sheet_from_teaching_assignment____last_update
+#: model:ir.model.fields,field_description:ssi_school_academic_operating_unit.field_school_curriculum____last_update
 #: model:ir.model.fields,field_description:ssi_school_academic_operating_unit.field_school_report_card____last_update
 #: model:ir.model.fields,field_description:ssi_school_academic_operating_unit.field_school_score_sheet____last_update
 #: model:ir.model.fields,field_description:ssi_school_academic_operating_unit.field_school_teaching_assignment____last_update
@@ -51,14 +54,22 @@ msgid "Last Modified on"
 msgstr ""
 
 #. module: ssi_school_academic_operating_unit
+#: model:ir.model.fields,field_description:ssi_school_academic_operating_unit.field_school_curriculum__operating_unit_id
 #: model:ir.model.fields,field_description:ssi_school_academic_operating_unit.field_school_report_card__operating_unit_id
 #: model:ir.model.fields,field_description:ssi_school_academic_operating_unit.field_school_score_sheet__operating_unit_id
 #: model:ir.model.fields,field_description:ssi_school_academic_operating_unit.field_school_teaching_assignment__operating_unit_ids
+#: model:res.groups,name:ssi_school_academic_operating_unit.school_curriculum_operating_unit_group
 #: model:res.groups,name:ssi_school_academic_operating_unit.school_report_card_operating_unit_group
 #: model:res.groups,name:ssi_school_academic_operating_unit.school_score_sheet_operating_unit_group
+#: model_terms:ir.ui.view,arch_db:ssi_school_academic_operating_unit.school_curriculum_view_search_ou
 #: model_terms:ir.ui.view,arch_db:ssi_school_academic_operating_unit.school_report_card_view_search_ou
 #: model_terms:ir.ui.view,arch_db:ssi_school_academic_operating_unit.school_score_sheet_view_search_ou
 msgid "Operating Unit"
+msgstr ""
+
+#. module: ssi_school_academic_operating_unit
+#: model:ir.model,name:ssi_school_academic_operating_unit.model_school_curriculum
+msgid "School Curriculum"
 msgstr ""
 
 #. module: ssi_school_academic_operating_unit
