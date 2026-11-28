@@ -25,5 +25,8 @@
 - The draft score sheet of the same term, class and subject follows the main teacher:
   when the **Teacher** of the document is changed, or a main line is added, or the
   **Role** of a line is changed to Main, that draft score sheet is given to the teacher
-  of the main line and linked to it. A line made Assistant moves nothing. A score sheet
-  that is confirmed, done or cancelled is never changed.
+  of the main line and linked to it. When that teacher has a user account, the
+  **Responsible** of the score sheet becomes that user, so the new teacher can open the
+  sheet; a teacher without a user account leaves the previous **Responsible** unchanged.
+  A line made Assistant moves nothing. A score sheet that is confirmed, done or
+  cancelled is never changed.
