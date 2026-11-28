@@ -726,3 +726,509 @@ scenarios:
           teaching_assignment_line_id:
             type: "m2o"
             expected: "REC: line_a"
+
+  - name:
+      "Teaching Assignment Sync - A new teacher takes the responsible of the draft sheet"
+    steps:
+      - step: "Create the user of teacher A"
+        action: "create"
+        model: "res.users"
+        save_as: "user_a"
+        values:
+          name: "SSTS User A"
+          login:
+            "EVAL: 'ssts_user_a_%d@example.com' % env['res.users'].search_count([])"
+          groups_id:
+            - - 6
+              - 0
+              - - "REF: base.group_user"
+                - "REF: ssi_school_academic.school_score_sheet_user_group"
+
+      - step: "Create the employee of teacher A"
+        action: "create"
+        model: "hr.employee"
+        save_as: "employee_a"
+        values:
+          name: "SSTS Account Employee A"
+          company_id: "base.main_company"
+          user_id: "REC: user_a.id"
+
+      - step: "Create teacher A with an account"
+        action: "create"
+        model: "school_teacher"
+        save_as: "teacher_a"
+        values:
+          name: "SSTS Account Teacher A"
+          code: "EVAL: 'SSTSAT%d' % env['school_teacher'].search_count([])"
+          employee_id: "REC: employee_a.id"
+
+      - step: "Create the user of teacher C"
+        action: "create"
+        model: "res.users"
+        save_as: "user_c"
+        values:
+          name: "SSTS User C"
+          login:
+            "EVAL: 'ssts_user_c_%d@example.com' % env['res.users'].search_count([])"
+          groups_id:
+            - - 6
+              - 0
+              - - "REF: base.group_user"
+                - "REF: ssi_school_academic.school_score_sheet_user_group"
+
+      - step: "Create the employee of teacher C"
+        action: "create"
+        model: "hr.employee"
+        save_as: "employee_c"
+        values:
+          name: "SSTS Account Employee C"
+          company_id: "base.main_company"
+          user_id: "REC: user_c.id"
+
+      - step: "Create teacher C with an account"
+        action: "create"
+        model: "school_teacher"
+        save_as: "teacher_c"
+        values:
+          name: "SSTS Account Teacher C"
+          code: "EVAL: 'SSTSAT%d' % env['school_teacher'].search_count([])"
+          employee_id: "REC: employee_c.id"
+
+      - step: "Create the assignment header_1"
+        action: "create"
+        model: "school_teaching_assignment"
+        save_as: "header_1"
+        values:
+          name: "SSTS header_1"
+          code: "/"
+          teacher_id: "REC: teacher_a.id"
+          academic_term_id: "REC: term_1.id"
+
+      - step: "Create the line line_1"
+        action: "create"
+        model: "school_teaching_assignment_line"
+        save_as: "line_1"
+        values:
+          assignment_id: "REC: header_1.id"
+          homeroom_id: "REC: homeroom_x.id"
+          subject_id: "REC: subject_a.id"
+          role: "main"
+          weekly_hours: 2
+
+      - step: "Create the line line_2"
+        action: "create"
+        model: "school_teaching_assignment_line"
+        save_as: "line_2"
+        values:
+          assignment_id: "REC: header_1.id"
+          homeroom_id: "REC: homeroom_x.id"
+          subject_id: "REC: subject_b.id"
+          role: "main"
+          weekly_hours: 2
+
+      - step: "Create the score sheet sheet_draft"
+        action: "create"
+        model: "school_score_sheet"
+        save_as: "sheet_draft"
+        values:
+          academic_term_id: "REC: term_1.id"
+          grade_class_id: "REC: class_x.id"
+          subject_id: "REC: subject_a.id"
+          teacher_id: "REC: teacher_a.id"
+          date: 2026-08-10
+          user_id: "REC: user_a.id"
+          teaching_assignment_line_id: "REC: line_1.id"
+
+      - step: "Create the score sheet sheet_done"
+        action: "create"
+        model: "school_score_sheet"
+        save_as: "sheet_done"
+        values:
+          academic_term_id: "REC: term_1.id"
+          grade_class_id: "REC: class_x.id"
+          subject_id: "REC: subject_b.id"
+          teacher_id: "REC: teacher_a.id"
+          date: 2026-08-10
+          user_id: "REF: base.user_admin"
+          teaching_assignment_line_id: "REC: line_2.id"
+
+      - step: "Confirm the sheet sheet_done"
+        action: "call"
+        target: "sheet_done"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve the sheet sheet_done, which finishes it"
+        action: "call"
+        target: "sheet_done"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "done"
+
+      - step: "Get the administrator user"
+        action: "ref"
+        xml_id: "base.user_admin"
+        save_as: "admin_user"
+
+      - step: "Change the teacher of the document"
+        action: "write"
+        target: "header_1"
+        values:
+          teacher_id: "REC: teacher_c.id"
+
+      - step: "The draft sheet is the responsibility of the new teacher"
+        action: "assert"
+        target: "sheet_draft"
+        asserts:
+          user_id:
+            type: "m2o"
+            expected: "REC: user_c"
+
+      - step: "The done sheet keeps its responsible"
+        action: "assert"
+        target: "sheet_done"
+        asserts:
+          user_id:
+            type: "m2o"
+            expected: "REC: admin_user"
+
+      - step: "The new teacher may read the draft sheet"
+        action: "call"
+        target: "sheet_draft"
+        method: "check_access_rule"
+        as_user: "user_c"
+        args:
+          - "read"
+
+      - step: "The new teacher may write the draft sheet"
+        action: "call"
+        target: "sheet_draft"
+        method: "check_access_rule"
+        as_user: "user_c"
+        args:
+          - "write"
+
+      - step: "The former teacher may not write the draft sheet"
+        action: "call"
+        target: "sheet_draft"
+        method: "check_access_rule"
+        as_user: "user_a"
+        args:
+          - "write"
+        expect_error:
+          type: "AccessError"
+
+  - name:
+      "Teaching Assignment Sync - A new main line gives the responsible of the draft
+      sheet"
+    steps:
+      - step: "Create the user of teacher A"
+        action: "create"
+        model: "res.users"
+        save_as: "user_a"
+        values:
+          name: "SSTS User A"
+          login:
+            "EVAL: 'ssts_user_a_%d@example.com' % env['res.users'].search_count([])"
+          groups_id:
+            - - 6
+              - 0
+              - - "REF: base.group_user"
+                - "REF: ssi_school_academic.school_score_sheet_user_group"
+
+      - step: "Create the employee of teacher A"
+        action: "create"
+        model: "hr.employee"
+        save_as: "employee_a"
+        values:
+          name: "SSTS Account Employee A"
+          company_id: "base.main_company"
+          user_id: "REC: user_a.id"
+
+      - step: "Create teacher A with an account"
+        action: "create"
+        model: "school_teacher"
+        save_as: "teacher_a"
+        values:
+          name: "SSTS Account Teacher A"
+          code: "EVAL: 'SSTSAT%d' % env['school_teacher'].search_count([])"
+          employee_id: "REC: employee_a.id"
+
+      - step: "Create the user of teacher C"
+        action: "create"
+        model: "res.users"
+        save_as: "user_c"
+        values:
+          name: "SSTS User C"
+          login:
+            "EVAL: 'ssts_user_c_%d@example.com' % env['res.users'].search_count([])"
+          groups_id:
+            - - 6
+              - 0
+              - - "REF: base.group_user"
+                - "REF: ssi_school_academic.school_score_sheet_user_group"
+
+      - step: "Create the employee of teacher C"
+        action: "create"
+        model: "hr.employee"
+        save_as: "employee_c"
+        values:
+          name: "SSTS Account Employee C"
+          company_id: "base.main_company"
+          user_id: "REC: user_c.id"
+
+      - step: "Create teacher C with an account"
+        action: "create"
+        model: "school_teacher"
+        save_as: "teacher_c"
+        values:
+          name: "SSTS Account Teacher C"
+          code: "EVAL: 'SSTSAT%d' % env['school_teacher'].search_count([])"
+          employee_id: "REC: employee_c.id"
+
+      - step: "Create the assignment header_1"
+        action: "create"
+        model: "school_teaching_assignment"
+        save_as: "header_1"
+        values:
+          name: "SSTS header_1"
+          code: "/"
+          teacher_id: "REC: teacher_a.id"
+          academic_term_id: "REC: term_1.id"
+
+      - step: "Create the assignment header_2"
+        action: "create"
+        model: "school_teaching_assignment"
+        save_as: "header_2"
+        values:
+          name: "SSTS header_2"
+          code: "/"
+          teacher_id: "REC: teacher_c.id"
+          academic_term_id: "REC: term_1.id"
+
+      - step: "Create the line line_a"
+        action: "create"
+        model: "school_teaching_assignment_line"
+        save_as: "line_a"
+        values:
+          assignment_id: "REC: header_1.id"
+          homeroom_id: "REC: homeroom_x.id"
+          subject_id: "REC: subject_a.id"
+          role: "main"
+          weekly_hours: 2
+
+      - step: "Create the score sheet sheet_draft"
+        action: "create"
+        model: "school_score_sheet"
+        save_as: "sheet_draft"
+        values:
+          academic_term_id: "REC: term_1.id"
+          grade_class_id: "REC: class_x.id"
+          subject_id: "REC: subject_a.id"
+          teacher_id: "REC: teacher_a.id"
+          date: 2026-08-10
+          user_id: "REC: user_a.id"
+          teaching_assignment_line_id: "REC: line_a.id"
+
+      - step: "Make the line of teacher A an assistant line"
+        action: "write"
+        target: "line_a"
+        values:
+          role: "assistant"
+
+      - step: "Create the line line_c"
+        action: "create"
+        model: "school_teaching_assignment_line"
+        save_as: "line_c"
+        values:
+          assignment_id: "REC: header_2.id"
+          homeroom_id: "REC: homeroom_x.id"
+          subject_id: "REC: subject_a.id"
+          role: "main"
+          weekly_hours: 2
+
+      - step: "The draft sheet is the responsibility of teacher C"
+        action: "assert"
+        target: "sheet_draft"
+        asserts:
+          user_id:
+            type: "m2o"
+            expected: "REC: user_c"
+
+  - name:
+      "Teaching Assignment Sync - A teacher without an account keeps the responsible"
+    steps:
+      - step: "Create the assignment header_1"
+        action: "create"
+        model: "school_teaching_assignment"
+        save_as: "header_1"
+        values:
+          name: "SSTS header_1"
+          code: "/"
+          teacher_id: "REC: teacher_1.id"
+          academic_term_id: "REC: term_1.id"
+
+      - step: "Create the score sheet sheet_draft"
+        action: "create"
+        model: "school_score_sheet"
+        save_as: "sheet_draft"
+        values:
+          academic_term_id: "REC: term_1.id"
+          grade_class_id: "REC: class_x.id"
+          subject_id: "REC: subject_a.id"
+          teacher_id: "REC: teacher_2.id"
+          date: 2026-08-10
+          user_id: "REF: base.user_admin"
+
+      - step: "Get the administrator user"
+        action: "ref"
+        xml_id: "base.user_admin"
+        save_as: "admin_user"
+
+      - step: "Create the line line_1"
+        action: "create"
+        model: "school_teaching_assignment_line"
+        save_as: "line_1"
+        values:
+          assignment_id: "REC: header_1.id"
+          homeroom_id: "REC: homeroom_x.id"
+          subject_id: "REC: subject_a.id"
+          role: "main"
+          weekly_hours: 2
+
+      - step: "The draft sheet moved to teacher 1 and keeps its responsible"
+        action: "assert"
+        target: "sheet_draft"
+        asserts:
+          teacher_id:
+            type: "m2o"
+            expected: "REC: teacher_1"
+          teaching_assignment_line_id:
+            type: "m2o"
+            expected: "REC: line_1"
+          user_id:
+            type: "m2o"
+            expected: "REC: admin_user"
+
+  - name: "Teaching Assignment Sync - Saving the main line again fixes the responsible"
+    steps:
+      - step: "Create the user of teacher A"
+        action: "create"
+        model: "res.users"
+        save_as: "user_a"
+        values:
+          name: "SSTS User A"
+          login:
+            "EVAL: 'ssts_user_a_%d@example.com' % env['res.users'].search_count([])"
+          groups_id:
+            - - 6
+              - 0
+              - - "REF: base.group_user"
+                - "REF: ssi_school_academic.school_score_sheet_user_group"
+
+      - step: "Create the employee of teacher A"
+        action: "create"
+        model: "hr.employee"
+        save_as: "employee_a"
+        values:
+          name: "SSTS Account Employee A"
+          company_id: "base.main_company"
+          user_id: "REC: user_a.id"
+
+      - step: "Create teacher A with an account"
+        action: "create"
+        model: "school_teacher"
+        save_as: "teacher_a"
+        values:
+          name: "SSTS Account Teacher A"
+          code: "EVAL: 'SSTSAT%d' % env['school_teacher'].search_count([])"
+          employee_id: "REC: employee_a.id"
+
+      - step: "Create the user of teacher C"
+        action: "create"
+        model: "res.users"
+        save_as: "user_c"
+        values:
+          name: "SSTS User C"
+          login:
+            "EVAL: 'ssts_user_c_%d@example.com' % env['res.users'].search_count([])"
+          groups_id:
+            - - 6
+              - 0
+              - - "REF: base.group_user"
+                - "REF: ssi_school_academic.school_score_sheet_user_group"
+
+      - step: "Create the employee of teacher C"
+        action: "create"
+        model: "hr.employee"
+        save_as: "employee_c"
+        values:
+          name: "SSTS Account Employee C"
+          company_id: "base.main_company"
+          user_id: "REC: user_c.id"
+
+      - step: "Create teacher C with an account"
+        action: "create"
+        model: "school_teacher"
+        save_as: "teacher_c"
+        values:
+          name: "SSTS Account Teacher C"
+          code: "EVAL: 'SSTSAT%d' % env['school_teacher'].search_count([])"
+          employee_id: "REC: employee_c.id"
+
+      - step: "Create the assignment header_1"
+        action: "create"
+        model: "school_teaching_assignment"
+        save_as: "header_1"
+        values:
+          name: "SSTS header_1"
+          code: "/"
+          teacher_id: "REC: teacher_c.id"
+          academic_term_id: "REC: term_1.id"
+
+      - step: "Create the line line_c"
+        action: "create"
+        model: "school_teaching_assignment_line"
+        save_as: "line_c"
+        values:
+          assignment_id: "REC: header_1.id"
+          homeroom_id: "REC: homeroom_x.id"
+          subject_id: "REC: subject_a.id"
+          role: "main"
+          weekly_hours: 2
+
+      - step: "Create the score sheet sheet_draft"
+        action: "create"
+        model: "school_score_sheet"
+        save_as: "sheet_draft"
+        values:
+          academic_term_id: "REC: term_1.id"
+          grade_class_id: "REC: class_x.id"
+          subject_id: "REC: subject_a.id"
+          teacher_id: "REC: teacher_c.id"
+          date: 2026-08-10
+          user_id: "REC: user_a.id"
+          teaching_assignment_line_id: "REC: line_c.id"
+
+      - step: "Save the main role of the line again"
+        action: "write"
+        target: "line_c"
+        values:
+          role: "main"
+
+      - step: "The responsible follows the teacher of the line"
+        action: "assert"
+        target: "sheet_draft"
+        asserts:
+          user_id:
+            type: "m2o"
+            expected: "REC: user_c"

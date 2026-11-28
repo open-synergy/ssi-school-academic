@@ -134,14 +134,20 @@ class SchoolTeachingAssignmentLine(models.Model):
         Only a line whose role is main is handled; an assistant line
         never writes. The draft score sheet that has the same academic
         term, grade class and subject as the line is given the teacher
-        of the assignment and is linked to the line. The sheets are
-        found and written as the superuser, because a user of the
-        teaching assignment may not write them. A sheet that is not
-        draft is never touched.
+        of the assignment and is linked to the line. When the teacher
+        has a user account, the sheet is also made the responsible of
+        that user, so the new teacher can open it through the record
+        rule of the internal users. A teacher without a user account
+        keeps the previous responsible, because the responsible is
+        required and the save of the teaching assignment must not be
+        refused. The sheets are found and written as the superuser,
+        because a user of the teaching assignment may not write them.
+        A sheet that is not draft is never touched.
         """
         sheet_model = self.env["school_score_sheet"].sudo()
         for record in self.filtered(lambda r: r.role == "main"):
             teacher = record.assignment_id.teacher_id
+            user = teacher.employee_id.user_id
             sheets = sheet_model.search(
                 [
                     ("state", "=", "draft"),
@@ -151,16 +157,18 @@ class SchoolTeachingAssignmentLine(models.Model):
                 ]
             )
             sheets = sheets.filtered(
-                lambda s, t=teacher, r=record: s.teacher_id != t
+                lambda s, t=teacher, r=record, u=user: s.teacher_id != t
                 or s.teaching_assignment_line_id != r
+                or (u and s.user_id != u)
             )
             if sheets:
-                sheets.write(
-                    {
-                        "teacher_id": teacher.id,
-                        "teaching_assignment_line_id": record.id,
-                    }
-                )
+                vals = {
+                    "teacher_id": teacher.id,
+                    "teaching_assignment_line_id": record.id,
+                }
+                if user:
+                    vals["user_id"] = user.id
+                sheets.write(vals)
 
     @api.model_create_multi
     def create(self, vals_list):

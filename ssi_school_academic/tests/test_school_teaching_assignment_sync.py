@@ -17,6 +17,8 @@ class TestSchoolTeachingAssignmentSync(
     change the role of a line and add a second main line. The draft
     score sheet of the same term, class and subject follows the main
     teacher, while the sheets that are not draft are not touched.
+    The responsible user of the sheet follows the user account of the
+    teacher, and a teacher without an account keeps the previous one.
     """
 
     def test_teaching_assignment_sync(self):
