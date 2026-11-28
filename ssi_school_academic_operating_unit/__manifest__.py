@@ -4,7 +4,7 @@
 
 {
     "name": "School Academic - Operating Unit",
-    "version": "14.0.1.3.0",
+    "version": "14.0.1.4.0",
     "website": "https://simetri-sinergi.id",
     # pylint: disable=line-too-long
     "author": "OpenSynergy Indonesia, PT. Simetri Sinergi Indonesia, Odoo Community Association (OCA)",  # noqa: B950
