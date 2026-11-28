@@ -18,8 +18,13 @@ the **Operating Unit / Multiple Operating Units** group
 (`operating_unit.group_multi_operating_unit`):
 
 - **Operating Unit**: The operating unit the curriculum belongs to. Displayed after the
-  **Company** field. Automatically filled with the default operating unit of the user.
-  Change it if needed.
+  **Company** field. Automatically filled with the operating unit of the selected
+  **School** as soon as the school is chosen, when the school has exactly one operating
+  unit. The unit of the school is used even when it is not one of your own operating
+  units, but then the curriculum cannot be saved: the record rule below refuses it, so
+  the user must hold the operating unit of the school. When the school has no operating
+  unit, or more than one, the field keeps the default operating unit of the user. Change
+  it if needed.
 
 ## Modified — Record Visibility
 
