@@ -14,6 +14,28 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_score_sheet_line.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Add score line\n"
+"Database ID: %s\n"
+"Problem: The column %s is locked, so no line can be added to it.\n"
+"Solution: Unlock the column on the score sheet before adding lines\n"
+msgstr ""
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_score_sheet_line.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Change score line\n"
+"Database ID: %s\n"
+"Problem: The column %s is locked, so its scores cannot be changed.\n"
+"Solution: Unlock the column on the score sheet before changing its scores\n"
+msgstr ""
+
+#. module: ssi_school_academic
 #: code:addons/ssi_school_academic/models/school_report_card.py:0
 #, python-format
 msgid ""
@@ -55,6 +77,17 @@ msgid ""
 "Database ID: %s\n"
 "Problem: A score sheet that is not cancelled exists for this term, class and subject.\n"
 "Solution: Cancel or delete the score sheet first\n"
+msgstr ""
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_score_sheet_component.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Lock score column\n"
+"Database ID: -\n"
+"Problem: The lock of a column can only be changed with the buttons.\n"
+"Solution: Use the Lock Column or Unlock Column button of the score sheet\n"
 msgstr ""
 
 #. module: ssi_school_academic
@@ -383,10 +416,58 @@ msgstr ""
 msgid ""
 "\n"
 "Document Type: %s\n"
+"Context: Confirm document\n"
+"Database ID: %s\n"
+"Problem: These columns are not locked yet: %s\n"
+"Solution: Lock every column of the score sheet before confirming it\n"
+msgstr ""
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_score_sheet.py:0
+#, python-format
+msgid ""
+"\n"
+"Document Type: %s\n"
 "Context: Generate lines\n"
 "Database ID: %s\n"
 "Problem: Lines can only be generated in draft state\n"
 "Solution: Restart the document before generating the lines\n"
+msgstr ""
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_score_sheet.py:0
+#, python-format
+msgid ""
+"\n"
+"Document Type: %s\n"
+"Context: Generate lines\n"
+"Database ID: %s\n"
+"Problem: Lines cannot be generated while a column is locked\n"
+"Solution: Unlock every column before generating the lines\n"
+msgstr ""
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_score_sheet_component.py:0
+#, python-format
+msgid ""
+"\n"
+"Document Type: %s\n"
+"Context: Lock score column\n"
+"Database ID: %s\n"
+"Problem: A column can only be locked or unlocked in draft state\n"
+"Solution: Restart the document before changing the lock of the column\n"
+msgstr ""
+
+#. module: ssi_school_academic
+#: code:addons/ssi_school_academic/models/school_score_sheet_component.py:0
+#, python-format
+msgid ""
+"\n"
+"Document Type: %s\n"
+"Context: Lock score column\n"
+"Database ID: %s\n"
+"Problem: Document is not allowed to change the lock of a column\n"
+"Solution: Check the %s policy prerequisite\n"
 msgstr ""
 
 #. module: ssi_school_academic
@@ -991,6 +1072,11 @@ msgid "Can Input Manual Document Number"
 msgstr ""
 
 #. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__lock_column_ok
+msgid "Can Lock Column"
+msgstr ""
+
+#. module: ssi_school_academic
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card__refill_learning_objective_ok
 msgid "Can Refill Learning Objective"
 msgstr ""
@@ -1019,6 +1105,11 @@ msgstr ""
 #. module: ssi_school_academic
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_curriculum__open_ok
 msgid "Can Start"
+msgstr ""
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__unlock_column_ok
+msgid "Can Unlock Column"
 msgstr ""
 
 #. module: ssi_school_academic
@@ -1157,6 +1248,8 @@ msgstr ""
 
 #. module: ssi_school_academic
 #: model:ir.model.fields,field_description:ssi_school_academic.field_print_report_card_ledger__subject_ids
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet__column_ids
+#: model_terms:ir.ui.view,arch_db:ssi_school_academic.school_score_sheet_view_form
 msgid "Columns"
 msgstr ""
 
@@ -1214,6 +1307,11 @@ msgid "Component"
 msgstr ""
 
 #. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_line__score_ids
+msgid "Component Scores"
+msgstr ""
+
+#. module: ssi_school_academic
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type__weight_ids
 msgid "Component Weights"
 msgstr ""
@@ -1255,6 +1353,14 @@ msgid "Copy Teaching Assignments"
 msgstr ""
 
 #. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card_line__score_ids
+msgid ""
+"Copy of the score of each component, taken when the scores of the report "
+"card were computed. The print reads it, so it does not change when a score "
+"sheet changes later."
+msgstr ""
+
+#. module: ssi_school_academic
 #: model:ir.model.fields,field_description:ssi_school_academic.field_copy_teaching_assignment_from_previous_term__create_uid
 #: model:ir.model.fields,field_description:ssi_school_academic.field_generate_score_sheet_from_teaching_assignment__create_uid
 #: model:ir.model.fields,field_description:ssi_school_academic.field_print_report_card_ledger__create_uid
@@ -1267,6 +1373,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_co_curricular__create_uid
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_extracurricular__create_uid
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_line__create_uid
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_line_score__create_uid
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_main_subject__create_uid
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type__create_uid
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type_print_column__create_uid
@@ -1299,6 +1406,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_co_curricular__create_date
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_extracurricular__create_date
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_line__create_date
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_line_score__create_date
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_main_subject__create_date
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type__create_date
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type_print_column__create_date
@@ -1344,11 +1452,6 @@ msgstr ""
 #. module: ssi_school_academic
 #: model:ir.model.fields.selection,name:ssi_school_academic.selection__school_score_component__category__daily_test
 msgid "Daily Test"
-msgstr ""
-
-#. module: ssi_school_academic
-#: model:ir.model.fields,help:ssi_school_academic.field_school_score_sheet_component__component_id
-msgid "Daily test or assignment component of the sheet."
 msgstr ""
 
 #. module: ssi_school_academic
@@ -1443,6 +1546,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_co_curricular__display_name
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_extracurricular__display_name
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_line__display_name
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_line_score__display_name
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_main_subject__display_name
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type__display_name
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type_print_column__display_name
@@ -1900,6 +2004,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_co_curricular__id
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_extracurricular__id
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_line__id
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_line_score__id
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_main_subject__id
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type__id
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type_print_column__id
@@ -2038,6 +2143,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_co_curricular____last_update
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_extracurricular____last_update
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_line____last_update
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_line_score____last_update
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_main_subject____last_update
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type____last_update
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type_print_column____last_update
@@ -2071,6 +2177,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_co_curricular__write_uid
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_extracurricular__write_uid
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_line__write_uid
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_line_score__write_uid
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_main_subject__write_uid
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type__write_uid
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type_print_column__write_uid
@@ -2103,6 +2210,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_co_curricular__write_date
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_extracurricular__write_date
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_line__write_date
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_line_score__write_date
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_main_subject__write_date
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type__write_date
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_type_print_column__write_date
@@ -2196,6 +2304,17 @@ msgstr ""
 msgid ""
 "Lines of the teaching assignments that name this homeroom, for every teacher"
 " who teaches in it."
+msgstr ""
+
+#. module: ssi_school_academic
+#: model_terms:ir.ui.view,arch_db:ssi_school_academic.school_score_sheet_view_form
+msgid "Lock Column"
+msgstr ""
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet_component__is_locked
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet_line__is_locked
+msgid "Locked"
 msgstr ""
 
 #. module: ssi_school_academic
@@ -2740,10 +2859,20 @@ msgid "Policy that determines whether the Generate Lines button is visible."
 msgstr ""
 
 #. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_score_sheet__lock_column_ok
+msgid "Policy that determines whether the Lock Column button is visible."
+msgstr ""
+
+#. module: ssi_school_academic
 #: model:ir.model.fields,help:ssi_school_academic.field_school_report_card__refill_learning_objective_ok
 msgid ""
 "Policy that determines whether the Refill Learning Objective button is "
 "visible."
+msgstr ""
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_score_sheet__unlock_column_ok
+msgid "Policy that determines whether the Unlock Column button is visible."
 msgstr ""
 
 #. module: ssi_school_academic
@@ -2894,6 +3023,11 @@ msgid "Report Card Ledger"
 msgstr ""
 
 #. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_line_score__line_id
+msgid "Report Card Line"
+msgstr ""
+
+#. module: ssi_school_academic
 #: model:ir.model,name:ssi_school_academic.model_school_report_card_main_subject
 #: model:res.groups,name:ssi_school_academic.school_report_card_main_subject_group
 msgid "Report Card Main Subject"
@@ -2917,6 +3051,11 @@ msgstr ""
 #. module: ssi_school_academic
 #: model:ir.ui.menu,name:ssi_school_academic.school_report_card_menu
 msgid "Report Cards"
+msgstr ""
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card_line_score__line_id
+msgid "Report card line the copied score belongs to."
 msgstr ""
 
 #. module: ssi_school_academic
@@ -3093,6 +3232,11 @@ msgid "School Report Card Line"
 msgstr ""
 
 #. module: ssi_school_academic
+#: model:ir.model,name:ssi_school_academic.model_school_report_card_line_score
+msgid "School Report Card Line Score"
+msgstr ""
+
+#. module: ssi_school_academic
 #: model:ir.model,name:ssi_school_academic.model_school_report_card_type
 msgid "School Report Card Type"
 msgstr ""
@@ -3186,11 +3330,13 @@ msgstr ""
 
 #. module: ssi_school_academic
 #: model:ir.model.fields,field_description:ssi_school_academic.field_print_report_card_ledger_cell__score
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_line_score__score
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet_line__score
 msgid "Score"
 msgstr ""
 
 #. module: ssi_school_academic
+#: model:ir.model.fields,field_description:ssi_school_academic.field_school_report_card_line_score__component_id
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet_component__component_id
 #: model:ir.model.fields,field_description:ssi_school_academic.field_school_score_sheet_line__component_id
 #: model:res.groups,name:ssi_school_academic.school_score_component_group
@@ -3258,10 +3404,27 @@ msgid "Score cells of this row, one for every subject column."
 msgstr ""
 
 #. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_score_sheet__column_ids
+msgid ""
+"Score columns of this sheet, one per score component that has lines, of any "
+"category. A column is locked and unlocked here."
+msgstr ""
+
+#. module: ssi_school_academic
 #: model:ir.model.fields,help:ssi_school_academic.field_school_report_card_type__print_column_ids
 msgid ""
 "Score component columns printed on the mid-term report card, at most four, "
 "in the order of their sequence. Leave empty to print only the final score."
+msgstr ""
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_score_sheet_component__component_id
+msgid "Score component of the sheet, for example Daily Test 1."
+msgstr ""
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card_line_score__component_id
+msgid "Score component the copied score is given for."
 msgstr ""
 
 #. module: ssi_school_academic
@@ -3296,6 +3459,13 @@ msgstr ""
 #. module: ssi_school_academic
 #: model:ir.model.fields,help:ssi_school_academic.field_school_score_sheet__line_ids
 msgid "Score lines, one per enrollment and per score component."
+msgstr ""
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_report_card_line_score__score
+msgid ""
+"Score of the student for the component, as it was when the scores of the "
+"report card were computed."
 msgstr ""
 
 #. module: ssi_school_academic
@@ -3359,6 +3529,23 @@ msgid ""
 "Set when a score was entered, zero included, and cleared when the score is "
 "emptied. A float field reads 0.0 for both an empty score and a zero score, "
 "so this flag tells them apart."
+msgstr ""
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_score_sheet_line__is_locked
+msgid ""
+"Set when the column of this line is locked on the score sheet. The report "
+"card reads only the scores of locked columns, and the score of a locked line"
+" cannot be changed."
+msgstr ""
+
+#. module: ssi_school_academic
+#: model:ir.model.fields,help:ssi_school_academic.field_school_score_sheet_component__is_locked
+msgid ""
+"Set when the teacher locked the column. The scores of a locked column cannot"
+" be changed, and the report card reads them. It is changed only by the Lock "
+"Column and Unlock Column buttons, which follow the policy of the score "
+"sheet."
 msgstr ""
 
 #. module: ssi_school_academic
@@ -3863,6 +4050,11 @@ msgstr ""
 #. module: ssi_school_academic
 #: model:ir.model.fields,help:ssi_school_academic.field_print_report_card_ledger__type_id
 msgid "Type of the report cards whose scores fill the ledger."
+msgstr ""
+
+#. module: ssi_school_academic
+#: model_terms:ir.ui.view,arch_db:ssi_school_academic.school_score_sheet_view_form
+msgid "Unlock Column"
 msgstr ""
 
 #. module: ssi_school_academic
