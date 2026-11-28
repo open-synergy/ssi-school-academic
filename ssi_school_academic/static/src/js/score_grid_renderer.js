@@ -542,6 +542,19 @@ odoo.define("ssi_school_academic.ScoreGridRenderer", function (require) {
         },
 
         /**
+         * Tell whether a score cell can take the focus. The cell of a
+         * locked column is rendered read-only, so the keyboard navigation
+         * jumps over it.
+         *
+         * @private
+         * @param {AbstractField|undefined} widget the widget of a cell
+         * @returns {Boolean}
+         */
+        _isEditableWidget: function (widget) {
+            return Boolean(widget) && widget.mode !== "readonly";
+        },
+
+        /**
          * Find the nearest editable cell from a position.
          *
          * @private
@@ -560,7 +573,7 @@ odoo.define("ssi_school_academic.ScoreGridRenderer", function (require) {
             if (dRow) {
                 for (var r = row + dRow; r >= 0 && r < nRows; r += dRow) {
                     widget = this._widgetAt[r][col];
-                    if (widget) {
+                    if (this._isEditableWidget(widget)) {
                         return widget;
                     }
                 }
@@ -573,7 +586,7 @@ odoo.define("ssi_school_academic.ScoreGridRenderer", function (require) {
                     break;
                 }
                 widget = this._widgetAt[currentRow][index % nCols];
-                if (widget) {
+                if (this._isEditableWidget(widget)) {
                     return widget;
                 }
                 index += dCol;

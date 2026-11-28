@@ -66,6 +66,8 @@ Work Instruction
 * `Restart School Score Sheet Approval Process <docs/school_score_sheet/07-restart-approval.html>`_
 * `Enter Scores of School Score Sheet <docs/school_score_sheet/08-enter-scores.html>`_
 * `Choose Learning Objectives of School Score Sheet <docs/school_score_sheet/09-choose-objectives.html>`_
+* `Lock Column of School Score Sheet <docs/school_score_sheet/10-lock-column.html>`_
+* `Unlock Column of School Score Sheet <docs/school_score_sheet/11-unlock-column.html>`_
 * `Create School Report Card <docs/school_report_card/01-create.html>`_
 * `Generate Lines of School Report Card <docs/school_report_card/02-generate-lines.html>`_
 * `Compute Scores of School Report Card <docs/school_report_card/03-compute-scores.html>`_

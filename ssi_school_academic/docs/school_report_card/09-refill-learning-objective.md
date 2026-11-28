@@ -10,9 +10,9 @@
 ## Pre-Condition
 
 - **Record:** Status is **Draft**, and the report card has lines.
-- **Data:** The score sheets of the subjects for the same Academic Term are **Done**,
-  and their daily tests and assignments have learning objectives chosen
-  (`09-choose-objectives` of the score sheet).
+- **Data:** The score sheets of the subjects for the same Academic Term have the columns
+  of their daily tests and assignments locked, and those tests and assignments have
+  learning objectives chosen (`09-choose-objectives` of the score sheet).
 - **Config:** An active `policy.template` for this model grants
   `refill_learning_objective_ok` for state `draft` to the actor's group.
 - **Access:** User is in group `User`.

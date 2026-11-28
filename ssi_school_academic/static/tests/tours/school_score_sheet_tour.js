@@ -439,4 +439,74 @@ odoo.define("ssi_school_academic.school_score_sheet_tour", function (require) {
             ]
         )
     );
+
+    // IK: docs/school_score_sheet/10-lock-column.md
+    tour.register(
+        "ssi_school_academic_school_score_sheet_lock_column",
+        {test: true, url: "/web"},
+        [].concat(
+            // Flow 1 and 2 -- Open the Score Sheets menu, open the record.
+            openSheetsList(),
+            openRecord("TOUR SSS Subject LOCKCOL"),
+            [
+                // Flow 3 -- Open the Columns tab.
+                {
+                    content: "Open the Columns tab",
+                    trigger: ".o_notebook .nav-link:contains(Columns)",
+                },
+
+                // Flow 4 -- Click the Lock Column button on the row.
+                {
+                    content: "Click the Lock Column button of the first column",
+                    trigger:
+                        ".o_field_one2many[name='column_ids'] .o_data_row:contains(TOUR SSS Daily Test 1) button[name='action_lock_column']",
+                },
+
+                // Post-Condition -- the row offers Unlock Column instead.
+                {
+                    content: "The row offers Unlock Column",
+                    trigger:
+                        ".o_field_one2many[name='column_ids'] .o_data_row:contains(TOUR SSS Daily Test 1) button[name='action_unlock_column']",
+                    run: function () {
+                        // Assertion only; do not trigger the default click.
+                    },
+                },
+            ]
+        )
+    );
+
+    // IK: docs/school_score_sheet/11-unlock-column.md
+    tour.register(
+        "ssi_school_academic_school_score_sheet_unlock_column",
+        {test: true, url: "/web"},
+        [].concat(
+            // Flow 1 and 2 -- Open the Score Sheets menu, open the record.
+            openSheetsList(),
+            openRecord("TOUR SSS Subject UNLOCKCOL"),
+            [
+                // Flow 3 -- Open the Columns tab.
+                {
+                    content: "Open the Columns tab",
+                    trigger: ".o_notebook .nav-link:contains(Columns)",
+                },
+
+                // Flow 4 -- Click the Unlock Column button on the row.
+                {
+                    content: "Click the Unlock Column button of the first column",
+                    trigger:
+                        ".o_field_one2many[name='column_ids'] .o_data_row:contains(TOUR SSS Daily Test 1) button[name='action_unlock_column']",
+                },
+
+                // Post-Condition -- the row offers Lock Column instead.
+                {
+                    content: "The row offers Lock Column",
+                    trigger:
+                        ".o_field_one2many[name='column_ids'] .o_data_row:contains(TOUR SSS Daily Test 1) button[name='action_lock_column']",
+                    run: function () {
+                        // Assertion only; do not trigger the default click.
+                    },
+                },
+            ]
+        )
+    );
 });

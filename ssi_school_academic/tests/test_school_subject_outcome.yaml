@@ -534,6 +534,19 @@ scenarios:
                     - 0
                     - - "REC: tp_3.id"
 
+      - step: "Find the columns of the score sheet"
+        action: "search"
+        model: "school_score_sheet_component"
+        domain:
+          - ["sheet_id", "=", "REC: sheet.id"]
+        save_as: "sheet_columns"
+
+      - step: "Lock every column of the score sheet"
+        action: "call"
+        target: "sheet_columns"
+        method: "action_lock_column"
+        as_user: "base.user_admin"
+
       - step: "Confirm the score sheet"
         action: "call"
         target: "sheet"
@@ -674,6 +687,19 @@ scenarios:
                   - - 6
                     - 0
                     - - "REC: tp_1.id"
+
+      - step: "Find the columns of the score sheet"
+        action: "search"
+        model: "school_score_sheet_component"
+        domain:
+          - ["sheet_id", "=", "REC: sheet.id"]
+        save_as: "sheet_columns"
+
+      - step: "Lock every column of the score sheet"
+        action: "call"
+        target: "sheet_columns"
+        method: "action_lock_column"
+        as_user: "base.user_admin"
 
       - step: "Confirm the score sheet"
         action: "call"

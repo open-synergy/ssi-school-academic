@@ -23,7 +23,7 @@ from odoo.tests import tagged
 
 LINE_MODEL = (
     "odoo.addons.ssi_school_academic.models.school_report_card_line."
-    "SchoolReportCardLine._get_component_scores"
+    "SchoolReportCardLine._get_printed_component_scores"
 )
 
 
@@ -542,3 +542,56 @@ class TestSchoolReportCardPrint(
         row = data["groups"][0]["rows"][0]
         self.assertEqual(row["scores"], ["0", "-"])
         self.assertEqual(row["final"], "87")
+
+    def test_print_uses_copied_scores(self):
+        """Check the print reads the copied scores (P1, L-01).
+
+        The scores are copied to the report card line when they are
+        computed. The print reads the copy, so cancelling the score
+        sheet afterwards does not change the printed scores.
+        """
+        env = self.env
+        partner = env["res.partner"].create({"name": "PRT Teacher Home"})
+        employee = env["hr.employee"].create(
+            {
+                "name": "PRT Teacher Employee",
+                "company_id": env.ref("base.main_company").id,
+                "address_home_id": partner.id,
+            }
+        )
+        teacher = env["school_teacher"].create(
+            {
+                "name": "PRT Teacher",
+                "code": "PRTTC%d" % self.count,
+                "employee_id": employee.id,
+            }
+        )
+        sheet = env["school_score_sheet"].create(
+            {
+                "academic_term_id": self.enrollment.academic_term_id.id,
+                "grade_class_id": self.enrollment.grade_class_id.id,
+                "subject_id": self.subject.id,
+                "teacher_id": teacher.id,
+                "date": "2026-08-10",
+                "user_id": env.ref("base.user_admin").id,
+                "line_ids": [
+                    (
+                        0,
+                        0,
+                        {
+                            "enrollment_id": self.enrollment.id,
+                            "component_id": self.comp_1.id,
+                            "score": 90.0,
+                        },
+                    )
+                ],
+            }
+        )
+        sheet.column_ids.with_context(bypass_policy_check=True).action_lock_column()
+        card = self._create_card(self.mid_type)
+        card._compute_scores()
+        line = card.line_ids.filtered(lambda r: r.subject_id == self.subject)
+        self.assertEqual(line.score_ids.mapped("score"), [90.0])
+        sheet.write({"state": "cancel"})
+        data = card.get_report_card_print_data()
+        self.assertEqual(data["groups"][0]["rows"][0]["scores"][:2], ["90", "-"])

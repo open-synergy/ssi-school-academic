@@ -11,9 +11,10 @@
 
 - **Record:** Status is **Done**. The report card of a finished enrollment can still be
   printed.
-- **Data:** The lines of the report card hold their final scores. The **Phase** of the
-  grade, the **NUPTK** of the homeroom teacher, and the address of the school are
-  filled, otherwise their places on the print stay empty.
+- **Data:** The lines of the report card hold their final scores and the copy of the
+  component scores made by `03-compute-scores`. The **Phase** of the grade, the
+  **NUPTK** of the homeroom teacher, and the address of the school are filled, otherwise
+  their places on the print stay empty.
 - **Config:** The **Report Card Type** lists the score components to show as columns, up
   to four. A fifth component and the ones after it are not printed.
 - **Access:** User is in group `Viewer` of the report card.
@@ -35,4 +36,6 @@
   a **Final** report card shows only the final score and the competency achievement.
 - The Co-Curricular, Extracurricular, Homeroom Teacher Note and Parent Response blocks
   are printed only when they are filled. The Absences block is always printed.
+- The component scores are the ones copied when the scores were computed, so the print
+  does not change when a score sheet is unlocked, changed or cancelled afterwards.
 - The report card itself is unchanged.

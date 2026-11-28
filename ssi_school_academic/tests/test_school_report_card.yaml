@@ -321,6 +321,19 @@ scenarios:
                 component_id: "REC: component_pts.id"
                 score: 86.0
 
+      - step: "Find the columns of the score sheet"
+        action: "search"
+        model: "school_score_sheet_component"
+        domain:
+          - ["sheet_id", "=", "REC: sheet.id"]
+        save_as: "sheet_columns"
+
+      - step: "Lock every column of the score sheet"
+        action: "call"
+        target: "sheet_columns"
+        method: "action_lock_column"
+        as_user: "base.user_admin"
+
       - step: "Confirm the score sheet"
         action: "call"
         target: "sheet"
@@ -508,6 +521,19 @@ scenarios:
                 component_id: "REC: component_pts.id"
                 score: 91.0
 
+      - step: "Find the columns of the score sheet"
+        action: "search"
+        model: "school_score_sheet_component"
+        domain:
+          - ["sheet_id", "=", "REC: sheet.id"]
+        save_as: "sheet_columns"
+
+      - step: "Lock every column of the score sheet"
+        action: "call"
+        target: "sheet_columns"
+        method: "action_lock_column"
+        as_user: "base.user_admin"
+
       - step: "Confirm the score sheet"
         action: "call"
         target: "sheet"
@@ -633,6 +659,19 @@ scenarios:
               - enrollment_id: "REC: enrollment_1.id"
                 component_id: "REC: component_pts.id"
                 score: 91.1
+
+      - step: "Find the columns of the score sheet"
+        action: "search"
+        model: "school_score_sheet_component"
+        domain:
+          - ["sheet_id", "=", "REC: sheet.id"]
+        save_as: "sheet_columns"
+
+      - step: "Lock every column of the score sheet"
+        action: "call"
+        target: "sheet_columns"
+        method: "action_lock_column"
+        as_user: "base.user_admin"
 
       - step: "Confirm the score sheet"
         action: "call"
@@ -760,6 +799,19 @@ scenarios:
                 component_id: "REC: component_pts.id"
                 score: 91.2
 
+      - step: "Find the columns of the score sheet"
+        action: "search"
+        model: "school_score_sheet_component"
+        domain:
+          - ["sheet_id", "=", "REC: sheet.id"]
+        save_as: "sheet_columns"
+
+      - step: "Lock every column of the score sheet"
+        action: "call"
+        target: "sheet_columns"
+        method: "action_lock_column"
+        as_user: "base.user_admin"
+
       - step: "Confirm the score sheet"
         action: "call"
         target: "sheet"
@@ -856,6 +908,19 @@ scenarios:
               - enrollment_id: "REC: enrollment_1.id"
                 component_id: "REC: component_3.id"
                 score: 0.0
+
+      - step: "Find the columns of the score sheet"
+        action: "search"
+        model: "school_score_sheet_component"
+        domain:
+          - ["sheet_id", "=", "REC: sheet.id"]
+        save_as: "sheet_columns"
+
+      - step: "Lock every column of the score sheet"
+        action: "call"
+        target: "sheet_columns"
+        method: "action_lock_column"
+        as_user: "base.user_admin"
 
       - step: "Confirm the score sheet"
         action: "call"
@@ -961,6 +1026,19 @@ scenarios:
               - enrollment_id: "REC: enrollment_1.id"
                 component_id: "REC: component_3.id"
 
+      - step: "Find the columns of the score sheet"
+        action: "search"
+        model: "school_score_sheet_component"
+        domain:
+          - ["sheet_id", "=", "REC: sheet.id"]
+        save_as: "sheet_columns"
+
+      - step: "Lock every column of the score sheet"
+        action: "call"
+        target: "sheet_columns"
+        method: "action_lock_column"
+        as_user: "base.user_admin"
+
       - step: "Confirm the score sheet"
         action: "call"
         target: "sheet"
@@ -1021,7 +1099,7 @@ scenarios:
             type: "value"
             expected: 70.0
 
-  - name: "School Report Card - A score sheet that is not done is not counted"
+  - name: "School Report Card - A score sheet without locked columns is not counted"
     steps:
       - step: "Create the score sheet of the subject"
         action: "create"
@@ -1129,6 +1207,19 @@ scenarios:
               - enrollment_id: "REC: enrollment_1.id"
                 component_id: "REC: component_pts.id"
                 score: 86.0
+
+      - step: "Find the columns of the score sheet"
+        action: "search"
+        model: "school_score_sheet_component"
+        domain:
+          - ["sheet_id", "=", "REC: sheet.id"]
+        save_as: "sheet_columns"
+
+      - step: "Lock every column of the score sheet"
+        action: "call"
+        target: "sheet_columns"
+        method: "action_lock_column"
+        as_user: "base.user_admin"
 
       - step: "Confirm the score sheet"
         action: "call"
@@ -1537,6 +1628,19 @@ scenarios:
                 component_id: "REC: component_pts.id"
                 score: 86.0
 
+      - step: "Find the columns of the score sheet"
+        action: "search"
+        model: "school_score_sheet_component"
+        domain:
+          - ["sheet_id", "=", "REC: sheet.id"]
+        save_as: "sheet_columns"
+
+      - step: "Lock every column of the score sheet"
+        action: "call"
+        target: "sheet_columns"
+        method: "action_lock_column"
+        as_user: "base.user_admin"
+
       - step: "Confirm the score sheet"
         action: "call"
         target: "sheet"
@@ -1651,6 +1755,19 @@ scenarios:
               - enrollment_id: "REC: enrollment_1.id"
                 component_id: "REC: component_1.id"
                 score: 0.0
+
+      - step: "Find the columns of the score sheet"
+        action: "search"
+        model: "school_score_sheet_component"
+        domain:
+          - ["sheet_id", "=", "REC: sheet.id"]
+        save_as: "sheet_columns"
+
+      - step: "Lock every column of the score sheet"
+        action: "call"
+        target: "sheet_columns"
+        method: "action_lock_column"
+        as_user: "base.user_admin"
 
       - step: "Confirm the score sheet"
         action: "call"

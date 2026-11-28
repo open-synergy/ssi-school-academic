@@ -40,7 +40,8 @@ class TestUiSchoolScoreSheet(HttpSavepointCase):
         """Create the master data and score sheets required by the tours.
 
         Every scenario owns a dedicated Subject (suffixed CREATE,
-        GENERATE, ENTER, CONFIRM, APPROVE, REJECT, CANCEL, RESTART). The
+        GENERATE, ENTER, CONFIRM, APPROVE, REJECT, CANCEL, RESTART,
+        LOCKCOL, UNLOCKCOL). The
         unique key of a sheet is its term, class and subject, so each
         scenario can move its own sheet without affecting another one,
         and no suffix is a prefix of another, so the list always shows
@@ -162,9 +163,10 @@ class TestUiSchoolScoreSheet(HttpSavepointCase):
             }
         )
 
-        # ── Confirm tour: a Draft sheet with lines ──
+        # ── Confirm tour: a Draft sheet with lines, every column locked ──
         confirm = cls._create_sheet("CONFIRM")
         cls._add_lines(confirm)
+        cls._lock_columns(confirm)
 
         # ── Approve tour: a sheet Waiting for Approval ──
         approve = cls._create_sheet("APPROVE")
@@ -184,6 +186,15 @@ class TestUiSchoolScoreSheet(HttpSavepointCase):
         restart = cls._create_sheet("RESTART")
         cls._add_lines(restart)
         cls._confirm(restart)
+
+        # ── Lock Column tour: a Draft sheet with lines, nothing locked ──
+        lock = cls._create_sheet("LOCKCOL")
+        cls._add_lines(lock)
+
+        # ── Unlock Column tour: a Draft sheet whose first column is locked ──
+        unlock = cls._create_sheet("UNLOCKCOL")
+        cls._add_lines(unlock)
+        cls._lock_columns(unlock, cls.components[0])
 
     @classmethod
     def _create_open_enrollment(cls, school, year, index, student_name):
@@ -269,12 +280,31 @@ class TestUiSchoolScoreSheet(HttpSavepointCase):
         sheet.invalidate_cache()
 
     @classmethod
+    def _lock_columns(cls, sheet, component=None):
+        """Lock the columns of a sheet through the lock action.
+
+        :param sheet: the ``school_score_sheet`` record to lock
+        :param component: the only ``school_score_component`` whose
+            column is locked; every column when it is empty
+        :return: nothing
+        """
+        sheet = sheet.with_user(cls.admin)
+        columns = sheet.column_ids
+        if component:
+            columns = columns.filtered(lambda r: r.component_id == component)
+        columns.action_lock_column()
+        sheet.invalidate_cache()
+
+    @classmethod
     def _confirm(cls, sheet):
         """Move a sheet to Waiting for Approval through its action.
+
+        Every column is locked first, as the confirm guard asks.
 
         :param sheet: the ``school_score_sheet`` record to confirm
         :return: nothing
         """
+        cls._lock_columns(sheet)
         sheet = sheet.with_user(cls.admin)
         sheet.action_confirm()
         sheet.invalidate_cache()
@@ -393,6 +423,28 @@ class TestUiSchoolScoreSheet(HttpSavepointCase):
         self.start_tour(
             "/web",
             "ssi_school_academic_school_score_sheet_restart_approval",
+            login="admin",
+        )
+
+    def test_lock_column(self):
+        """Run the lock column tour for ``school_score_sheet``.
+
+        IK: docs/school_score_sheet/10-lock-column.md
+        """
+        self.start_tour(
+            "/web",
+            "ssi_school_academic_school_score_sheet_lock_column",
+            login="admin",
+        )
+
+    def test_unlock_column(self):
+        """Run the unlock column tour for ``school_score_sheet``.
+
+        IK: docs/school_score_sheet/11-unlock-column.md
+        """
+        self.start_tour(
+            "/web",
+            "ssi_school_academic_school_score_sheet_unlock_column",
             login="admin",
         )
 

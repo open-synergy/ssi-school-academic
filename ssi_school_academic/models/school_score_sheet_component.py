@@ -3,15 +3,19 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from odoo import _, api, fields, models
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError, ValidationError
 
 
 class SchoolScoreSheetComponent(models.Model):
-    """Represents one score component of a score sheet.
+    """Represents one score column of a score sheet.
 
-    A record links a score sheet to one daily test or assignment
-    component, and holds the learning objectives (TP) that component
-    measures on that sheet. The objectives must belong to the learning
+    A record links a score sheet to one score component, of any
+    category, that has lines on the sheet. It holds the lock of the
+    column, and for a daily test or an assignment also the learning
+    objectives (TP) the column measures. A teacher locks a column when
+    its scores are final; a locked column cannot be changed until it is
+    unlocked, and the report card reads it without waiting for the
+    sheet to be done. The objectives must belong to the learning
     outcome of the subject, the grade and the academic term of the
     sheet.
     """
@@ -32,8 +36,16 @@ class SchoolScoreSheetComponent(models.Model):
         comodel_name="school_score_component",
         required=True,
         ondelete="restrict",
-        domain="[('category', 'in', ['daily_test', 'assignment'])]",
-        help="Daily test or assignment component of the sheet.",
+        help="Score component of the sheet, for example Daily Test 1.",
+    )
+    is_locked = fields.Boolean(
+        string="Locked",
+        default=False,
+        readonly=True,
+        help="Set when the teacher locked the column. The scores of a "
+        "locked column cannot be changed, and the report card reads "
+        "them. It is changed only by the Lock Column and Unlock Column "
+        "buttons, which follow the policy of the score sheet.",
     )
     objective_ids = fields.Many2many(
         string="Learning Objectives",
@@ -45,6 +57,130 @@ class SchoolScoreSheetComponent(models.Model):
         "objectives of the subject, the grade and the academic term of "
         "the score sheet can be chosen.",
     )
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        """Create columns, refusing a lock that bypasses the buttons.
+
+        :param list vals_list: values of the columns to create.
+        :return: the new columns.
+        :rtype: recordset of ``school_score_sheet_component``
+        :raises UserError: when a value sets ``is_locked`` outside the
+            lock context.
+        """
+        for vals in vals_list:
+            if vals.get("is_locked"):
+                self._check_lock_context()
+        return super().create(vals_list)
+
+    def write(self, vals):
+        """Write columns, refusing a lock that bypasses the buttons.
+
+        :param dict vals: values to write.
+        :return: True
+        :rtype: bool
+        :raises UserError: when the values set ``is_locked`` outside
+            the lock context.
+        """
+        if "is_locked" in vals:
+            self._check_lock_context()
+        return super().write(vals)
+
+    @api.model
+    def _check_lock_context(self):
+        """Raise unless the call comes from the lock buttons.
+
+        The lock is written only with the ``score_column_lock`` context,
+        which only ``_set_column_lock`` sets, so a direct RPC write
+        cannot unlock a column.
+
+        :raises UserError: when the context key is missing.
+        """
+        if self.env.context.get("score_column_lock"):
+            return
+        error_message = _(
+            """
+Context: Lock score column
+Database ID: -
+Problem: The lock of a column can only be changed with the buttons.
+Solution: Use the Lock Column or Unlock Column button of the score sheet
+"""
+        )
+        raise UserError(error_message)
+
+    def action_lock_column(self):
+        """Lock the columns, so their scores cannot change.
+
+        The button is shown according to the ``lock_column_ok`` policy
+        of the score sheet, and the policy is checked again here.
+
+        :return: nothing
+        """
+        self._set_column_lock(True)
+
+    def action_unlock_column(self):
+        """Unlock the columns, so their scores can change again.
+
+        The button is shown according to the ``unlock_column_ok``
+        policy of the score sheet, and the policy is checked again here.
+
+        :return: nothing
+        """
+        self._set_column_lock(False)
+
+    def _set_column_lock(self, locked):
+        """Check the policy of each sheet, then write the lock.
+
+        :param bool locked: True to lock, False to unlock.
+        :raises UserError: when a sheet is not in draft state, or its
+            policy does not allow the action to the user.
+        :return: nothing
+        """
+        policy_field = "lock_column_ok" if locked else "unlock_column_ok"
+        for record in self:
+            record._check_column_lock_allowed(policy_field)
+        self.with_context(score_column_lock=True).write({"is_locked": locked})
+
+    def _check_column_lock_allowed(self, policy_field):
+        """Raise when the column may not be locked or unlocked now.
+
+        :param str policy_field: ``lock_column_ok`` or
+            ``unlock_column_ok``, the policy of the score sheet.
+        :raises UserError: when the sheet is not in draft state, or the
+            policy is not met and the policy check is not bypassed.
+        """
+        self.ensure_one()
+        sheet = self.sheet_id
+        if sheet.state != "draft":
+            error_message = (
+                _(
+                    """
+Document Type: %s
+Context: Lock score column
+Database ID: %s
+Problem: A column can only be locked or unlocked in draft state
+Solution: Restart the document before changing the lock of the column
+"""
+                )
+                % (sheet._description, sheet.id)
+            )
+            raise UserError(error_message)
+        if self.env.context.get("bypass_policy_check", False):
+            return
+        if not sheet[policy_field]:
+            error_message = (
+                _(
+                    """
+Document Type: %s
+Context: Lock score column
+Database ID: %s
+Problem: Document is not allowed to change the lock of a column
+Solution: Check the %s policy prerequisite
+"""
+                )
+                % (sheet._description, sheet.id, policy_field)
+            )
+            raise UserError(error_message)
 
     def name_get(self):
         """Return the display name of each record.

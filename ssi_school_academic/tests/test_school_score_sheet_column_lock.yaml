@@ -1,0 +1,1040 @@
+# T-01 (odoo-development-unit-test/test-traps.md): the `setup:` block replays
+# before every scenario inside one un-rolled-back transaction, so every
+# unique-constrained code or login it creates is generated per replay from a
+# count of the existing records. Every scenario builds its own score sheet,
+# because aliases do not survive from a scenario to the next.
+options:
+  auto_refresh: true
+
+setup:
+  steps:
+    - step: "Create the grade type"
+      action: "create"
+      model: "school_grade_type"
+      save_as: "grade_type"
+      values:
+        name: "SCL Grade Type"
+        code: "EVAL: 'SCLGT%d' % env['school_grade_type'].search_count([])"
+
+    - step: "Create the school"
+      action: "create"
+      model: "school"
+      save_as: "school"
+      values:
+        name: "SCL School"
+        code: "EVAL: 'SCLSC%d' % env['school'].search_count([])"
+        grade_type_id: "REC: grade_type.id"
+
+    - step: "Create the academic year"
+      action: "create"
+      model: "school_academic_year"
+      save_as: "academic_year"
+      values:
+        name: "SCL Academic Year"
+        code: "EVAL: 'SCLAY%d' % env['school_academic_year'].search_count([])"
+        date_start: 2026-07-01
+        date_end: 2027-06-30
+
+    - step: "Create the academic term open for enrollment"
+      action: "create"
+      model: "school_academic_term"
+      save_as: "academic_term"
+      values:
+        name: "SCL Term"
+        code: "EVAL: 'SCLTM%d' % env['school_academic_term'].search_count([])"
+        date_start: 2026-07-01
+        date_end: 2026-12-31
+        year_id: "REC: academic_year.id"
+        enrollment_state: "open"
+
+    - step: "Create the grade"
+      action: "create"
+      model: "school_grade"
+      save_as: "grade"
+      values:
+        name: "SCL Grade"
+        code: "EVAL: 'SCLGR%d' % env['school_grade'].search_count([])"
+        type_id: "REC: grade_type.id"
+
+    - step: "Create the grade class"
+      action: "create"
+      model: "school_grade_class"
+      save_as: "grade_class"
+      values:
+        name: "SCL Class"
+        code: "EVAL: 'SCLCL%d' % env['school_grade_class'].search_count([])"
+        school_id: "REC: school.id"
+        grade_id: "REC: grade.id"
+
+    - step: "Create the subject taught in the grade, with a minimum score of 70"
+      action: "create"
+      model: "school_subject"
+      save_as: "subject"
+      values:
+        name: "SCL Subject"
+        code: "EVAL: 'SCLSJ%d' % env['school_subject'].search_count([])"
+        grade_ids:
+          - - 6
+            - 0
+            - - "REC: grade.id"
+        minimum_score_ids:
+          - - 0
+            - 0
+            - grade_id: "REC: grade.id"
+              minimum_score: 70.0
+
+    - step: "Create a subject that is not taught in the grade"
+      action: "create"
+      model: "school_subject"
+      save_as: "other_subject"
+      values:
+        name: "SCL Other Subject"
+        code: "EVAL: 'SCLOS%d' % env['school_subject'].search_count([])"
+
+    - step: "Create the predicate table of the grade"
+      action: "create"
+      model: "school_score_predicate"
+      save_as: "predicate"
+      values:
+        name: "SCL Predicate"
+        code: "EVAL: 'SCLPR%d' % env['school_score_predicate'].search_count([])"
+        grade_ids:
+          - - 6
+            - 0
+            - - "REC: grade.id"
+        line_ids:
+          - - 0
+            - 0
+            - name: "A"
+              min_score: 88.0
+          - - 0
+            - 0
+            - name: "B"
+              min_score: 80.0
+          - - 0
+            - 0
+            - name: "C"
+              min_score: 0.0
+
+    - step: "Create the home address partner of the teacher"
+      action: "create"
+      model: "res.partner"
+      save_as: "teacher_partner"
+      values:
+        name: "SCL Teacher Home Address"
+
+    - step: "Create the employee of the teacher"
+      action: "create"
+      model: "hr.employee"
+      save_as: "employee"
+      values:
+        name: "SCL Teacher Employee"
+        company_id: "base.main_company"
+        address_home_id: "REC: teacher_partner.id"
+
+    - step: "Create the teacher"
+      action: "create"
+      model: "school_teacher"
+      save_as: "teacher"
+      values:
+        name: "SCL Teacher"
+        code: "EVAL: 'SCLTC%d' % env['school_teacher'].search_count([])"
+        employee_id: "REC: employee.id"
+
+    - step: "Create the score component UH 1"
+      action: "create"
+      model: "school_score_component"
+      save_as: "component_1"
+      values:
+        name: "SCL UH 1"
+        code: "EVAL: 'SCLC%d' % env['school_score_component'].search_count([])"
+        category: "daily_test"
+        sequence: 10
+
+    - step: "Create the score component UH 2"
+      action: "create"
+      model: "school_score_component"
+      save_as: "component_2"
+      values:
+        name: "SCL UH 2"
+        code: "EVAL: 'SCLC%d' % env['school_score_component'].search_count([])"
+        category: "daily_test"
+        sequence: 20
+
+    - step: "Create the score component UH 3"
+      action: "create"
+      model: "school_score_component"
+      save_as: "component_3"
+      values:
+        name: "SCL UH 3"
+        code: "EVAL: 'SCLC%d' % env['school_score_component'].search_count([])"
+        category: "daily_test"
+        sequence: 30
+
+    - step: "Create the score component PTS"
+      action: "create"
+      model: "school_score_component"
+      save_as: "component_pts"
+      values:
+        name: "SCL PTS"
+        code: "EVAL: 'SCLC%d' % env['school_score_component'].search_count([])"
+        category: "mid_term_exam"
+        sequence: 40
+
+    - step: "Create the mid-term type, 70% average of UH 1 and UH 2, 30% PTS"
+      action: "create"
+      model: "school_report_card_type"
+      save_as: "mid_type"
+      values:
+        name: "SCL Mid-Term"
+        code: "EVAL: 'SCLRT%d' % env['school_report_card_type'].search_count([])"
+        term_type: "mid_term"
+        average_weight: 70.0
+        average_component_ids:
+          - - 6
+            - 0
+            - - "REC: component_1.id"
+              - "REC: component_2.id"
+        weight_ids:
+          - - 0
+            - 0
+            - component_id: "REC: component_pts.id"
+              weight: 30.0
+
+    - step: "Create the contact of the first student"
+      action: "create"
+      model: "res.partner"
+      save_as: "contact_1"
+      values:
+        name: "SCL Student Contact 1"
+
+    - step: "Create the first student"
+      action: "create"
+      model: "school_student"
+      save_as: "student_1"
+      values:
+        name: "SCL Student 1"
+        code: "EVAL: 'SCLST%d' % env['school_student'].search_count([])"
+        contact_id: "REC: contact_1.id"
+        school_id: "REC: school.id"
+
+    - step: "Create the enrollment of the first student"
+      action: "create"
+      model: "school_enrollment"
+      save_as: "enrollment_1"
+      values:
+        academic_year_id: "REC: academic_year.id"
+        academic_term_id: "REC: academic_term.id"
+        school_id: "REC: school.id"
+        grade_id: "REC: grade.id"
+        grade_class_id: "REC: grade_class.id"
+        student_id: "REC: student_1.id"
+        currency_id: "EVAL: env.company.currency_id.id"
+
+    - step: "Confirm the first enrollment"
+      action: "call"
+      target: "enrollment_1"
+      method: "action_confirm"
+      as_user: "base.user_admin"
+      asserts:
+        state:
+          type: "value"
+          expected: "confirm"
+
+    - step: "Approve the first enrollment, which opens it"
+      action: "call"
+      target: "enrollment_1"
+      method: "action_approve_approval"
+      as_user: "base.user_admin"
+      asserts:
+        state:
+          type: "value"
+          expected: "open"
+
+    - step: "Create the contact of the second student"
+      action: "create"
+      model: "res.partner"
+      save_as: "contact_2"
+      values:
+        name: "SCL Student Contact 2"
+
+    - step: "Create the second student"
+      action: "create"
+      model: "school_student"
+      save_as: "student_2"
+      values:
+        name: "SCL Student 2"
+        code: "EVAL: 'SCLST%d' % env['school_student'].search_count([])"
+        contact_id: "REC: contact_2.id"
+        school_id: "REC: school.id"
+
+    - step: "Create the enrollment of the second student, left in draft"
+      action: "create"
+      model: "school_enrollment"
+      save_as: "enrollment_2"
+      values:
+        academic_year_id: "REC: academic_year.id"
+        academic_term_id: "REC: academic_term.id"
+        school_id: "REC: school.id"
+        grade_id: "REC: grade.id"
+        grade_class_id: "REC: grade_class.id"
+        student_id: "REC: student_2.id"
+        currency_id: "EVAL: env.company.currency_id.id"
+
+    - step: "Assert the second enrollment is draft"
+      action: "assert"
+      target: "enrollment_2"
+      asserts:
+        state:
+          type: "value"
+          expected: "draft"
+
+    - step: "Create the score component PAS"
+      action: "create"
+      model: "school_score_component"
+      save_as: "component_pas"
+      values:
+        name: "SCL PAS"
+        code: "EVAL: 'SCLC%d' % env['school_score_component'].search_count([])"
+        category: "final_exam"
+        sequence: 50
+
+    - step: "Create the final type, 60% average of UH 1 and UH 2, 40% PAS"
+      action: "create"
+      model: "school_report_card_type"
+      save_as: "final_type"
+      values:
+        name: "SCL Final"
+        code: "EVAL: 'SCLRF%d' % env['school_report_card_type'].search_count([])"
+        term_type: "final"
+        average_weight: 60.0
+        average_component_ids:
+          - - 6
+            - 0
+            - - "REC: component_1.id"
+              - "REC: component_2.id"
+        weight_ids:
+          - - 0
+            - 0
+            - component_id: "REC: component_pas.id"
+              weight: 40.0
+
+    - step: "Create a teacher user who is not a validator"
+      action: "create"
+      model: "res.users"
+      save_as: "plain_user"
+      values:
+        name: "SCL Plain User"
+        login: "EVAL: 'scl_plain_%d' % env['res.users'].search_count([])"
+        groups_id:
+          [
+            [
+              6,
+              0,
+              [
+                "REF: base.group_user",
+                "REF: ssi_school_academic.school_score_sheet_user_group",
+              ],
+            ],
+          ]
+
+scenarios:
+  - name: "School Score Sheet Column Lock - Lock and unlock a column by policy"
+    steps:
+      - step: "Create the score sheet with a line per component"
+        action: "create"
+        model: "school_score_sheet"
+        save_as: "sheet"
+        values:
+          academic_term_id: "REC: academic_term.id"
+          grade_class_id: "REC: grade_class.id"
+          subject_id: "REC: subject.id"
+          teacher_id: "REC: teacher.id"
+          date: 2026-08-10
+          user_id: "REC: plain_user.id"
+          line_ids:
+            - - 0
+              - 0
+              - enrollment_id: "REC: enrollment_1.id"
+                component_id: "REC: component_1.id"
+                score: 90.0
+            - - 0
+              - 0
+              - enrollment_id: "REC: enrollment_1.id"
+                component_id: "REC: component_2.id"
+                score: 80.0
+            - - 0
+              - 0
+              - enrollment_id: "REC: enrollment_1.id"
+                component_id: "REC: component_pts.id"
+                score: 75.0
+            - - 0
+              - 0
+              - enrollment_id: "REC: enrollment_1.id"
+                component_id: "REC: component_pas.id"
+
+      - step: "Find every column of the score sheet"
+        action: "search"
+        model: "school_score_sheet_component"
+        domain:
+          - ["sheet_id", "=", "REC: sheet.id"]
+        save_as: "columns"
+        expect_count: 4
+
+      - step: "Find the column of the mid-term exam"
+        action: "search"
+        model: "school_score_sheet_component"
+        domain:
+          - ["sheet_id", "=", "REC: sheet.id"]
+          - ["component_id", "=", "REC: component_pts.id"]
+        save_as: "column_pts"
+        expect_count: 1
+
+      - step: "The column starts unlocked"
+        action: "assert"
+        target: "column_pts"
+        asserts:
+          is_locked:
+            type: "value"
+            expected: false
+
+      - step: "Lock the column as a user of the sheet"
+        action: "call"
+        target: "column_pts"
+        method: "action_lock_column"
+        as_user: "REC: plain_user.id"
+
+      - step: "The column is locked"
+        action: "assert"
+        target: "column_pts"
+        asserts:
+          is_locked:
+            type: "value"
+            expected: true
+
+      - step: "Writing the lock directly is rejected"
+        action: "write"
+        target: "column_pts"
+        values:
+          is_locked: false
+        expect_error:
+          type: "UserError"
+          message_contains: "can only be changed with the buttons"
+
+      - step: "A user who is not a validator cannot unlock the column"
+        action: "call"
+        target: "column_pts"
+        method: "action_unlock_column"
+        as_user: "REC: plain_user.id"
+        expect_error:
+          type: "UserError"
+          message_contains: "not allowed to change the lock of a column"
+
+      - step: "The policy of the sheet is read again for the validator"
+        action: "assert"
+        target: "sheet"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "draft"
+
+      - step: "The validator unlocks the column"
+        action: "call"
+        target: "column_pts"
+        method: "action_unlock_column"
+        as_user: "base.user_admin"
+
+      - step: "The column is unlocked again"
+        action: "assert"
+        target: "column_pts"
+        asserts:
+          is_locked:
+            type: "value"
+            expected: false
+
+  - name: "School Score Sheet Column Lock - A locked column cannot change"
+    steps:
+      - step: "Create the score sheet with a line per component"
+        action: "create"
+        model: "school_score_sheet"
+        save_as: "sheet"
+        values:
+          academic_term_id: "REC: academic_term.id"
+          grade_class_id: "REC: grade_class.id"
+          subject_id: "REC: subject.id"
+          teacher_id: "REC: teacher.id"
+          date: 2026-08-10
+          user_id: "REF: base.user_admin"
+          line_ids:
+            - - 0
+              - 0
+              - enrollment_id: "REC: enrollment_1.id"
+                component_id: "REC: component_1.id"
+                score: 90.0
+            - - 0
+              - 0
+              - enrollment_id: "REC: enrollment_1.id"
+                component_id: "REC: component_2.id"
+                score: 80.0
+            - - 0
+              - 0
+              - enrollment_id: "REC: enrollment_1.id"
+                component_id: "REC: component_pts.id"
+                score: 75.0
+            - - 0
+              - 0
+              - enrollment_id: "REC: enrollment_1.id"
+                component_id: "REC: component_pas.id"
+
+      - step: "Find the column of the first daily test"
+        action: "search"
+        model: "school_score_sheet_component"
+        domain:
+          - ["sheet_id", "=", "REC: sheet.id"]
+          - ["component_id", "=", "REC: component_1.id"]
+        save_as: "column_1"
+        expect_count: 1
+
+      - step: "Find the score line of the first daily test"
+        action: "search"
+        model: "school_score_sheet_line"
+        domain:
+          - ["sheet_id", "=", "REC: sheet.id"]
+          - ["component_id", "=", "REC: component_1.id"]
+        save_as: "line_1"
+        expect_count: 1
+
+      - step: "Lock the first daily test"
+        action: "call"
+        target: "column_1"
+        method: "action_lock_column"
+        as_user: "base.user_admin"
+
+      - step: "The line follows the lock of its column"
+        action: "assert"
+        target: "line_1"
+        asserts:
+          is_locked:
+            type: "value"
+            expected: true
+
+      - step: "Changing a score of the locked column is rejected"
+        action: "write"
+        target: "line_1"
+        values:
+          score: 95.0
+        expect_error:
+          type: "UserError"
+          message_contains: "is locked, so its scores cannot be changed"
+
+      - step: "Adding a line to the locked column is rejected"
+        action: "create"
+        model: "school_score_sheet_line"
+        values:
+          sheet_id: "REC: sheet.id"
+          enrollment_id: "REC: enrollment_1.id"
+          component_id: "REC: component_1.id"
+        expect_error:
+          type: "UserError"
+          message_contains: "no line can be added to it"
+
+      - step: "Deleting a line of the locked column is rejected"
+        action: "unlink"
+        target: "line_1"
+        expect_error:
+          type: "UserError"
+          message_contains: "is locked, so its scores cannot be changed"
+
+      - step: "Generating the lines while a column is locked is rejected"
+        action: "call"
+        target: "sheet"
+        method: "action_generate_lines"
+        as_user: "base.user_admin"
+        expect_error:
+          type: "UserError"
+          message_contains: "while a column is locked"
+
+      - step: "Unlock the first daily test"
+        action: "call"
+        target: "column_1"
+        method: "action_unlock_column"
+        as_user: "base.user_admin"
+
+      - step: "The score can be changed again after the unlock"
+        action: "write"
+        target: "line_1"
+        values:
+          score: 95.0
+
+      - step: "The new score is kept"
+        action: "assert"
+        target: "line_1"
+        asserts:
+          score:
+            type: "value"
+            expected: 95.0
+
+  - name: "School Score Sheet Column Lock - The report card reads the locked columns"
+    steps:
+      - step: "Create the score sheet with a line per component"
+        action: "create"
+        model: "school_score_sheet"
+        save_as: "sheet"
+        values:
+          academic_term_id: "REC: academic_term.id"
+          grade_class_id: "REC: grade_class.id"
+          subject_id: "REC: subject.id"
+          teacher_id: "REC: teacher.id"
+          date: 2026-08-10
+          user_id: "REF: base.user_admin"
+          line_ids:
+            - - 0
+              - 0
+              - enrollment_id: "REC: enrollment_1.id"
+                component_id: "REC: component_1.id"
+                score: 90.0
+            - - 0
+              - 0
+              - enrollment_id: "REC: enrollment_1.id"
+                component_id: "REC: component_2.id"
+                score: 80.0
+            - - 0
+              - 0
+              - enrollment_id: "REC: enrollment_1.id"
+                component_id: "REC: component_pts.id"
+                score: 75.0
+            - - 0
+              - 0
+              - enrollment_id: "REC: enrollment_1.id"
+                component_id: "REC: component_pas.id"
+
+      - step: "Find the columns of the daily tests and the mid-term exam"
+        action: "search"
+        model: "school_score_sheet_component"
+        domain:
+          - ["sheet_id", "=", "REC: sheet.id"]
+          - ["component_id", "!=", "REC: component_pas.id"]
+        save_as: "locked_columns"
+
+      - step: "Lock the columns except the final exam"
+        action: "call"
+        target: "locked_columns"
+        method: "action_lock_column"
+        as_user: "base.user_admin"
+
+      - step: "The sheet is still a draft"
+        action: "assert"
+        target: "sheet"
+        asserts:
+          state:
+            type: "value"
+            expected: "draft"
+
+      - step: "Create the report card"
+        action: "create"
+        model: "school_report_card"
+        save_as: "mid_card"
+        values:
+          enrollment_id: "REC: enrollment_1.id"
+          type_id: "REC: mid_type.id"
+          print_date: 2026-12-20
+          print_city: "Jakarta"
+          user_id: "REF: base.user_admin"
+
+      - step: "Generate the lines and compute the scores"
+        action: "call"
+        target: "mid_card"
+        method: "action_generate_lines"
+        as_user: "base.user_admin"
+        refresh: true
+
+      - step: "Find the line of the subject"
+        action: "search"
+        model: "school_report_card_line"
+        domain:
+          - ["report_card_id", "=", "REC: mid_card.id"]
+          - ["subject_id", "=", "REC: subject.id"]
+        save_as: "mid_line"
+        expect_count: 1
+
+      - step: "The mid-term score uses the locked columns"
+        action: "assert"
+        target: "mid_line"
+        asserts:
+          is_scored:
+            type: "value"
+            expected: true
+          final_score:
+            type: "value"
+            expected: 82.0
+
+      - step: "Create the report card"
+        action: "create"
+        model: "school_report_card"
+        save_as: "final_card"
+        values:
+          enrollment_id: "REC: enrollment_1.id"
+          type_id: "REC: final_type.id"
+          print_date: 2026-12-20
+          print_city: "Jakarta"
+          user_id: "REF: base.user_admin"
+
+      - step: "Generate the lines and compute the scores"
+        action: "call"
+        target: "final_card"
+        method: "action_generate_lines"
+        as_user: "base.user_admin"
+        refresh: true
+
+      - step: "Find the line of the subject"
+        action: "search"
+        model: "school_report_card_line"
+        domain:
+          - ["report_card_id", "=", "REC: final_card.id"]
+          - ["subject_id", "=", "REC: subject.id"]
+        save_as: "final_line"
+        expect_count: 1
+
+      - step: "The final score is computed without the final exam"
+        action: "assert"
+        target: "final_line"
+        asserts:
+          is_scored:
+            type: "value"
+            expected: true
+          final_score:
+            type: "value"
+            expected: 85.0
+
+      - step: "Cancel the score sheet"
+        action: "write"
+        target: "sheet"
+        values:
+          state: "cancel"
+
+      - step: "Compute the scores of the mid-term report card again"
+        action: "call"
+        target: "mid_card"
+        method: "action_compute_scores"
+        as_user: "base.user_admin"
+        refresh: true
+
+      - step: "A cancelled sheet is not read"
+        action: "assert"
+        target: "mid_line"
+        asserts:
+          is_scored:
+            type: "value"
+            expected: false
+
+  - name: "School Score Sheet Column Lock - Confirm needs every column locked"
+    steps:
+      - step: "Create the score sheet with a line per component"
+        action: "create"
+        model: "school_score_sheet"
+        save_as: "sheet"
+        values:
+          academic_term_id: "REC: academic_term.id"
+          grade_class_id: "REC: grade_class.id"
+          subject_id: "REC: subject.id"
+          teacher_id: "REC: teacher.id"
+          date: 2026-08-10
+          user_id: "REF: base.user_admin"
+          line_ids:
+            - - 0
+              - 0
+              - enrollment_id: "REC: enrollment_1.id"
+                component_id: "REC: component_1.id"
+                score: 90.0
+            - - 0
+              - 0
+              - enrollment_id: "REC: enrollment_1.id"
+                component_id: "REC: component_2.id"
+                score: 80.0
+            - - 0
+              - 0
+              - enrollment_id: "REC: enrollment_1.id"
+                component_id: "REC: component_pts.id"
+                score: 75.0
+            - - 0
+              - 0
+              - enrollment_id: "REC: enrollment_1.id"
+                component_id: "REC: component_pas.id"
+
+      - step: "Find the columns except the final exam"
+        action: "search"
+        model: "school_score_sheet_component"
+        domain:
+          - ["sheet_id", "=", "REC: sheet.id"]
+          - ["component_id", "!=", "REC: component_pas.id"]
+        save_as: "locked_columns"
+
+      - step: "Lock the columns except the final exam"
+        action: "call"
+        target: "locked_columns"
+        method: "action_lock_column"
+        as_user: "base.user_admin"
+
+      - step: "Confirming with a column that is not locked is rejected"
+        action: "call"
+        target: "sheet"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        expect_error:
+          type: "UserError"
+          message_contains: "columns are not locked yet"
+
+  - name:
+      "School Score Sheet Column Lock - Confirm and approve with every column locked"
+    steps:
+      - step: "Create the score sheet with a line per component"
+        action: "create"
+        model: "school_score_sheet"
+        save_as: "sheet"
+        values:
+          academic_term_id: "REC: academic_term.id"
+          grade_class_id: "REC: grade_class.id"
+          subject_id: "REC: subject.id"
+          teacher_id: "REC: teacher.id"
+          date: 2026-08-10
+          user_id: "REF: base.user_admin"
+          line_ids:
+            - - 0
+              - 0
+              - enrollment_id: "REC: enrollment_1.id"
+                component_id: "REC: component_1.id"
+                score: 90.0
+            - - 0
+              - 0
+              - enrollment_id: "REC: enrollment_1.id"
+                component_id: "REC: component_2.id"
+                score: 80.0
+            - - 0
+              - 0
+              - enrollment_id: "REC: enrollment_1.id"
+                component_id: "REC: component_pts.id"
+                score: 75.0
+            - - 0
+              - 0
+              - enrollment_id: "REC: enrollment_1.id"
+                component_id: "REC: component_pas.id"
+
+      - step: "Find the columns except the final exam"
+        action: "search"
+        model: "school_score_sheet_component"
+        domain:
+          - ["sheet_id", "=", "REC: sheet.id"]
+          - ["component_id", "!=", "REC: component_pas.id"]
+        save_as: "locked_columns"
+
+      - step: "Lock the columns except the final exam"
+        action: "call"
+        target: "locked_columns"
+        method: "action_lock_column"
+        as_user: "base.user_admin"
+
+      - step: "Find the column of the final exam"
+        action: "search"
+        model: "school_score_sheet_component"
+        domain:
+          - ["sheet_id", "=", "REC: sheet.id"]
+          - ["component_id", "=", "REC: component_pas.id"]
+        save_as: "pas_column"
+
+      - step: "Lock the final exam"
+        action: "call"
+        target: "pas_column"
+        method: "action_lock_column"
+        as_user: "base.user_admin"
+
+      - step: "Confirm the sheet"
+        action: "call"
+        target: "sheet"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve the sheet, which finishes it"
+        action: "call"
+        target: "sheet"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "done"
+
+  - name: "School Score Sheet Column Lock - The report card keeps a copy of the scores"
+    steps:
+      - step: "Create the score sheet with a line per component"
+        action: "create"
+        model: "school_score_sheet"
+        save_as: "sheet"
+        values:
+          academic_term_id: "REC: academic_term.id"
+          grade_class_id: "REC: grade_class.id"
+          subject_id: "REC: subject.id"
+          teacher_id: "REC: teacher.id"
+          date: 2026-08-10
+          user_id: "REF: base.user_admin"
+          line_ids:
+            - - 0
+              - 0
+              - enrollment_id: "REC: enrollment_1.id"
+                component_id: "REC: component_1.id"
+                score: 90.0
+            - - 0
+              - 0
+              - enrollment_id: "REC: enrollment_1.id"
+                component_id: "REC: component_2.id"
+                score: 80.0
+            - - 0
+              - 0
+              - enrollment_id: "REC: enrollment_1.id"
+                component_id: "REC: component_pts.id"
+                score: 75.0
+            - - 0
+              - 0
+              - enrollment_id: "REC: enrollment_1.id"
+                component_id: "REC: component_pas.id"
+
+      - step: "Find the columns except the final exam"
+        action: "search"
+        model: "school_score_sheet_component"
+        domain:
+          - ["sheet_id", "=", "REC: sheet.id"]
+          - ["component_id", "!=", "REC: component_pas.id"]
+        save_as: "locked_columns"
+
+      - step: "Lock the columns except the final exam"
+        action: "call"
+        target: "locked_columns"
+        method: "action_lock_column"
+        as_user: "base.user_admin"
+
+      - step: "Create the report card"
+        action: "create"
+        model: "school_report_card"
+        save_as: "mid_card"
+        values:
+          enrollment_id: "REC: enrollment_1.id"
+          type_id: "REC: mid_type.id"
+          print_date: 2026-12-20
+          print_city: "Jakarta"
+          user_id: "REF: base.user_admin"
+
+      - step: "Generate the lines and compute the scores"
+        action: "call"
+        target: "mid_card"
+        method: "action_generate_lines"
+        as_user: "base.user_admin"
+        refresh: true
+
+      - step: "Find the line of the subject"
+        action: "search"
+        model: "school_report_card_line"
+        domain:
+          - ["report_card_id", "=", "REC: mid_card.id"]
+          - ["subject_id", "=", "REC: subject.id"]
+        save_as: "mid_line"
+        expect_count: 1
+
+      - step: "Three component scores are copied to the line"
+        action: "assert"
+        target: "mid_line"
+        asserts:
+          score_ids:
+            type: "o2m"
+            check: "count"
+            expected_count: 3
+
+      - step: "Find the copy of the first daily test"
+        action: "search"
+        model: "school_report_card_line_score"
+        domain:
+          - ["line_id", "=", "REC: mid_line.id"]
+          - ["component_id", "=", "REC: component_1.id"]
+        save_as: "copy_1"
+        expect_count: 1
+
+      - step: "The copy holds the score of the sheet"
+        action: "assert"
+        target: "copy_1"
+        asserts:
+          score:
+            type: "value"
+            expected: 90.0
+
+      - step: "Cancel the score sheet"
+        action: "write"
+        target: "sheet"
+        values:
+          state: "cancel"
+
+      - step: "The copy does not change when the sheet is cancelled"
+        action: "assert"
+        target: "mid_line"
+        asserts:
+          score_ids:
+            type: "o2m"
+            check: "count"
+            expected_count: 3
+
+  - name:
+      "School Score Sheet Column Lock - Learning objectives page keeps its components"
+    steps:
+      - step: "Create the score sheet with a line per component"
+        action: "create"
+        model: "school_score_sheet"
+        save_as: "sheet"
+        values:
+          academic_term_id: "REC: academic_term.id"
+          grade_class_id: "REC: grade_class.id"
+          subject_id: "REC: subject.id"
+          teacher_id: "REC: teacher.id"
+          date: 2026-08-10
+          user_id: "REF: base.user_admin"
+          line_ids:
+            - - 0
+              - 0
+              - enrollment_id: "REC: enrollment_1.id"
+                component_id: "REC: component_1.id"
+                score: 90.0
+            - - 0
+              - 0
+              - enrollment_id: "REC: enrollment_1.id"
+                component_id: "REC: component_2.id"
+                score: 80.0
+            - - 0
+              - 0
+              - enrollment_id: "REC: enrollment_1.id"
+                component_id: "REC: component_pts.id"
+                score: 75.0
+            - - 0
+              - 0
+              - enrollment_id: "REC: enrollment_1.id"
+                component_id: "REC: component_pas.id"
+
+      - step: "Every component of the lines has a column"
+        action: "assert"
+        target: "sheet"
+        asserts:
+          column_ids:
+            type: "o2m"
+            check: "count"
+            expected_count: 4
+
+      - step: "Only the daily tests and assignments are components"
+        action: "assert"
+        target: "sheet"
+        asserts:
+          component_ids:
+            type: "o2m"
+            check: "count"
+            expected_count: 2

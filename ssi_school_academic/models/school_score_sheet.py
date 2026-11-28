@@ -19,8 +19,12 @@ class SchoolScoreSheet(models.Model):
     the open enrollments of the class: one line per enrollment and per
     active score component. The teacher then fills in the scores, and
     the sheet becomes final once it is confirmed and approved. The
-    scores of a finished sheet are the source of the final report card
-    score. Scores may only be entered for enrollments that are open.
+    teacher can lock each score column once its scores are final; the
+    scores of the locked columns are the source of the final report
+    card score, so the report card does not wait for the sheet to be
+    done. A sheet can only be confirmed when every column that has
+    lines is locked. Scores may only be entered for enrollments that
+    are open.
     The scores are entered in a student by component grid, which asks
     this model for its calculated columns and for the minimum score.
     """
@@ -55,6 +59,8 @@ class SchoolScoreSheet(models.Model):
         "restart_ok",
         "done_ok",
         "manual_number_ok",
+        "lock_column_ok",
+        "unlock_column_ok",
     ]
     _header_button_order = [
         "action_confirm",
@@ -256,6 +262,7 @@ class SchoolScoreSheet(models.Model):
         string="Components",
         comodel_name="school_score_sheet_component",
         inverse_name="sheet_id",
+        domain=[("component_id.category", "in", ["daily_test", "assignment"])],
         readonly=True,
         states={
             "draft": [
@@ -265,12 +272,35 @@ class SchoolScoreSheet(models.Model):
         help="Daily tests and assignments of this sheet, each with the "
         "learning objectives (TP) it measures.",
     )
+    column_ids = fields.One2many(
+        string="Columns",
+        comodel_name="school_score_sheet_component",
+        inverse_name="sheet_id",
+        readonly=True,
+        help="Score columns of this sheet, one per score component "
+        "that has lines, of any category. A column is locked and "
+        "unlocked here.",
+    )
     generate_lines_ok = fields.Boolean(
         string="Can Generate Lines",
         compute="_compute_policy",
         store=False,
         compute_sudo=True,
         help="Policy that determines whether the Generate Lines " "button is visible.",
+    )
+    lock_column_ok = fields.Boolean(
+        string="Can Lock Column",
+        compute="_compute_policy",
+        store=False,
+        compute_sudo=True,
+        help="Policy that determines whether the Lock Column button " "is visible.",
+    )
+    unlock_column_ok = fields.Boolean(
+        string="Can Unlock Column",
+        compute="_compute_policy",
+        store=False,
+        compute_sudo=True,
+        help="Policy that determines whether the Unlock Column button " "is visible.",
     )
     minimum_score = fields.Float(
         string="Minimum Score",
@@ -610,14 +640,33 @@ Solution: Open the existing score sheet, or cancel it before creating a new one
         for record in self:
             record.component_ids._check_objective_scope()
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        """Create sheets and add the column record of each component.
+
+        The lines and the components written with the new sheet are
+        created first, without the column records the lines would add
+        one by one, so a component given in the same values is not
+        created twice. The missing column records are added at the end.
+
+        :param list vals_list: values of the sheets to create.
+        :return: the new sheets.
+        :rtype: recordset of ``school_score_sheet``
+        """
+        skipping = self.with_context(skip_column_upsert=True)
+        records = super(SchoolScoreSheet, skipping).create(vals_list)
+        records = records.with_context(skip_column_upsert=False)
+        records._upsert_component_records()
+        return records
+
     def action_generate_lines(self):
         """Fill the lines from the open enrollments of the class.
 
         Replaces every line of the sheet with one line per open
-        enrollment and per active score component, and adds a component
-        record for each daily test and assignment that has none yet.
-        The button is shown according to the ``generate_lines_ok``
-        policy.
+        enrollment and per active score component, and adds a column
+        record for each score component that has none yet. It is
+        refused while a column is locked. The button is shown
+        according to the ``generate_lines_ok`` policy.
 
         :return: nothing
         """
@@ -627,7 +676,8 @@ Solution: Open the existing score sheet, or cancel it before creating a new one
     def _generate_lines(self):
         """Replace the lines with enrollment by component lines.
 
-        :raises UserError: when the sheet is not in draft state.
+        :raises UserError: when the sheet is not in draft state, or a
+            column is locked.
         :return: nothing
         """
         self.ensure_one()
@@ -640,6 +690,20 @@ Context: Generate lines
 Database ID: %s
 Problem: Lines can only be generated in draft state
 Solution: Restart the document before generating the lines
+"""
+                )
+                % (self._description, self.id)
+            )
+            raise UserError(error_message)
+        if self.column_ids.filtered("is_locked"):
+            error_message = (
+                _(
+                    """
+Document Type: %s
+Context: Generate lines
+Database ID: %s
+Problem: Lines cannot be generated while a column is locked
+Solution: Unlock every column before generating the lines
 """
                 )
                 % (self._description, self.id)
@@ -660,26 +724,31 @@ Solution: Restart the document before generating the lines
         self._upsert_component_records()
 
     def _upsert_component_records(self):
-        """Add a component record for each daily test and assignment.
+        """Add a column record for each component that has lines.
 
-        Components that already have a record keep it, with the
-        learning objectives chosen on it, so generating the lines again
-        never removes a choice.
+        Every score component that has a line on the sheet gets one
+        record, of any category, so a column can always be locked.
+        Components that already have a record keep it, with the lock and
+        the learning objectives chosen on it, so generating the lines
+        again never removes a choice.
 
         :return: nothing
         """
-        self.ensure_one()
-        existing = self.component_ids.mapped("component_id")
-        components = self.env["school_score_component"].search(
-            self._get_objective_component_domain(), order="sequence, id"
-        )
-        self.env["school_score_sheet_component"].create(
-            [
-                {"sheet_id": self.id, "component_id": component.id}
-                for component in components
-                if component not in existing
-            ]
-        )
+        for record in self:
+            lines = self.env["school_score_sheet_line"].search(
+                [("sheet_id", "=", record.id)]
+            )
+            existing = self.env["school_score_sheet_component"].search(
+                [("sheet_id", "=", record.id)]
+            )
+            missing = lines.mapped("component_id") - existing.mapped("component_id")
+            self.env["school_score_sheet_component"].create(
+                [
+                    {"sheet_id": record.id, "component_id": component.id}
+                    for component in missing.sorted(lambda c: (c.sequence, c.id))
+                ]
+            )
+            record.invalidate_cache(["column_ids", "component_ids"])
 
     def _get_objective_component_domain(self):
         """Return the domain of the components that get a TP choice.
@@ -916,6 +985,40 @@ Solution: Restart the document before generating the lines
         self.ensure_one()
         self.line_ids._check_enrollment_open()
 
+    @ssi_decorator.pre_confirm_check()
+    def _02_check_column_locked(self):
+        """Check that every column that has lines is locked.
+
+        A sheet without lines has no column to lock and passes.
+
+        :raises UserError: when a score component that has lines on the
+            sheet has no locked column.
+        """
+        self.ensure_one()
+        components = self.line_ids.mapped("component_id")
+        locked = self.column_ids.filtered("is_locked").mapped("component_id")
+        open_columns = components - locked
+        if open_columns:
+            error_message = (
+                _(
+                    """
+Document Type: %s
+Context: Confirm document
+Database ID: %s
+Problem: These columns are not locked yet: %s
+Solution: Lock every column of the score sheet before confirming it
+"""
+                )
+                % (
+                    self._description,
+                    self.id,
+                    ", ".join(
+                        open_columns.sorted(lambda c: (c.sequence, c.id)).mapped("name")
+                    ),
+                )
+            )
+            raise UserError(error_message)
+
     @ssi_decorator.insert_on_form_view()
     def _insert_form_element(self, view_arch):
         if self._automatically_insert_view_element:
@@ -935,6 +1038,8 @@ Solution: Restart the document before generating the lines
             "restart_ok",
             "manual_number_ok",
             "generate_lines_ok",
+            "lock_column_ok",
+            "unlock_column_ok",
         ]
         res += policy_field
         return res
