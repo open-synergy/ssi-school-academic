@@ -436,7 +436,10 @@ scenarios:
           academic_year_id: "REC: year_1.id"
           effective_start: 2026-07-01
           effective_end: 2027-06-30
-          user_id: "REC: user_sdo.id"
+          # The owner is another user: the internal user rule of the base
+          # module (user_id = user) is OR-combined with the unit rule and
+          # would let the creating user through if he were the owner (T-05).
+          user_id: "REC: user_sd.id"
 
   - name: "School Curriculum OU Derivation - K5 writing the school re-derives the unit"
     steps:
