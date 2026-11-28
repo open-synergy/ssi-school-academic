@@ -1,0 +1,292 @@
+# T-01 (odoo-development-unit-test/test-traps.md): the `setup:` block replays
+# before every scenario inside one un-rolled-back transaction, so every
+# unique-constrained value it creates (codes, logins, and the name of an
+# operating unit, unique per company) is generated per replay from a count of
+# the existing records. The assertions of each scenario are limited to the
+# aliases the scenario builds itself, never to a count over the whole model.
+# A school has one curriculum per academic year that is not cancelled, so the
+# two curriculums of a scenario are made for two academic years.
+options:
+  auto_refresh: true
+
+setup:
+  steps:
+    - step: "Create the partner of Operating Unit A"
+      action: "create"
+      model: "res.partner"
+      save_as: "ou_a_partner"
+      values:
+        name: "SCOU Operating Unit A Partner"
+
+    - step: "Create Operating Unit A"
+      action: "create"
+      model: "operating.unit"
+      save_as: "ou_a"
+      values:
+        name:
+          "EVAL: 'SCOU Operating Unit A %d' % env['operating.unit'].search_count([])"
+        code: "EVAL: 'SCOUA%d' % env['operating.unit'].search_count([])"
+        company_id: "REF: base.main_company"
+        partner_id: "REC: ou_a_partner.id"
+
+    - step: "Create the partner of Operating Unit B"
+      action: "create"
+      model: "res.partner"
+      save_as: "ou_b_partner"
+      values:
+        name: "SCOU Operating Unit B Partner"
+
+    - step: "Create Operating Unit B"
+      action: "create"
+      model: "operating.unit"
+      save_as: "ou_b"
+      values:
+        name:
+          "EVAL: 'SCOU Operating Unit B %d' % env['operating.unit'].search_count([])"
+        code: "EVAL: 'SCOUB%d' % env['operating.unit'].search_count([])"
+        company_id: "REF: base.main_company"
+        partner_id: "REC: ou_b_partner.id"
+
+    # U1 and U2 are in the Operating Unit group and the User group of the
+    # curriculum only. They are not in the Company group, because a Company
+    # group implies the Operating Unit group and its own rule would show every
+    # curriculum of the company: group rules are OR-combined, so it would hide
+    # the effect of the Operating Unit rule.
+    - step: "Create the user U1 of Operating Unit A"
+      action: "create"
+      model: "res.users"
+      save_as: "user_u1"
+      values:
+        name: "SCOU User U1"
+        login: "EVAL: 'scou_u1_%d@ssi-school.test' % env['res.users'].search_count([])"
+        company_id: "REF: base.main_company"
+        groups_id:
+          - - 6
+            - 0
+            - - "REF: base.group_user"
+              - "REF: ssi_school_academic.school_curriculum_user_group"
+              - "REF:
+                ssi_school_academic_operating_unit.school_curriculum_operating_unit_group"
+        assigned_operating_unit_ids:
+          - - 6
+            - 0
+            - - "REC: ou_a.id"
+        default_operating_unit_id: "REC: ou_a.id"
+
+    - step: "Create the user U2 of Operating Unit A"
+      action: "create"
+      model: "res.users"
+      save_as: "user_u2"
+      values:
+        name: "SCOU User U2"
+        login: "EVAL: 'scou_u2_%d@ssi-school.test' % env['res.users'].search_count([])"
+        company_id: "REF: base.main_company"
+        groups_id:
+          - - 6
+            - 0
+            - - "REF: base.group_user"
+              - "REF: ssi_school_academic.school_curriculum_user_group"
+              - "REF:
+                ssi_school_academic_operating_unit.school_curriculum_operating_unit_group"
+        assigned_operating_unit_ids:
+          - - 6
+            - 0
+            - - "REC: ou_a.id"
+        default_operating_unit_id: "REC: ou_a.id"
+
+    - step: "Create the user U3 of Operating Unit B"
+      action: "create"
+      model: "res.users"
+      save_as: "user_u3"
+      values:
+        name: "SCOU User U3"
+        login: "EVAL: 'scou_u3_%d@ssi-school.test' % env['res.users'].search_count([])"
+        company_id: "REF: base.main_company"
+        groups_id:
+          - - 6
+            - 0
+            - - "REF: base.group_user"
+              - "REF: ssi_school_academic.school_curriculum_user_group"
+              - "REF:
+                ssi_school_academic_operating_unit.school_curriculum_operating_unit_group"
+        assigned_operating_unit_ids:
+          - - 6
+            - 0
+            - - "REC: ou_b.id"
+        default_operating_unit_id: "REC: ou_b.id"
+
+    # U4 is assigned to Operating Unit A only, so that seeing the curriculum
+    # of Operating Unit B proves the Company rule, not the unit rule.
+    - step: "Create the user U4 of the Company group"
+      action: "create"
+      model: "res.users"
+      save_as: "user_u4"
+      values:
+        name: "SCOU User U4"
+        login: "EVAL: 'scou_u4_%d@ssi-school.test' % env['res.users'].search_count([])"
+        company_id: "REF: base.main_company"
+        groups_id:
+          - - 6
+            - 0
+            - - "REF: base.group_user"
+              - "REF: ssi_school_academic.school_curriculum_user_group"
+              - "REF: ssi_school_academic.school_curriculum_company_group"
+        assigned_operating_unit_ids:
+          - - 6
+            - 0
+            - - "REC: ou_a.id"
+        default_operating_unit_id: "REC: ou_a.id"
+
+    - step: "Create the grade type"
+      action: "create"
+      model: "school_grade_type"
+      save_as: "grade_type"
+      values:
+        name: "SCOU Grade Type"
+        code: "EVAL: 'SCOUGT%d' % env['school_grade_type'].search_count([])"
+
+    - step: "Create the school"
+      action: "create"
+      model: "school"
+      save_as: "school"
+      values:
+        name: "SCOU School"
+        code: "EVAL: 'SCOUSC%d' % env['school'].search_count([])"
+        grade_type_id: "REC: grade_type.id"
+
+    - step: "Create the first academic year"
+      action: "create"
+      model: "school_academic_year"
+      save_as: "year_a"
+      values:
+        name: "SCOU Academic Year A"
+        code: "EVAL: 'SCOUAYA%d' % env['school_academic_year'].search_count([])"
+        date_start: 2026-07-01
+        date_end: 2027-06-30
+
+    - step: "Create the second academic year"
+      action: "create"
+      model: "school_academic_year"
+      save_as: "year_b"
+      values:
+        name: "SCOU Academic Year B"
+        code: "EVAL: 'SCOUAYB%d' % env['school_academic_year'].search_count([])"
+        date_start: 2027-07-01
+        date_end: 2028-06-30
+
+scenarios:
+  - name: "School Curriculum Operating Unit - User of the unit sees and writes its unit"
+    steps:
+      - step: "Create the curriculum of U1 in Operating Unit A"
+        action: "create"
+        model: "school_curriculum"
+        save_as: "curriculum_a"
+        values:
+          title: "SCOU Curriculum A"
+          school_id: "REC: school.id"
+          academic_year_id: "REC: year_a.id"
+          effective_start: 2026-07-01
+          effective_end: 2027-06-30
+          user_id: "REC: user_u1.id"
+          operating_unit_id: "REC: ou_a.id"
+
+      - step: "Create the curriculum of U1 in Operating Unit B"
+        action: "create"
+        model: "school_curriculum"
+        save_as: "curriculum_b"
+        values:
+          title: "SCOU Curriculum B"
+          school_id: "REC: school.id"
+          academic_year_id: "REC: year_b.id"
+          effective_start: 2027-07-01
+          effective_end: 2028-06-30
+          user_id: "REC: user_u1.id"
+          operating_unit_id: "REC: ou_b.id"
+
+      - step: "Assert the curriculum of Operating Unit A stores its unit"
+        action: "assert"
+        target: "curriculum_a"
+        asserts:
+          operating_unit_id:
+            type: "m2o"
+            expected: "REC: ou_a"
+
+      - step: "U2 finds only the curriculum of its own unit"
+        action: "search"
+        model: "school_curriculum"
+        as_user: "user_u2"
+        domain:
+          - ["id", "in", ["REC: curriculum_a.id", "REC: curriculum_b.id"]]
+        save_as: "seen_by_u2"
+        expect_count: 1
+
+      - step: "U2 writes the curriculum of U1 in its own unit"
+        action: "write"
+        target: "curriculum_a"
+        as_user: "user_u2"
+        values:
+          title: "SCOU Curriculum A Written By U2"
+
+      - step: "Assert the curriculum of U1 carries the title written by U2"
+        action: "assert"
+        target: "curriculum_a"
+        asserts:
+          title:
+            type: "value"
+            expected: "SCOU Curriculum A Written By U2"
+
+      - step: "U2 cannot pass the read access rule of the curriculum of unit B"
+        action: "call"
+        target: "curriculum_b"
+        method: "check_access_rule"
+        as_user: "user_u2"
+        args:
+          - "read"
+        expect_error:
+          type: "AccessError"
+
+      - step: "U3 finds only the curriculum of Operating Unit B"
+        action: "search"
+        model: "school_curriculum"
+        as_user: "user_u3"
+        domain:
+          - ["id", "in", ["REC: curriculum_a.id", "REC: curriculum_b.id"]]
+        save_as: "seen_by_u3"
+        expect_count: 1
+
+  - name: "School Curriculum Operating Unit - User of the company sees every unit"
+    steps:
+      - step: "Create the curriculum of U1 in Operating Unit A"
+        action: "create"
+        model: "school_curriculum"
+        save_as: "curriculum_a"
+        values:
+          title: "SCOU Curriculum A"
+          school_id: "REC: school.id"
+          academic_year_id: "REC: year_a.id"
+          effective_start: 2026-07-01
+          effective_end: 2027-06-30
+          user_id: "REC: user_u1.id"
+          operating_unit_id: "REC: ou_a.id"
+
+      - step: "Create the curriculum of U1 in Operating Unit B"
+        action: "create"
+        model: "school_curriculum"
+        save_as: "curriculum_b"
+        values:
+          title: "SCOU Curriculum B"
+          school_id: "REC: school.id"
+          academic_year_id: "REC: year_b.id"
+          effective_start: 2027-07-01
+          effective_end: 2028-06-30
+          user_id: "REC: user_u1.id"
+          operating_unit_id: "REC: ou_b.id"
+
+      - step: "U4 of the Company group finds the curriculums of both units"
+        action: "search"
+        model: "school_curriculum"
+        as_user: "user_u4"
+        domain:
+          - ["id", "in", ["REC: curriculum_a.id", "REC: curriculum_b.id"]]
+        save_as: "seen_by_u4"
+        expect_count: 2

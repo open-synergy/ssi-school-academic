@@ -4,7 +4,9 @@
 
 from . import (  # noqa: F401
     test_school_academic_operating_unit,
+    test_school_curriculum_operating_unit,
     test_school_teaching_assignment_operating_unit,
+    test_ui_school_curriculum,
     test_ui_school_report_card,
     test_ui_school_score_sheet,
     test_ui_school_teaching_assignment,

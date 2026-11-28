@@ -11,6 +11,10 @@
         <xpath expr="." position="inside">
             <script
                 type="text/javascript"
+                src="/ssi_school_academic_operating_unit/static/tests/tours/school_curriculum_tour.js"
+            />
+            <script
+                type="text/javascript"
                 src="/ssi_school_academic_operating_unit/static/tests/tours/school_score_sheet_tour.js"
             />
             <script
