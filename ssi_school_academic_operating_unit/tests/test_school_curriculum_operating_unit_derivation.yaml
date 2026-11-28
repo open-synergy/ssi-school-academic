@@ -1,0 +1,480 @@
+# T-01 (odoo-development-unit-test/test-traps.md): the `setup:` block replays
+# before every scenario inside one un-rolled-back transaction, so every
+# unique-constrained value it creates (codes, logins, and the name of an
+# operating unit, unique per company) is generated per replay from a count of
+# the existing records. Each scenario asserts only the aliases it builds.
+# A school has one curriculum per academic year that is not cancelled, so the
+# curriculums of one school in a scenario use different academic years.
+options:
+  auto_refresh: true
+
+setup:
+  steps:
+    - step: "Create the partner of Operating Unit SD"
+      action: "create"
+      model: "res.partner"
+      save_as: "ou_sd_partner"
+      values:
+        name: "SCOD Operating Unit SD Partner"
+
+    - step: "Create Operating Unit SD"
+      action: "create"
+      model: "operating.unit"
+      save_as: "ou_sd"
+      values:
+        name:
+          "EVAL: 'SCOD Operating Unit SD %d' % env['operating.unit'].search_count([])"
+        code: "EVAL: 'SCODSD%d' % env['operating.unit'].search_count([])"
+        company_id: "REF: base.main_company"
+        partner_id: "REC: ou_sd_partner.id"
+
+    - step: "Create the partner of Operating Unit SMA"
+      action: "create"
+      model: "res.partner"
+      save_as: "ou_sma_partner"
+      values:
+        name: "SCOD Operating Unit SMA Partner"
+
+    - step: "Create Operating Unit SMA"
+      action: "create"
+      model: "operating.unit"
+      save_as: "ou_sma"
+      values:
+        name:
+          "EVAL: 'SCOD Operating Unit SMA %d' % env['operating.unit'].search_count([])"
+        code: "EVAL: 'SCODSMA%d' % env['operating.unit'].search_count([])"
+        company_id: "REF: base.main_company"
+        partner_id: "REC: ou_sma_partner.id"
+
+    - step: "Create the user U-SD"
+      action: "create"
+      model: "res.users"
+      save_as: "user_sd"
+      values:
+        name: "SCOD User U-SD"
+        login:
+          "EVAL: 'scod_user_sd_%d@ssi-school.test' % env['res.users'].search_count([])"
+        company_id: "REF: base.main_company"
+        groups_id:
+          - - 6
+            - 0
+            - - "REF: base.group_user"
+              - "REF: ssi_school_academic.school_curriculum_user_group"
+              - "REF:
+                ssi_school_academic_operating_unit.school_curriculum_operating_unit_group"
+              - "REF: operating_unit.group_multi_operating_unit"
+        assigned_operating_unit_ids:
+          - - 6
+            - 0
+            - - "REC: ou_sd.id"
+              - "REC: ou_sma.id"
+        default_operating_unit_id: "REC: ou_sd.id"
+
+    - step: "Create the user U-SD2"
+      action: "create"
+      model: "res.users"
+      save_as: "user_sd2"
+      values:
+        name: "SCOD User U-SD2"
+        login:
+          "EVAL: 'scod_user_sd2_%d@ssi-school.test' % env['res.users'].search_count([])"
+        company_id: "REF: base.main_company"
+        groups_id:
+          - - 6
+            - 0
+            - - "REF: base.group_user"
+              - "REF: ssi_school_academic.school_curriculum_user_group"
+              - "REF:
+                ssi_school_academic_operating_unit.school_curriculum_operating_unit_group"
+        assigned_operating_unit_ids:
+          - - 6
+            - 0
+            - - "REC: ou_sd.id"
+              - "REC: ou_sma.id"
+        default_operating_unit_id: "REC: ou_sd.id"
+
+    - step: "Create the user U-SMA"
+      action: "create"
+      model: "res.users"
+      save_as: "user_sma"
+      values:
+        name: "SCOD User U-SMA"
+        login:
+          "EVAL: 'scod_user_sma_%d@ssi-school.test' % env['res.users'].search_count([])"
+        company_id: "REF: base.main_company"
+        groups_id:
+          - - 6
+            - 0
+            - - "REF: base.group_user"
+              - "REF: ssi_school_academic.school_curriculum_user_group"
+              - "REF:
+                ssi_school_academic_operating_unit.school_curriculum_operating_unit_group"
+        assigned_operating_unit_ids:
+          - - 6
+            - 0
+            - - "REC: ou_sma.id"
+        default_operating_unit_id: "REC: ou_sma.id"
+
+    - step: "Create the user U-SDO"
+      action: "create"
+      model: "res.users"
+      save_as: "user_sdo"
+      values:
+        name: "SCOD User U-SDO"
+        login:
+          "EVAL: 'scod_user_sdo_%d@ssi-school.test' % env['res.users'].search_count([])"
+        company_id: "REF: base.main_company"
+        groups_id:
+          - - 6
+            - 0
+            - - "REF: base.group_user"
+              - "REF: ssi_school_academic.school_curriculum_user_group"
+              - "REF:
+                ssi_school_academic_operating_unit.school_curriculum_operating_unit_group"
+        assigned_operating_unit_ids:
+          - - 6
+            - 0
+            - - "REC: ou_sd.id"
+        default_operating_unit_id: "REC: ou_sd.id"
+
+    - step: "Create the grade type"
+      action: "create"
+      model: "school_grade_type"
+      save_as: "grade_type"
+      values:
+        name: "SCOD Grade Type"
+        code: "EVAL: 'SCODGT%d' % env['school_grade_type'].search_count([])"
+
+    - step: "Create the school S1"
+      action: "create"
+      model: "school"
+      save_as: "school_s1"
+      values:
+        name: "SCOD School S1"
+        code: "EVAL: 'SCODSCS1%d' % env['school'].search_count([])"
+        grade_type_id: "REC: grade_type.id"
+        operating_unit_ids: [[6, 0, ["REC: ou_sma.id"]]]
+
+    - step: "Create the school S2"
+      action: "create"
+      model: "school"
+      save_as: "school_s2"
+      values:
+        name: "SCOD School S2"
+        code: "EVAL: 'SCODSCS2%d' % env['school'].search_count([])"
+        grade_type_id: "REC: grade_type.id"
+        operating_unit_ids: [[6, 0, ["REC: ou_sd.id", "REC: ou_sma.id"]]]
+
+    - step: "Create the school S3"
+      action: "create"
+      model: "school"
+      save_as: "school_s3"
+      values:
+        name: "SCOD School S3"
+        code: "EVAL: 'SCODSCS3%d' % env['school'].search_count([])"
+        grade_type_id: "REC: grade_type.id"
+
+    - step: "Create the academic year 1"
+      action: "create"
+      model: "school_academic_year"
+      save_as: "year_1"
+      values:
+        name: "SCOD Academic Year 1"
+        code: "EVAL: 'SCODAY1_%d' % env['school_academic_year'].search_count([])"
+        date_start: 2026-07-01
+        date_end: 2027-06-30
+
+    - step: "Create the academic year 2"
+      action: "create"
+      model: "school_academic_year"
+      save_as: "year_2"
+      values:
+        name: "SCOD Academic Year 2"
+        code: "EVAL: 'SCODAY2_%d' % env['school_academic_year'].search_count([])"
+        date_start: 2028-07-01
+        date_end: 2029-06-30
+
+    - step: "Create the academic year 3"
+      action: "create"
+      model: "school_academic_year"
+      save_as: "year_3"
+      values:
+        name: "SCOD Academic Year 3"
+        code: "EVAL: 'SCODAY3_%d' % env['school_academic_year'].search_count([])"
+        date_start: 2030-07-01
+        date_end: 2031-06-30
+
+scenarios:
+  - name: "School Curriculum OU Derivation - K1 create derives the unit of the school"
+    steps:
+      - step:
+          "User of unit SD creates a curriculum of the school of unit SMA without a unit"
+        action: "create"
+        model: "school_curriculum"
+        save_as: "curriculum_k1"
+        as_user: "user_sd"
+        values:
+          title: "SCOD curriculum_k1"
+          school_id: "REC: school_s1.id"
+          academic_year_id: "REC: year_1.id"
+          effective_start: 2026-07-01
+          effective_end: 2027-06-30
+          user_id: "REC: user_sd.id"
+
+      - step: "Assert the curriculum takes the unit of the school"
+        action: "assert"
+        target: "curriculum_k1"
+        asserts:
+          operating_unit_id:
+            type: "m2o"
+            expected: "REC: ou_sma"
+
+  - name:
+      "School Curriculum OU Derivation - K2 form shows and saves the unit of the school"
+    steps:
+      - step: "User of unit SD with the multiple unit group picks the school"
+        action: "form"
+        model: "school_curriculum"
+        as_user: "user_sd"
+        save: false
+        values:
+          title: "SCOD Form Curriculum"
+          school_id: "REC: school_s1"
+          academic_year_id: "REC: year_1"
+          effective_start: 2026-07-01
+          effective_end: 2027-06-30
+        asserts:
+          operating_unit_id:
+            type: "m2o"
+            expected: "REC: ou_sma"
+
+      - step: "User of unit SD with the multiple unit group saves the form"
+        action: "form"
+        model: "school_curriculum"
+        as_user: "user_sd"
+        save_as: "form_a"
+        save: true
+        values:
+          title: "SCOD Form Curriculum"
+          school_id: "REC: school_s1"
+          academic_year_id: "REC: year_1"
+          effective_start: 2026-07-01
+          effective_end: 2027-06-30
+        asserts:
+          operating_unit_id:
+            type: "m2o"
+            expected: "REC: ou_sma"
+
+      - step: "Assert the saved curriculum of the form takes the unit of the school"
+        action: "assert"
+        target: "form_a"
+        asserts:
+          operating_unit_id:
+            type: "m2o"
+            expected: "REC: ou_sma"
+
+      - step: "User of unit SD without the multiple unit group saves the form"
+        action: "form"
+        model: "school_curriculum"
+        as_user: "user_sd2"
+        save_as: "form_b"
+        save: true
+        values:
+          title: "SCOD Form Curriculum"
+          school_id: "REC: school_s1"
+          academic_year_id: "REC: year_2"
+          effective_start: 2028-07-01
+          effective_end: 2029-06-30
+        asserts:
+          operating_unit_id:
+            type: "m2o"
+            expected: "REC: ou_sma"
+
+      - step:
+          "Assert the saved curriculum of the user without the group takes the unit of
+          the school"
+        action: "assert"
+        target: "form_b"
+        asserts:
+          operating_unit_id:
+            type: "m2o"
+            expected: "REC: ou_sma"
+
+  - name: "School Curriculum OU Derivation - K3 an explicit unit wins"
+    steps:
+      - step: "Create the curriculum with an explicit unit SD"
+        action: "create"
+        model: "school_curriculum"
+        save_as: "curriculum_k3"
+        as_user: "user_sd"
+        values:
+          title: "SCOD curriculum_k3"
+          school_id: "REC: school_s1.id"
+          academic_year_id: "REC: year_1.id"
+          effective_start: 2026-07-01
+          effective_end: 2027-06-30
+          user_id: "REC: user_sd.id"
+          operating_unit_id: "REC: ou_sd.id"
+
+      - step: "Assert the explicit unit is kept"
+        action: "assert"
+        target: "curriculum_k3"
+        asserts:
+          operating_unit_id:
+            type: "m2o"
+            expected: "REC: ou_sd"
+
+      - step: "Create the curriculum of the school without a unit"
+        action: "create"
+        model: "school_curriculum"
+        save_as: "curriculum_k3b"
+        as_user: "user_sd"
+        values:
+          title: "SCOD curriculum_k3b"
+          school_id: "REC: school_s1.id"
+          academic_year_id: "REC: year_2.id"
+          effective_start: 2028-07-01
+          effective_end: 2029-06-30
+          user_id: "REC: user_sd.id"
+
+      - step: "Write the unit alone on the curriculum of unit SMA"
+        action: "write"
+        target: "curriculum_k3b"
+        as_user: "user_sd"
+        values:
+          operating_unit_id: "REC: ou_sd.id"
+
+      - step: "Assert the written unit is kept"
+        action: "assert"
+        target: "curriculum_k3b"
+        asserts:
+          operating_unit_id:
+            type: "m2o"
+            expected: "REC: ou_sd"
+
+  - name:
+      "School Curriculum OU Derivation - K4 a school without a single unit keeps the
+      default of the user"
+    steps:
+      - step: "User of unit SD creates for the school of two units"
+        action: "create"
+        model: "school_curriculum"
+        save_as: "curriculum_k4a"
+        as_user: "user_sd"
+        values:
+          title: "SCOD curriculum_k4a"
+          school_id: "REC: school_s2.id"
+          academic_year_id: "REC: year_1.id"
+          effective_start: 2026-07-01
+          effective_end: 2027-06-30
+          user_id: "REC: user_sd.id"
+
+      - step: "Assert the default unit SD of the user is kept"
+        action: "assert"
+        target: "curriculum_k4a"
+        asserts:
+          operating_unit_id:
+            type: "m2o"
+            expected: "REC: ou_sd"
+
+      - step: "User of unit SMA creates for the school of two units"
+        action: "create"
+        model: "school_curriculum"
+        save_as: "curriculum_k4b"
+        as_user: "user_sma"
+        values:
+          title: "SCOD curriculum_k4b"
+          school_id: "REC: school_s2.id"
+          academic_year_id: "REC: year_2.id"
+          effective_start: 2028-07-01
+          effective_end: 2029-06-30
+          user_id: "REC: user_sma.id"
+
+      - step: "Assert the default unit SMA of the user is kept"
+        action: "assert"
+        target: "curriculum_k4b"
+        asserts:
+          operating_unit_id:
+            type: "m2o"
+            expected: "REC: ou_sma"
+
+      - step: "User of unit SD creates for the school without a unit"
+        action: "create"
+        model: "school_curriculum"
+        save_as: "curriculum_k4c"
+        as_user: "user_sd"
+        values:
+          title: "SCOD curriculum_k4c"
+          school_id: "REC: school_s3.id"
+          academic_year_id: "REC: year_1.id"
+          effective_start: 2026-07-01
+          effective_end: 2027-06-30
+          user_id: "REC: user_sd.id"
+
+      - step:
+          "Assert the default unit SD of the user is kept for the school without a unit"
+        action: "assert"
+        target: "curriculum_k4c"
+        asserts:
+          operating_unit_id:
+            type: "m2o"
+            expected: "REC: ou_sd"
+
+  - name:
+      "School Curriculum OU Derivation - K7 a user without the unit of the school is
+      refused"
+    steps:
+      - step: "User of unit SD only creates for the school of unit SMA"
+        action: "create"
+        model: "school_curriculum"
+        as_user: "user_sdo"
+        expect_error:
+          type: "AccessError"
+        values:
+          title: "SCOD curriculum_k7"
+          school_id: "REC: school_s1.id"
+          academic_year_id: "REC: year_1.id"
+          effective_start: 2026-07-01
+          effective_end: 2027-06-30
+          # The owner is another user: the internal user rule of the base
+          # module (user_id = user) is OR-combined with the unit rule and
+          # would let the creating user through if he were the owner (T-05).
+          user_id: "REC: user_sd.id"
+
+  - name: "School Curriculum OU Derivation - K5 writing the school re-derives the unit"
+    steps:
+      - step: "Create the draft curriculum of the school without a unit"
+        action: "create"
+        model: "school_curriculum"
+        save_as: "curriculum_k5"
+        as_user: "user_sd"
+        values:
+          title: "SCOD curriculum_k5"
+          school_id: "REC: school_s3.id"
+          academic_year_id: "REC: year_1.id"
+          effective_start: 2026-07-01
+          effective_end: 2027-06-30
+          user_id: "REC: user_sd.id"
+
+      - step: "Assert the draft curriculum has the unit SD"
+        action: "assert"
+        target: "curriculum_k5"
+        asserts:
+          operating_unit_id:
+            type: "m2o"
+            expected: "REC: ou_sd"
+
+      - step: "Write the school of unit SMA on the draft curriculum"
+        action: "write"
+        target: "curriculum_k5"
+        as_user: "user_sd"
+        values:
+          school_id: "REC: school_s1.id"
+
+      - step: "Assert the unit follows the new school"
+        action: "assert"
+        target: "curriculum_k5"
+        asserts:
+          operating_unit_id:
+            type: "m2o"
+            expected: "REC: ou_sma"
